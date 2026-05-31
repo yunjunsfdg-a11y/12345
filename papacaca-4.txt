@@ -8861,50 +8861,10 @@ AuraTab:CreateToggle({
         end
     end
 })
-function AntiBoxF()
-    
-    local targetNames = {"JukeboxBule", "JukeboxOrange"}
-
-    task.spawn(function()
-        while AntiBoxT and task.wait(0.1) do
-            local character = plr.Character
-            if not character then continue end
-
-            local hrp = character:FindFirstChild("HumanoidRootPart")
-            if not hrp then continue end
-
-            for _, folder in ipairs(workspace:GetChildren()) do
-                if folder:IsA("Folder") and folder.Name:match("SpawnedInToys$") then
-                    if folder.Name ~= (plr.Name .. "SpawnedInToys") then
-                        for _, item in ipairs(folder:GetChildren()) do
-                            if table.find(targetNames, item.Name) and item:FindFirstChild("SoundPart") then
-                                local Spart = item.Button
-
-                                local basePart = item.PrimaryPart or Spart
-                                local PartOwner = Spart:FindFirstChild("PartOwner")
-                                local dist = (basePart.Position - hrp.Position).Magnitude
-
-                                local FallenY = workspace.FallenPartsDestroyHeight
-                                local targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
-
-                                if dist <= 30 and not PartOwner then 
-                                    rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
-                                end
-                                if PartOwner then 
-                                    Spart.CFrame = CFrame.new(0, targetY, 9999) 
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end)
-end
 
 
 local function AntiBoxFunction()
-    local targetNames = {"PalletLightBrown"}
+    local targetName = {"PB"}
 
     task.spawn(function()
         while _G.AntiBoxT and task.wait(0.1) do
