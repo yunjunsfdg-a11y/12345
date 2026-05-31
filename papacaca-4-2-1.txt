@@ -4860,8 +4860,6 @@ function AntiBoxF()
         end
     end)
 end
-
-
 function AntiBoxF()
     local targetNames = {"PalletLightBrown"}
 
@@ -4897,6 +4895,7 @@ function AntiBoxF()
         end
     end)
 end
+
 function AntiDeathF()
     local connection
     connection = rs2.Heartbeat:Connect(function()
