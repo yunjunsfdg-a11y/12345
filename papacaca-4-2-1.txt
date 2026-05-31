@@ -4820,8 +4820,7 @@ function AntiBoxF()
         end
     end)
 end
-function AntiBoxF()
-    
+function AntiJukeBoxF()
     local targetNames = {"JukeboxBule", "JukeboxOrange"}
 
     task.spawn(function()
@@ -4843,15 +4842,11 @@ function AntiBoxF()
                                 local PartOwner = Spart:FindFirstChild("PartOwner")
                                 local dist = (basePart.Position - hrp.Position).Magnitude
 
-                                local FallenY = workspace.FallenPartsDestroyHeight
-                                local targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
+                                FallenY = workspace.FallenPartsDestroyHeight
+                                targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
 
-                                if dist <= 30 and not PartOwner then 
-                                    rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
-                                end
-                                if PartOwner then 
-                                    Spart.CFrame = CFrame.new(0, targetY, 9999) 
-                                end
+                                if dist <= 30 and not PartOwner then rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) end
+                                if PartOwner then Spart.CFrame = CFrame.new(0, targetY, 9999) end
                             end
                         end
                     end
@@ -4860,7 +4855,7 @@ function AntiBoxF()
         end
     end)
 end
-function AntiBoxF()
+function AntiPalletF()
     local targetNames = {"PalletLightBrown"}
 
     task.spawn(function()
@@ -8883,32 +8878,31 @@ AuraTab:CreateToggle({
 
 
 
-AuraTab:CreateToggle({
-    Name = "안티 주크박스 아우라",
-    CurrentValue = false,
-    Flag = "AntiJukeboxFlag",
-    Callback = function(Value)
-        AntiBoxT = Value
-        if AntiBoxT then
-            AntiBoxF()
-        end
-    end
+local AntiJukebox = AuraTab:CreateToggle({
+	Name = "안티 주크박스 아우라",
+	CurrentValue = false,
+	Flag = "AntiJukeboxAura",
+	Callback = function(Value)
+		AntiBoxT = Value
+		if Value then
+			AntiJukeboxF()
+		end
+	end
 })
 
 
 
-AuraTab:CreateToggle({
-    Name = "안티 판자 아우라",
-    CurrentValue = false,
-    Flag = "AntiBoxToggleFlag",
-    Callback = function(Value)
-        _G.AntiBoxT = Value
-        if _G.AntiBoxT then
-            AntiBoxFunction()
-        end
-    end,
+local AntiPallet = AuraTab:CreateToggle({
+	Name = "안티 판자 아우라",
+	CurrentValue = false,
+	Flag = "AntiPalletAura",
+	Callback = function(Value)
+		AntiBoxT = Value
+		if Value then
+			AntiPalletF()
+		end
+	end
 })
-
 
 
 funTab:CreateSection("TP")
