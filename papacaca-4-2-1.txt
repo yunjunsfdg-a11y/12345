@@ -8037,6 +8037,7 @@ local function Fire()
 
                 for _, item in pairs(inv:GetChildren()) do
                     if item.Name == "Campfire" then
+                        item.Name = "Campfire"
                         desk = item
                         break
                     end
@@ -8049,26 +8050,38 @@ local function Fire()
             end
         end
 
-        -- [기존 물리 로직 유지] Main 파트 위치 고정 및 BodyPosition 세팅
         local main = desk:FindFirstChild("Main")
         if main then
             local bp = main:FindFirstChildOfClass("BodyPosition")
             if not bp then
                 bp = Instance.new("BodyPosition")
                 bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
                 bp.Parent = main
+            else
+                bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
             end
-            bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
         end
 
-        -- [기존 물리 로직 유지] Hitbox 체크
         local hitbox = desk:FindFirstChild("Hitbox")
         if not hitbox then
             task.wait(0.1)
             continue
         end
 
-        -- 타겟 플레이어 수집 (플롯 외부 인원)
+        -- [원본 유지] 네트워크 오너십을 가져와야 강제로 TP 시킨 게 서버에 반영됨
+        local partOwner = hitbox:FindFirstChild("PartOwner")
+        if not partOwner or partOwner.Value ~= plr.Name then
+            rs.GrabEvents.SetNetworkOwner:FireServer(hitbox, hitbox.CFrame)
+            task.wait(0.1)
+            partOwner = hitbox:FindFirstChild("PartOwner")
+            if not partOwner or partOwner.Value ~= plr.Name then
+                task.wait(0.1)
+                continue
+            end
+        end
+
+        -- [원본 유지] 타겟 리스트 추출
         local validRoots = {}
         for _, name in ipairs(playersInLoop1V) do
             local player = game.Players:FindFirstChild(name)
@@ -8080,14 +8093,13 @@ local function Fire()
             end
         end
 
-        
+        -- [수정] StickyRemoverPart 검증만 완전히 빼고 hitbox를 타겟 뒤나 정위치로 강제 고정
         if #validRoots > 0 then
             for _, targetRoot in ipairs(validRoots) do
                 if not ToggleState then break end
                 if targetRoot then
-                    
-                    local targetCFrame = targetRoot.CFrame * CFrame.new(0, 0, 0)
-                    hitbox.CFrame = targetCFrame
+                    local behindCFrame = targetRoot.CFrame * CFrame.new(1, 0, 3)
+                    hitbox.CFrame = behindCFrame
                     task.wait()
                 end
             end
@@ -8096,7 +8108,6 @@ local function Fire()
         task.wait(0.5)
     end
 end
-
 
 local Toggle = LoopTab:CreateToggle({
    Name = "불테러",
@@ -8109,6 +8120,7 @@ local Toggle = LoopTab:CreateToggle({
       end
    end,
 })
+
 
 
 antiTab:CreateSection("Teleport | Toggle")
