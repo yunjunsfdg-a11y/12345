@@ -8012,11 +8012,7 @@ LoopTab:CreateButton({
 })
 local ToggleState = false
 
-function Fire()
-    if not ToggleState then
-        return
-    end
-
+local function Fire()
     while ToggleState do
         local char = plr.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -8037,11 +8033,10 @@ function Fire()
                         spawnRemote:InvokeServer("Campfire", spawnCF, spawnCF.Position)
                     end)
                 end)
-                task.wait(0.001)
+                task.wait(0.1)
 
                 for _, item in pairs(inv:GetChildren()) do
                     if item.Name == "Campfire" then
-                        item.Name = "Campfire"
                         desk = item
                         break
                     end
@@ -8054,39 +8049,9 @@ function Fire()
             end
         end
 
-        local main = desk:FindFirstChild("Main")
-        if main then
-            local bp = main:FindFirstChildOfClass("BodyPosition")
-            if not bp then
-                bp = Instance.new("BodyPosition")
-                bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-                bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
-                bp.Parent = main
-            else
-                bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
-            end
-        end
-
         local hitbox = desk:FindFirstChild("Hitbox")
         if not hitbox then
             task.wait(0.1)
-            continue
-        end
-
-        local partOwner = hitbox:FindFirstChild("PartOwner")
-        if not partOwner or partOwner.Value ~= plr.Name then
-            rs.GrabEvents.SetNetworkOwner:FireServer(hitbox, hitbox.CFrame)
-            task.wait(0.01)
-            partOwner = hitbox:FindFirstChild("PartOwner")
-            if not partOwner or partOwner.Value ~= plr.Name then
-                task.wait(0.1)
-                continue
-            end
-        end
-
-        local hitbox2 = desk:FindFirstChild("StickyRemoverPart")
-        if not hitbox2 then
-            task.wait(0.01)
             continue
         end
 
@@ -8103,25 +8068,30 @@ function Fire()
 
         if #validRoots > 0 then
             for _, targetRoot in ipairs(validRoots) do
+                if not ToggleState then break end
                 if targetRoot then
-                    local behindCFrame = targetRoot.CFrame * CFrame.new(1,0,3)
-                    hitbox2.CFrame = behindCFrame
-                    task.wait()
+                    hitbox.CFrame = targetRoot.CFrame
+                    task.wait(0.05) 
                 end
             end
         end
 
-        task.wait(0.05)
+        task.wait(0.2)
     end
 end
 
-local Button = LoopTab:CreateButton({
-   Name = "Fire",
-   Callback = function()
-      ToggleState = true
-      task.spawn(Fire)
+local Toggle = Tab:CreateToggle({
+   Name = "불테러",
+   CurrentValue = false,
+   Flag = "FireToggle",
+   Callback = function(Value)
+      ToggleState = Value
+      if ToggleState then
+          task.spawn(Fire)
+      end
    end,
 })
+
 
 antiTab:CreateSection("Teleport | Toggle")
 local AntiGrabV1 = antiTab:CreateToggle({
