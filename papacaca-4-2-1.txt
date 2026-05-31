@@ -8868,7 +8868,7 @@ playerTab:CreateToggle({
 })
 AuraTab:CreateSection("안티 아우라들")
 AuraTab:CreateToggle({
-    Name = "안티 붐박스 아우라 [ all ]", -- Boombox
+    Name = "안티 붐박스 아우라 [ all ]",
     CurrentValue = false,
     Flag = "5",
     Callback = function(Value)
@@ -8904,7 +8904,7 @@ G:WaitForChild("EndGrabEarly"):Destroy()
 Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
 
 local AntiJukebox = AuraTab:CreateToggle({
-	Name = "안티 주크박스 아우라",
+	Name = "주크박스 고정 아우라",
 	CurrentValue = false,
 	Flag = "AntiJukeboxAura",
 	Callback = function(Value)
@@ -8917,7 +8917,7 @@ local AntiJukebox = AuraTab:CreateToggle({
 
 
 local AntiPallet = AuraTab:CreateToggle({
-	Name = "안티 판자 아우라",
+	Name = "판자 고정 아우라",
 	CurrentValue = false,
 	Flag = "AntiPalletAura",
 	Callback = function(Value)
@@ -8928,7 +8928,79 @@ local AntiPallet = AuraTab:CreateToggle({
 	end
 })
 
+function AntiDeathF()
+    local connection
+    local lastTpTime = 0
+    local targetIndex = 1
 
+    connection = rs2.Heartbeat:Connect(function()
+        if not _G.AntiDeathT then
+            connection:Disconnect()
+            return
+        end
+
+        local Character = plr.Character
+        if not Character then return end
+
+        local campfire = inv:FindFirstChild("Campfire")
+
+        if not campfire then
+            pcall(function()
+                local aimPosition = cam.CFrame.Position + (cam.CFrame.LookVector * 10)
+                local spawnCFrame = CFrame.new(aimPosition)
+                
+                rs.MenuToys.SpawnToyRemoteFunction:InvokeServer(
+                    "Campfire",
+                    spawnCFrame,
+                    Vector3.new(0,0,0)
+                )
+            end)
+        else
+            local currentTime = tick()
+            if currentTime - lastTpTime >= 0.15 then
+                lastTpTime = currentTime
+                
+                local allPlayers = Players:GetPlayers()
+                local validTargets = {}
+
+                for _, player in pairs(allPlayers) do
+                    if player ~= plr and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        table.insert(validTargets, player.Character.HumanoidRootPart)
+                    end
+                end
+
+                if #validTargets > 0 then
+                    if targetIndex > #validTargets then
+                        targetIndex = 1
+                    end
+                    
+                    local currentTarget = validTargets[targetIndex]
+                    if currentTarget and campfire:FindFirstChild("Hitbox") then
+                        pcall(function()
+                            campfire.Hitbox.CFrame = currentTarget.CFrame
+                        end)
+                        targetIndex = targetIndex + 1
+                    end
+                end
+            end
+        end
+    end)
+end
+
+RunService = game:GetService("RunService")
+Camera = workspace.CurrentCamera
+
+AuraTab:CreateToggle({
+    Name = "뒤쪽에 불 상시소환",
+    CurrentValue = false,
+    Flag = "AntiDeathToggle",
+    Callback = function(Value)
+        _G.AntiDeathT = Value
+        if Value then
+            AntiDeathF()
+        end
+    end,
+})
 funTab:CreateSection("TP")
 local VoidInput = funTab:CreateInput({
    Name = "Y좌표 설정",
