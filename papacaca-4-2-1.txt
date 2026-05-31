@@ -4847,7 +4847,15 @@ function AntiJukeboxF()
                                     rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
                                 end
                                 if PartOwner then 
-                                    Spart.CFrame = CFrame.new(9999, 10000, 9999) 
+                                    -- 고정 풀기 및 낙사 구역 밑바닥으로 처박아 강제 삭제 유도
+                                    local FallenY = workspace.FallenPartsDestroyHeight
+                                    local killY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -200
+                                    
+                                    if Spart:IsA("BasePart") then
+                                        Spart.Velocity = Vector3.new(0, 0, 0)
+                                        Spart.RotVelocity = Vector3.new(0, 0, 0)
+                                    end
+                                    Spart.CFrame = CFrame.new(0, killY, 0)
                                 end
                             end
                         end
@@ -4885,7 +4893,15 @@ function AntiPalletF()
                                     rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
                                 end
                                 if PartOwner then 
-                                    Spart.CFrame = CFrame.new(9999, 10000, 9999) 
+                                    -- 고정 풀기 및 낙사 구역 밑바닥으로 처박아 강제 삭제 유도
+                                    local FallenY = workspace.FallenPartsDestroyHeight
+                                    local killY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -200
+                                    
+                                    if Spart:IsA("BasePart") then
+                                        Spart.Velocity = Vector3.new(0, 0, 0)
+                                        Spart.RotVelocity = Vector3.new(0, 0, 0)
+                                    end
+                                    Spart.CFrame = CFrame.new(0, killY, 0)
                                 end
                             end
                         end
@@ -4895,7 +4911,6 @@ function AntiPalletF()
         end
     end)
 end
-
 
 function AntiDeathF()
     local connection
