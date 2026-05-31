@@ -8848,7 +8848,7 @@ AuraTab:CreateToggle({
     end
 })
 
-Tab:CreateToggle({
+AuraTab:CreateToggle({
     Name = "안티 판자 아우라",
     CurrentValue = false,
     Callback = function(Value)
