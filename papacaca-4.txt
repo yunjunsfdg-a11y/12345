@@ -4820,6 +4820,48 @@ function AntiBoxF()
         end
     end)
 end
+function AntiBoxF()
+    
+    local targetNames = {"JukeboxBule", "JukeboxOrange"}
+
+    task.spawn(function()
+        while AntiBoxT and task.wait(0.1) do
+            local character = plr.Character
+            if not character then continue end
+
+            local hrp = character:FindFirstChild("HumanoidRootPart")
+            if not hrp then continue end
+
+            for _, folder in ipairs(workspace:GetChildren()) do
+                if folder:IsA("Folder") and folder.Name:match("SpawnedInToys$") then
+                    if folder.Name ~= (plr.Name .. "SpawnedInToys") then
+                        for _, item in ipairs(folder:GetChildren()) do
+                            if table.find(targetNames, item.Name) and item:FindFirstChild("SoundPart") then
+                                local Spart = item.Button
+
+                                local basePart = item.PrimaryPart or Spart
+                                local PartOwner = Spart:FindFirstChild("PartOwner")
+                                local dist = (basePart.Position - hrp.Position).Magnitude
+
+                                local FallenY = workspace.FallenPartsDestroyHeight
+                                local targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
+
+                                if dist <= 30 and not PartOwner then 
+                                    rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
+                                end
+                                if PartOwner then 
+                                    Spart.CFrame = CFrame.new(0, targetY, 9999) 
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
+
+
 
 function AntiDeathF()
     local connection
@@ -8793,17 +8835,7 @@ local flyInput = playerTab:CreateInput({
     end
 })
 flyInput:Set(80)
--- ================== Fly ==================
-local FlyToggle = playerTab:CreateToggle({
-    Name = "플라이 (Fly)",
-    CurrentValue = false,
-    Flag = "FlyToggle",
-    Callback = function(Value)
-        if Value then
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/yunjun3737-ship-it/ap1/main/ap1"))()
-        end
-    end
-})
+
 
 playerTab:CreateSection("Extra")
 
@@ -8959,40 +8991,60 @@ AuraTab:CreateToggle({
         ViewAuraF()
     end
 })
-AuraTab:CreateSection("Owner Aura")
-
 AuraTab:CreateToggle({
-    Name = "킬 아우라 (원인불명 미작동)",
+    Name = "안티 주크박스 아우라",
     CurrentValue = false,
-    Flag = "KillAura",
+    Flag = "AntiJukeboxFlag",
     Callback = function(Value)
-        KillAuraT = Value
-        KillAuraF()
+        AntiBoxT = Value
+        if AntiBoxT then
+            AntiBoxF()
+        end
     end
 })
+function AntiBoxF()
+    
+    local targetNames = {"JukeboxBule", "JukeboxOrange"}
+
+    task.spawn(function()
+        while AntiBoxT and task.wait(0.1) do
+            local character = plr.Character
+            if not character then continue end
+
+            local hrp = character:FindFirstChild("HumanoidRootPart")
+            if not hrp then continue end
+
+            for _, folder in ipairs(workspace:GetChildren()) do
+                if folder:IsA("Folder") and folder.Name:match("SpawnedInToys$") then
+                    if folder.Name ~= (plr.Name .. "SpawnedInToys") then
+                        for _, item in ipairs(folder:GetChildren()) do
+                            if table.find(targetNames, item.Name) and item:FindFirstChild("SoundPart") then
+                                local Spart = item.Button
+
+                                local basePart = item.PrimaryPart or Spart
+                                local PartOwner = Spart:FindFirstChild("PartOwner")
+                                local dist = (basePart.Position - hrp.Position).Magnitude
+
+                                local FallenY = workspace.FallenPartsDestroyHeight
+                                local targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
+
+                                if dist <= 30 and not PartOwner then 
+                                    rs.GrabEvents.SetNetworkOwner:FireServer(Spart, CFrame.lookAt(hrp.Position, Spart.Position)) 
+                                end
+                                if PartOwner then 
+                                    Spart.CFrame = CFrame.new(0, targetY, 9999) 
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
 
 
-AuraTab:CreateSection("파카용 아우라")
 
-local FlingAuraToggle = AuraTab:CreateToggle({
-    Name = "플링 아우라 (파카용)",
-    CurrentValue = false,
-    Flag = "FlingAura",
-    Callback = function(Value)
-        FlingAuraT = Value
-        FlingAuraF()
-    end
-})
-
-local SitAuraToggle = AuraTab:CreateToggle({
-    Name = "무한 Sit 아우라 (파카용)",
-    CurrentValue = false,
-    Flag = "SitAura",
-    Callback = function(Value)
-        SitAuraT = Value
-        SitAuraF()
-    end
-})
 
 funTab:CreateSection("TP")
 local VoidInput = funTab:CreateInput({
