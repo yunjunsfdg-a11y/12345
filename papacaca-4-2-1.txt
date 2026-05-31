@@ -8049,12 +8049,26 @@ local function Fire()
             end
         end
 
+        -- [기존 물리 로직 유지] Main 파트 위치 고정 및 BodyPosition 세팅
+        local main = desk:FindFirstChild("Main")
+        if main then
+            local bp = main:FindFirstChildOfClass("BodyPosition")
+            if not bp then
+                bp = Instance.new("BodyPosition")
+                bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                bp.Parent = main
+            end
+            bp.Position = Vector3.new(hrp.CFrame.X, 600, hrp.CFrame.Z)
+        end
+
+        -- [기존 물리 로직 유지] Hitbox 체크
         local hitbox = desk:FindFirstChild("Hitbox")
         if not hitbox then
             task.wait(0.1)
             continue
         end
 
+        -- 타겟 플레이어 수집 (플롯 외부 인원)
         local validRoots = {}
         for _, name in ipairs(playersInLoop1V) do
             local player = game.Players:FindFirstChild(name)
@@ -8066,24 +8080,28 @@ local function Fire()
             end
         end
 
+        
         if #validRoots > 0 then
             for _, targetRoot in ipairs(validRoots) do
                 if not ToggleState then break end
                 if targetRoot then
-                    hitbox.CFrame = targetRoot.CFrame
-                    task.wait(0.05) 
+                    
+                    local targetCFrame = targetRoot.CFrame * CFrame.new(0, 0, 0)
+                    hitbox.CFrame = targetCFrame
+                    task.wait()
                 end
             end
         end
 
-        task.wait(0.2)
+        task.wait(0.5)
     end
 end
 
-local Toggle = LoopTab:CreateButton({
+
+local Toggle = LoopTab:CreateToggle({
    Name = "불테러",
    CurrentValue = false,
-   Flag = "FireToggle",
+   Flag = "FireTerrorToggle",
    Callback = function(Value)
       ToggleState = Value
       if ToggleState then
