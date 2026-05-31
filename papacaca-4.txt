@@ -8565,25 +8565,7 @@ local PermRag = antiTab:CreateToggle({
     end
 })
 
-local PermRag2 = antiTab:CreateToggle({
-    Name = "래그돌(미작동)",
-    CurrentValue = false,
-    Flag = "RagdollLoopToggle",
-    Callback = function(Value)
-        ragdollRunning = Value
-        task.spawn(ragdollLoopF2)
-    end
-})
 
-local RagdollWalkToggle = antiTab:CreateToggle({
-    Name = "래그돌 걷기(미작동)",
-    CurrentValue = false,
-    Flag = "14",
-    Callback = function(Value)
-        RagdollWalkT = Value
-        RagdollWalk()
-    end
-})
 
 antiTab:CreateSection("Gucci | Toggle")
 local AutoGucci = antiTab:CreateToggle({
@@ -8634,15 +8616,6 @@ local AutoGucciV2 = antiTab:CreateToggle({
 end
 })
 
-antiTab:CreateSection("Delete | Toggle")
-local AutoHeight = antiTab:CreateToggle({
-    Name = "오토 힙하이스트",
-    CurrentValue = false,
-    Callback = function(Value)
-        ToggleActive = Value
-        StartMonitoring()
-    end
-})
 
 local AutoDele = antiTab:CreateToggle({
 	Name = "자동 지우기 | 나",
@@ -8948,19 +8921,6 @@ playerTab:CreateToggle({
         end)
     end
 })
---[[
-AuraTab:CreateToggle({
-    Name = "테스트 아우라",
-    CurrentValue = false,
-    Flag = "5",
-    Callback = function(Value)
-        --ViewAuraT = Value
-        --if Value then
-            --ViewAuraF()
-        --end
-    end
-})
-]]--
 
 AuraTab:CreateToggle({
     Name = "안티 붐박스 아우라 [ all ]", -- Boombox
