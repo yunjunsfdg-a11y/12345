@@ -9689,7 +9689,7 @@ function jerk()
     end
 end
 
-keybindTab:CreateSection("Line")
+keybindTab:CreateSection("줄")
 local antilagDet = keybindTab:CreateInput({
     Name = "줄 감지",
     CurrentValue = 30,
@@ -9702,13 +9702,6 @@ local antilagDet = keybindTab:CreateInput({
 })
 antilagDet:Set(30)
 
-keybindTab:CreateSection("Animation")
-local Jerk = keybindTab:CreateKeybind({
-    Name = "저크",
-    CurrentKeybind = "Three",
-    HoldToInteract = false,
-    Callback = jerk
-})
 
 game:GetService('Players').LocalPlayer.CharacterAdded:Connect(function()
     vu5 = nil
@@ -9729,30 +9722,51 @@ local Tper = keybindTab:CreateToggle({
     CurrentValue = false,
     Flag = "AutoSitBlobman",
     Callback = function(Value)
+        _G.CameraLoopID = (_G.CameraLoopID or 0) + 1
+        local currentLoopID = _G.CameraLoopID
+
         if Value then
-            plr.CameraMode = Enum.CameraMode.Classic
-            
-            
-            plr.CameraMinZoomDistance = 12
-            plr.CameraMaxZoomDistance = 12
-            
-            
-            local timeout = 0
-            while plr:GetAttribute("CameraZoomDistance") ~= 12 and timeout < 10 do
+            task.spawn(function()
+                local character = plr.Character or plr.CharacterAdded:Wait()
+                local rootPart = character:WaitForChild("HumanoidRootPart", 5)
+                
+                plr.CameraMode = Enum.CameraMode.Classic
                 task.wait(0.05)
-                timeout = timeout + 1
-            end
-            
-             plr.CameraMinZoomDistance = 0.5 
-            plr.CameraMaxZoomDistance = 100000 
+                
+                local success = false
+                local attempts = 0
+                
+                while _G.CameraLoopID == currentLoopID and not success and attempts < 80 do
+                    plr.CameraMinZoomDistance = 12
+                    plr.CameraMaxZoomDistance = 12
+                    
+                    task.wait(0.05)
+                    attempts = attempts + 1
+                    
+                    if plr:GetAttribute("CameraZoomDistance") == 12 or 
+                       (workspace.CurrentCamera and rootPart and (workspace.CurrentCamera.CoordinateFrame.p - rootPart.Position).Magnitude >= 11.5) then
+                        success = true
+                    end
+                end
+                
+                if _G.CameraLoopID == currentLoopID then
+                    plr.CameraMinZoomDistance = 0.5 
+                    plr.CameraMaxZoomDistance = 100000 
+                end
+            end)
         else
-            
             plr.CameraMode = Enum.CameraMode.LockFirstPerson
             plr.CameraMaxZoomDistance = 0.5
+            plr.CameraMinZoomDistance = 0.5
         end
     end
 })
-Tper:Set(true)
+
+task.spawn(function()
+    if not game:IsLoaded() then game.Loaded:Wait() end
+    task.wait(0.3)
+    Tper:Set(true)
+end)
 
 keybindTab:CreateSection("Sit")
 local AutoSit = keybindTab:CreateToggle({
