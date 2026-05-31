@@ -3429,7 +3429,7 @@ function AntiGrabF(enable)
         end
 
         if isvs and POR then
-        task.wait(0.003)
+        task.wait(0.0003)
         end
 
         if POR and POR.Value then
@@ -4761,7 +4761,7 @@ function AntiBananaAuraF()
             if not hrp then continue end
 
             for _, folder in ipairs(workspace:GetChildren()) do
-                if folder:IsA("Folder") and folder.Name:match("SpawnedInToys$") then
+                if folder:IsA("Folder") and folder.Name:match("SpawnedInToys") then
                     if folder.Name ~= (plr.Name .. "SpawnedInToys") then
                         for _, item in ipairs(folder:GetChildren()) do
                             if table.find(targetNames, item.Name) and item:FindFirstChild("SoundPart") then
@@ -4832,11 +4832,11 @@ function AntiDeathF()
         local Character = plr.Character
         if not Character then return end
 
-        local donut = inv:FindFirstChild("InstrumentPianoKeyboard")
+        local donut = inv:FindFirstChild("FoodHamburger")
 
         if not donut then
             pcall(function()
-                rs.MenuToys.SpawnToyRemoteFunction:InvokeServer("InstrumentPianoKeyboard", CFrame.new(0,0,0), Vector3.new(0,0,0))
+                rs.MenuToys.SpawnToyRemoteFunction:InvokeServer("FoodHamburger", CFrame.new(0,0,0), Vector3.new(0,0,0))
             end)
             return
         end
