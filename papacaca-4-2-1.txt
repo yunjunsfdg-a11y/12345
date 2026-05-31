@@ -9724,31 +9724,35 @@ keybindTab:CreateKeybind({
     Callback = tpF
 })
 
-Local Tper = keybindTab:CreateToggle({
+local Tper = keybindTab:CreateToggle({
     Name = "3인칭",
     CurrentValue = false,
     Flag = "AutoSitBlobman",
     Callback = function(Value)
-        If Value then
-            Plr.CameraMode = Enum.CameraMode.Classic
+        if Value then
+            plr.CameraMode = Enum.CameraMode.Classic
             
             
-            Plr.CameraMinZoomDistance = 12
-            Plr.CameraMaxZoomDistance = 12
+            plr.CameraMinZoomDistance = 12
+            plr.CameraMaxZoomDistance = 12
             
             
-            Task.wait(0.01) 
-            Plr.CameraMinZoomDistance = 0.5 
-            Plr.CameraMaxZoomDistance = 10000000000 
-        Else
+            local timeout = 0
+            while plr:GetAttribute("CameraZoomDistance") ~= 12 and timeout < 10 do
+                task.wait(0.05)
+                timeout = timeout + 1
+            end
             
-            Plr.CameraMode = Enum.CameraMode.LockFirstPerson
-            Plr.CameraMaxZoomDistance = 0.5
-        End
+             plr.CameraMinZoomDistance = 0.5 
+            plr.CameraMaxZoomDistance = 100000 
+        else
+            
+            plr.CameraMode = Enum.CameraMode.LockFirstPerson
+            plr.CameraMaxZoomDistance = 0.5
+        end
     end
 })
 Tper:Set(true)
-
 
 keybindTab:CreateSection("Sit")
 local AutoSit = keybindTab:CreateToggle({
