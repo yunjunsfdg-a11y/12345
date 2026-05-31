@@ -6967,15 +6967,6 @@ grabTab:CreateToggle({
     end
 })
 
-grabTab:CreateToggle({ 
-    Name = "[ 무효시키기 ]", 
-    CurrentValue = false,
-    Flag = "1",
-    Callback = function(Value)
-        TpKLG = Value
-    end
-})
-
 grabTab:CreateSection("")
 grabTab:CreateToggle({
     Name = "킥그랩(더럽게 안됨)",
