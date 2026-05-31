@@ -6343,45 +6343,7 @@ local AdminHackButton = RankTab:CreateButton({
         })
     end
 })
-DevTab:CreateSection("Gamepass")
-DevTab:CreateButton({
-    Name = "잠금해제 | 현질줄(오류)",
-    Callback = function()
 
-    local ReachNotify = rs.GamepassEvents.FurtherReachBoughtNotifier
-    local LimitedTime = rs.MenuToys.LimitedTimeToyEvent
-
-    local GrabScript = plr.Character:FindFirstChild("GrabbingScript")
-    local grbaparts = workspace:FindFirstChild("GrabParts")
-    local campart = plr.Character:FindFirstChild("CamPart")
-
-    hookinstance(ReachNotify, LimitedTime)
-    GrabScript.Enabled = false
-    if grbaparts then grbaparts:Destroy() end
-    if campart then campart:Destroy() end
-    GrabScript.Enabled = true
-    LimitedTime:FireServer()
-
-    end
-})
-
-DevTab:CreateButton({
-    Name = "잠금해제 | 줄색 꾸미기(오류)",
-    Callback = function()
-
-    local ColorNotify = rs.GamepassEvents.MulticolorLineBoughtNotifier
-    local LimitedTime = rs.MenuToys.LimitedTimeToyEvent
-
-    local ColorPicking = plr.PlayerGui.MenuGui.Menu.TabContents.Settings.Contents.LineFrame.ColorPicking
-
-    hookinstance(ColorNotify, LimitedTime)
-    ColorPicking.Enabled = false
-    ColorPicking.Enabled = true
-    task.wait(0.1)
-    LimitedTime:FireServer()
-
-    end
-})
 -- ================== 모바일 크로스헤어 TP (DevTab) ==================
 DevTab:CreateSection("Mobile Crosshair TP")
 
