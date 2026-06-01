@@ -3815,6 +3815,309 @@ local AntiKickF = function()
             break
         end
     end
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+
+local plr = Players.LocalPlayer
+
+-- Anti Grab Sticky Function (Rayfield Compatible)
+function AntiGrabStickyF()
+    while AntiGrabStickyT and plr do
+        task.wait(0.1)
+
+        local char = plr.Character
+        if not char or not char.Parent then
+            continue
+        end
+
+        local inv = Workspace:WaitForChild(plr.Name.."SpawnedInToys", 5)
+        if not inv then continue end
+
+        local StickyPartEvent = ReplicatedStorage:WaitForChild("PlayerEvents"):WaitForChild("StickyPartEvent")
+        local SetNetworkOwner = ReplicatedStorage:WaitForChild("GrabEvents"):WaitForChild("SetNetworkOwner")
+        local SpawnToyRemoteFunction = ReplicatedStorage:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction") 
+        local DestroyToy = ReplicatedStorage:WaitForChild("MenuToys"):WaitForChild("DestroyToy")
+
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local head = char:FindFirstChild("Head")
+        if not hrp or not hum or not head then
+            continue
+        end
+
+        local agFolder = inv:FindFirstChild("AG")
+        local stickyPart = agFolder and agFolder:FindFirstChild("StickyPart")
+
+        local headPartOwner = head:FindFirstChild("PartOwner")
+        local stickyWeld = stickyPart and stickyPart:FindFirstChild("StickyWeld")
+        local targetPart = hrp:FindFirstChild("RagdollTouchedHitbox")
+
+        if headPartOwner and stickyWeld and targetPart and stickyWeld.Part1 == targetPart then
+            pcall(function()
+                SetNetworkOwner:FireServer(stickyPart, stickyPart.CFrame)
+            end)
+
+            if hum.Sit then
+                hum.Sit = false
+            end
+            if not hum.AutoRotate then
+                hum.AutoRotate = true
+            end
+
+            headPartOwner:Destroy()
+        end
+
+        if stickyWeld and targetPart and stickyWeld.Part1 ~= targetPart then
+            pcall(function()
+                SetNetworkOwner:FireServer(stickyPart, stickyPart.CFrame)
+            end)
+        end
+
+        if stickyPart then
+            local distance = (hrp.Position - stickyPart.Position).Magnitude
+            if distance > 25 then
+                pcall(function()
+                    DestroyToy:FireServer(agFolder)
+                end)
+                task.wait(0.00001)
+            else
+                local partOwner = stickyPart:FindFirstChild("PartOwner")
+                if not partOwner or partOwner.Value ~= plr.Name then
+                    pcall(function()
+                        SetNetworkOwner:FireServer(stickyPart, hrp.CFrame)
+                    end)
+                end
+
+                local targetPartCheck = hrp:FindFirstChild("RagdollTouchedHitbox")
+                local stickyWeldCheck = stickyPart:FindFirstChild("StickyWeld")
+
+                if targetPartCheck and stickyPart then
+                    if not stickyWeldCheck or stickyWeldCheck.Part1 ~= targetPartCheck then
+                        pcall(function()
+                            StickyPartEvent:FireServer(stickyPart, targetPartCheck, CFrame.new(0, -0.3, 0.3) * CFrame.Angles(190, 0, 0))
+                        end)
+                    end
+                end
+            end
+        else
+            local existingNinja = inv:FindFirstChild("AG")
+            if not existingNinja then
+                task.spawn(function()
+                    pcall(function()
+                        SpawnToyRemoteFunction:InvokeServer("NinjaShuriken", hrp.CFrame * CFrame.new(0,10,20), Vector3.new(0,0,0))
+                    end)
+                end)
+
+                task.wait(0.00001)
+
+                local newNinjaFolder = inv:FindFirstChild("NinjaShuriken")
+                if newNinjaFolder then
+                    local newStickyPart = newNinjaFolder:FindFirstChild("StickyPart")
+                    if newStickyPart then
+                        local distance = (hrp.Position - newStickyPart.Position).Magnitude
+                        if distance <= 30 then
+                            newNinjaFolder.Name = "AG"
+                        else
+                            pcall(function()
+                                DestroyToy:FireServer(newNinjaFolder)
+                            end)
+                        end
+                    end
+                end
+            else
+                local newStickyPart = existingNinja:FindFirstChild("StickyPart")
+                if newStickyPart then
+                    local distance = (hrp.Position - newStickyPart.Position).Magnitude
+                    if distance <= 30 then
+                        existingNinja.Name = "AG"
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Snowball Loop Function
+function LoopSnowBallF()
+    if SnowballLoopThread and coroutine.status(SnowballLoopThread) ~= "dead" then
+        return
+    end
+
+    if not playersInLoop1V or type(playersInLoop1V) ~= "table" then
+        playersInLoop1V = {}
+    end
+
+    local inv = Workspace:WaitForChild(plr.Name.."SpawnedInToys", 5)
+    local Remotes = {
+        Spawn = ReplicatedStorage:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction"),
+        SetOwner = ReplicatedStorage:WaitForChild("GrabEvents"):WaitForChild("SetNetworkOwner"),
+        Explode = ReplicatedStorage:WaitForChild("Explode") -- Adjusted based on typical path, verify if needed
+    }
+
+    SnowballLoopThread = coroutine.create(function()
+        while LoopSnowBallT do
+            task.wait(0.2)
+
+            local myHrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+            if not myHrp then
+                continue
+            end
+
+            local ball = inv and inv:FindFirstChild("Campfire")
+            if not ball then
+                task.spawn(function()
+                    Remotes.Spawn:InvokeServer("Campfire", myHrp.CFrame * CFrame.new(0, 10, 20), Vector3.new(0, 0, 0))
+                end)
+                task.wait(0.15)
+                continue
+            end
+
+            if #playersInLoop1V == 0 then
+                task.wait(0.1)
+                continue
+            end
+
+            TARGET_INDEX = (not TARGET_INDEX or TARGET_INDEX > #playersInLoop1V) and 1 or TARGET_INDEX
+            local targetName = playersInLoop1V[TARGET_INDEX]
+            local targetPlayer = Players:FindFirstChild(targetName)
+
+            if not targetPlayer or targetPlayer == plr or not targetPlayer.Character then
+                table.remove(playersInLoop1V, TARGET_INDEX)
+                if TARGET_INDEX > #playersInLoop1V then
+                    TARGET_INDEX = 1
+                end
+                continue
+            end
+
+            local targetHrp = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if not targetHrp then
+                table.remove(playersInLoop1V, TARGET_INDEX)
+                if TARGET_INDEX > #playersInLoop1V then
+                    TARGET_INDEX = 1
+                end
+                continue
+            end
+
+            TARGET_INDEX = TARGET_INDEX + 1
+            if TARGET_INDEX > #playersInLoop1V then
+                TARGET_INDEX = 1
+            end
+
+            local ballSPart = ball:FindFirstChild("SoundPart")
+            if not ballSPart then
+                task.wait(0.1)
+                continue
+            end
+
+            Remotes.SetOwner:FireServer(ballSPart, ballSPart.CFrame)
+            task.wait(0.05)
+            ballSPart.CFrame = targetHrp.CFrame
+
+            task.wait(0.05)
+            Remotes.Explode:FireServer({
+                Radius = 0, 
+                Color = Color3.new(0, 0, 0), 
+                TimeLength = 0, 
+                Model = ball, 
+                Type = "SnowPoof", 
+                ExplodesByFire = false, 
+                MaxForcePerStudSquared = 0, 
+                Hitbox = ballSPart, 
+                ImpactSpeed = 0, 
+                ExplodesByPointy = false, 
+                DestroysModel = true, 
+                PositionPart = ballSPart
+            }, Vector3.new(0, 0, 0))
+
+            task.wait(0.15)
+        end
+
+        SnowballLoopThread = nil
+    end)
+
+    coroutine.resume(SnowballLoopThread)
+end
+
+-- ESP System (LoopFireESP)
+espEnabled = false
+espObjects = {}
+connections = {}
+
+local function CreateESP(vPlayer)
+    if vPlayer == plr then return end
+    
+    local box = Drawing.new("Square")
+    box.Visible = false
+    box.Color = Color3.fromRGB(255, 0, 0)
+    box.Thickness = 1
+    box.Filled = false
+
+    espObjects[vPlayer] = box
+
+    local conn
+    conn = RunService.RenderStepped:Connect(function()
+        if not espEnabled or not vPlayer.Character or not vPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            box.Visible = false
+            return
+        end
+
+        local hrp = vPlayer.Character.HumanoidRootPart
+        local cam = Workspace.CurrentCamera
+        local vector, onScreen = cam:WorldToViewportPoint(hrp.Position)
+
+        if onScreen then
+            local sizeX = 1000 / vector.Z
+            local sizeY = 2000 / vector.Z
+            
+            box.Size = Vector2.new(sizeX, sizeY)
+            box.Position = Vector2.new(vector.X - sizeX / 2, vector.Y - sizeY / 2)
+            box.Visible = true
+        else
+            box.Visible = false
+        end
+    end)
+    
+    table.insert(connections, conn)
+end
+
+local function RemoveESP(vPlayer)
+    if espObjects[vPlayer] then
+        espObjects[vPlayer]:Remove()
+        espObjects[vPlayer] = nil
+    end
+end
+
+function LoopFireESP(state)
+    espEnabled = state
+    
+    if espEnabled then
+        for _, v in ipairs(Players:GetPlayers()) do
+            CreateESP(v)
+        end
+        
+        local pAdded = Players.PlayerAdded:Connect(function(v)
+            CreateESP(v)
+        end)
+        local pRemoved = Players.PlayerRemoving:Connect(function(v)
+            RemoveESP(v)
+        end)
+        
+        table.insert(connections, pAdded)
+        table.insert(connections, pRemoved)
+    else
+        for _, conn in ipairs(connections) do
+            if conn then conn:Disconnect() end
+        end
+        connections = {}
+        
+        for p, obj in pairs(espObjects) do
+            obj:Remove()
+        end
+        espObjects = {}
+    end
+end
 
     if not AntiKickT then
         local shurikenFolder = inv:FindFirstChild("NinjaShuriken")
@@ -7350,6 +7653,17 @@ local HRPMODE = LoopTab:CreateToggle({
 })
 HRPMODE:Set(true)
 ]]--
+LoopTab:CreateToggle({
+   Name = "루프 파이어",
+   CurrentValue = false,
+   Callback = function(Value)
+      LoopSnowBallT = Value
+      if Value then
+          LoopSnowBallF()
+      end
+   end,
+})
+
 
 LoopTab:CreateSection("Bring")
 LoopTab:CreateButton({
@@ -8629,6 +8943,16 @@ local AntiKick = antiTab:CreateToggle({
     end
 })
 --AntiKick:Set(true)
+antiTab:CreateToggle({
+   Name = "안티킥",
+   CurrentValue = false,
+   Callback = function(Value)
+      AntiGrabStickyT = Value
+      if Value then
+          task.spawn(AntiGrabStickyF)
+      end
+   end,
+})
 
 antiTab:CreateButton({
     Name = "안티킥 [ 집안 표창 소환 ]",
