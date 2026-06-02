@@ -44,9 +44,12 @@ local BlacklistTab = Window:CreateTab("블랙리스트(좆장애창녀 모음집
 local cmdWindowTab = Window:CreateTab("명령어 콘솔",6023426923 )
 local TargetTab = Window:CreateTab("ui설정")
 
-
-
-
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+local rs2 = game:GetService("RunService")
+local camConnection = nil
+local teleportGui = nil
+local targetPlayer = nil
 
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
@@ -7706,7 +7709,104 @@ ListTab:CreateInput({
     end
 })
 ListTab:CreateSection("염탐 조지기")
+local SpectateToggle = ListTab:CreateToggle({
+    Name = "관전 기능 활성화",
+    CurrentValue = false,
+    Flag = "SpectateToggleFlag",
+    Callback = function(Value)
+        if Value then
+            -- [수정] 토글이 켜질 때 나를 제외한 다른 플레이어를 자동으로 타겟팅
+            targetPlayer = nil
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p ~= plr then
+                    targetPlayer = p
+                    break
+                end
+            end
+            
+            -- 서버에 나밖에 없는 경우 예외 처리
+            if not targetPlayer then
+                Rayfield:Notify({
+                    Title = "오류",
+                    Content = "관전할 다른 플레이어가 서버에 없습니다.",
+                    Duration = 3,
+                    Image = 4483362458,
+                })
+                return
+            end
 
+            -- 기존 카메라 연결 해제 후 재연결
+            if camConnection then camConnection:Disconnect() end
+            
+            camConnection = rs2.RenderStepped:Connect(function()
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                    workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
+                else
+                    -- 대상이 죽거나 사라지면 내 캐릭터로 카메라 복구
+                    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                        workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+                    end
+                end
+            end)
+            
+            -- UI 생성 및 텔레포트 기능
+            if teleportGui then teleportGui:Destroy() end
+            
+            teleportGui = Instance.new("ScreenGui")
+            teleportGui.Name = "SpectateTeleportGui"
+            teleportGui.ResetOnSpawn = false
+            
+            local success, err = pcall(function()
+                teleportGui.Parent = game:GetService("CoreGui")
+            end)
+            if not success then
+                teleportGui.Parent = plr.PlayerGui
+            end
+            
+            local tpButton = Instance.new("TextButton")
+            tpButton.Name = "TpButton"
+            tpButton.Size = UDim2.new(0, 120, 0, 40)
+            tpButton.Position = UDim2.new(0, 20, 0.5, -20)
+            tpButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            tpButton.TextSize = 14
+            tpButton.Font = Enum.Font.SourceSansBold
+            tpButton.Text = targetPlayer.Name .. "에게 텔레포트" -- 버튼에 대상 이름 표시
+            
+            local uiCorner = Instance.new("UICorner")
+            uiCorner.CornerRadius = UDim.new(0, 8)
+            uiCorner.Parent = tpButton
+            
+            tpButton.Parent = teleportGui
+            
+            tpButton.MouseButton1Click:Connect(function()
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local myChar = plr.Character
+                    if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                        -- 대상의 좌표 위쪽(Y축 +2)으로 즉시 이동
+                        myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+                    end
+                end
+            end)
+        else
+            -- 토글 해제 시 모두 초기화 및 원래 상태 원복
+            if camConnection then
+                camConnection:Disconnect()
+                camConnection = nil
+            end
+            
+            if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+            end
+            
+            if teleportGui then
+                teleportGui:Destroy()
+                teleportGui = nil
+            end
+            targetPlayer = nil
+        end
+    end,
+})
 LoopTab:CreateToggle({
    Name = "루프 파이어",
    CurrentValue = false,
