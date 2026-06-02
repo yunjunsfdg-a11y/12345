@@ -7367,6 +7367,38 @@ grabTab:CreateToggle({
     end
 })
 
+-- =============== [ 보호 대상 목록 ] ==
+local GF = {"1ove0_9"}
+
+--[[
+local Owner = {"TSB_01223", "TSB_V00V", "TSB_0VV0", "TSB_Z00Z", "TSB_0ZZ0", "Diwno2f", "Diwno2ff", "Diwno2fff", "TESTPLAYACCOUNT01", "TESTPLAYACCOUNT02", "Dhd9021el", "DM209jfda", "DJHaoidhw2dlk", "QRdoote1120", "AIpaca_AI16"}
+
+local Overseer = {"AIpaca_AI16","QRdoote1120"}
+local CoOwner = {"test_diro3", "Inferno_diro"}
+
+local HeadAdmin = {"oOPPGl9", "0_HY1N"}
+local Admin = {"KillLum_YT"}
+local Mod = {"plmqazoknqsxihvedc", "jaeyoon4720", "Solo_ponyo"}
+]]--
+
+local Owner = {"AIpaca_AI16","QRdoote1120"}
+local Overseer = {""}
+local CoOwner = {""}
+local HeadAdmin = {""}
+local Admin = {""}
+local Mod = {""}
+
+local Ranks = {
+    Owner = 7,
+    GF = 6,
+    Overseer = 5,
+    CoOwner = 4,
+    HeadAdmin = 3,
+    Admin = 2,
+    Mod = 1,
+    User = 0
+}
+-- =============== ---------------- ==
 
 local function Notify(type, playerName)
     playerName = playerName or ""
@@ -7516,8 +7548,6 @@ local function removeFromList(listTable, dropdown, inputValue, useRankCheck)
     if dropdown then dropdown:Refresh(listTable, true) end
     Notify("Removed", foundName)
 end
-
-
 
 antiTab:CreateSection("Friendly | Toggle")
 local WhiteListToggle = antiTab:CreateToggle({
