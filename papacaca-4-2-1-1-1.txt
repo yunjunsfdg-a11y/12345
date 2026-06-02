@@ -9630,14 +9630,14 @@ AuraTab:CreateToggle({
 AuraTab:CreateSection("킬,플링")
 AuraTab:CreateInput({
     Name = "범위 설정",
-    PlaceholderText = "기본값: 15 (원하는 정수 입력)",
+    PlaceholderText = "기본값: 30 (원하는 정수 입력)",
     RemoveTextAfterFocusLost = false,
     Callback = function(Text)
         local num = tonumber(Text)
         if num then
             auraRadius = num
         else
-            auraRadius = 15
+            auraRadius = 30
         end
     end
 })
