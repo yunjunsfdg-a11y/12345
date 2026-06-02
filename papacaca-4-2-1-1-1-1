@@ -7706,6 +7706,97 @@ ListTab:CreateInput({
     end
 })
 ListTab:CreateSection("염탐 조지기")
+local SpectateToggle = ListTab:CreateToggle({
+    Name = "관전 기능 활성화",
+    CurrentValue = false,
+    Flag = "SpectateToggleFlag",
+    Callback = function(Value)
+        if Value then
+            targetPlayer = nil
+            for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+                if p ~= plr then
+                    targetPlayer = p
+                    break
+                end
+            end
+            
+            if not targetPlayer then
+                Rayfield:Notify({
+                    Title = "오류",
+                    Content = "관전할 다른 플레이어가 없습니다.",
+                    Duration = 3,
+                    Image = 4483362458,
+                })
+                return
+            end
+
+            if camConnection then camConnection:Disconnect() end
+            
+            camConnection = rs2.RenderStepped:Connect(function()
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                    workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
+                else
+                    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                        workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+                    end
+                end
+            end)
+            
+            if teleportGui then teleportGui:Destroy() end
+            
+            teleportGui = Instance.new("ScreenGui")
+            teleportGui.Name = "SpectateTeleportGui"
+            teleportGui.ResetOnSpawn = false
+            
+            local success, err = pcall(function()
+                teleportGui.Parent = game:GetService("CoreGui")
+            end)
+            if not success then
+                teleportGui.Parent = plr.PlayerGui
+            end
+            
+            local tpButton = Instance.new("TextButton")
+            tpButton.Name = "TpButton"
+            tpButton.Size = UDim2.new(0, 120, 0, 40)
+            tpButton.Position = UDim2.new(0, 20, 0.5, -20)
+            tpButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            tpButton.TextSize = 14
+            tpButton.Font = Enum.Font.SourceSansBold
+            tpButton.Text = "대상에게 텔레포트"
+            
+            local uiCorner = Instance.new("UICorner")
+            uiCorner.CornerRadius = UDim.new(0, 8)
+            uiCorner.Parent = tpButton
+            
+            tpButton.Parent = teleportGui
+            
+            tpButton.MouseButton1Click:Connect(function()
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local myChar = plr.Character
+                    if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                        myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+                    end
+                end
+            end)
+        else
+            if camConnection then
+                camConnection:Disconnect()
+                camConnection = nil
+            end
+            
+            if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+            end
+            
+            if teleportGui then
+                teleportGui:Destroy()
+                teleportGui = nil
+            end
+            targetPlayer = nil
+        end
+    end,
+})
 
 LoopTab:CreateToggle({
    Name = "루프 파이어",
