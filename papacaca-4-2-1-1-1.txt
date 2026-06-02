@@ -8174,6 +8174,130 @@ local Loop1 = LoopTab:CreateToggle({
         end
     end
 })
+Local Loop1 = LoopTab:CreateToggle({
+    Name = "루프킬 [ V2 ]",
+    CurrentValue = false,
+    Flag = "21",
+    Callback = function(Value)
+        loopPlayerT = Value
+        if loopPlayerT then
+            table.clear(playersInLoop2V)
+            for i, e in ipairs(playersInLoop1V) do
+                local nameOnly = e:match("^(.-) %(") or e
+                table.insert(playersInLoop2V, nameOnly)
+            end
+            loopPlayerF()
+        else
+            loopPlayerT = false
+            table.clear(playersInLoop2V)
+        end
+    end
+})  
+function loopPlayerF() -- 룹1
+    UpdateCurrentBlobman()
+
+    local currentProcessing = {}
+
+    local function processPlayer(player)
+        if not player then return false end
+
+        local character, hrp, head = safeGetCharacterParts(player)
+        if not hrp or not head then return false end
+
+        local myChar = plr and plr.Character
+        local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
+        if not myHrp then return false end
+        local originCF = myHrp.CFrame
+
+        local tpRunning = true
+        task.spawn(function()
+            while tpRunning do
+                local ok, cf = TP(player)
+                if ok and cf then
+                    CF = cf
+                end
+                task.wait()
+            end
+        end)
+
+        while loopPlayerT do
+            if not player or not player.Character or not player.Character:FindFirstChild("Head") then break end
+            
+            rs.GrabEvents.SetNetworkOwner:FireServer(head, head.CFrame)
+            local ownerTag = head:FindFirstChild("PartOwner")
+            if ownerTag and ownerTag:IsA("StringValue") and ownerTag.Value == plr.Name then
+                break
+            end
+            task.wait()
+        end
+
+        tpRunning = false
+
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+
+            rs.GrabEvents.SetNetworkOwner:FireServer(head, head.CFrame)
+            rs.GrabEvents.SetNetworkOwner:FireServer(head, head.CFrame)
+            rs.GrabEvents.SetNetworkOwner:FireServer(head, head.CFrame)
+
+            if humanoid.RigType ~= Enum.HumanoidRigType.R15 and humanoid.SeatPart == nil then humanoid.RigType = Enum.HumanoidRigType.R15 end
+
+            if humanoid.BreakJointsOnDeath == true and humanoid.SeatPart == nil then humanoid.BreakJointsOnDeath = false end
+
+            if head:FindFirstChildOfClass("BallSocketConstraint") then head.BallSocketConstraint.Attachment0 = nil end
+
+            local FallenY = workspace.FallenPartsDestroyHeight
+            local targetY = (FallenY <= -50000 and -49999) or (FallenY <= -100 and -99) or -100
+            local storso = character:FindFirstChild("Torso")
+            --local ownerTag = head:FindFirstChild("PartOwner")
+
+            if storso then --and ownerTag.Value == plr.Name then
+                storso.CFrame = CFrame.new(storso.Position.X, targetY, storso.Position.Z)
+            end
+        end
+
+        if originCF then BACK(originCF) end
+        return true
+    end
+
+    task.spawn(function()
+        while loopPlayerT do
+            for _, name in ipairs(playersInLoop2V) do
+                local player = game.Players:FindFirstChild(name)
+
+                if player and not table.find(Whitelist, player.Name) then
+                    if PPs:FindFirstChild(name) or inv:FindFirstChild(name) then continue end
+
+                    local character = player.Character
+                    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+                    if humanoid and humanoid.Health > 0 then
+                        if not currentProcessing[player] then
+                            currentProcessing[player] = true
+
+                            task.spawn(function()
+                                local success = processPlayer(player)
+
+                                if success then
+                                    task.wait(1.5)
+                                end
+
+                                currentProcessing[player] = nil
+                            end)
+                        end
+                    else
+                        currentProcessing[player] = nil
+                    end
+                else
+                    if player then
+                        currentProcessing[player] = nil
+                    end
+                end
+            end
+            task.wait(0.0005)
+        end
+    end)
+end
 
 local Loop2 = LoopTab:CreateToggle({
     Name = "루프킥 [ Owner ]",
