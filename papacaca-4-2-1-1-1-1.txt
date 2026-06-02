@@ -44,12 +44,7 @@ local BlacklistTab = Window:CreateTab("블랙리스트(좆장애창녀 모음집
 local cmdWindowTab = Window:CreateTab("명령어 콘솔",6023426923 )
 local TargetTab = Window:CreateTab("ui설정")
 
-local Players = game:GetService("Players")
-local plr = Players.LocalPlayer
-local rs2 = game:GetService("RunService")
-local camConnection = nil
-local teleportGui = nil
-local targetPlayer = nil
+
 
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
