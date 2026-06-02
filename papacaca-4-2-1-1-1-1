@@ -7712,76 +7712,197 @@ local SpectateToggle = ListTab:CreateToggle({
     Flag = "SpectateToggleFlag",
     Callback = function(Value)
         if Value then
-            if not targetPlayer then
-                Rayfield:Notify({
-                    Title = "오류",
-                    Content = "명단에서 관전할 대상을 먼저 선택해주세요.",
-                    Duration = 3,
-                    Image = 4483362458,
-                })
-                SpectateToggle:Set(false)
-                return
-            end
-
-            if camConnection then camConnection:Disconnect() end
-            
-            camConnection = rs2.RenderStepped:Connect(function()
-                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
-                    workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
-                else
-                    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-                        workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
-                    end
-                end
-            end)
-            
             if teleportGui then teleportGui:Destroy() end
-            
+            if camConnection then camConnection:Disconnect() camConnection = nil end
+
             teleportGui = Instance.new("ScreenGui")
-            teleportGui.Name = "SpectateTeleportGui"
+            teleportGui.Name = "IndependentSpectateGui"
             teleportGui.ResetOnSpawn = false
-            
+
             local success, err = pcall(function()
                 teleportGui.Parent = game:GetService("CoreGui")
             end)
             if not success then
                 teleportGui.Parent = plr.PlayerGui
             end
-            
-            local tpButton = Instance.new("TextButton")
-            tpButton.Name = "TpButton"
-            tpButton.Size = UDim2.new(0, 120, 0, 40)
-            tpButton.Position = UDim2.new(0, 20, 0.5, -20)
-            tpButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-            tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-            tpButton.TextSize = 14
-            tpButton.Font = Enum.Font.SourceSansBold
-            tpButton.Text = "대상에게 텔레포트"
-            
+
+            local mainFrame = Instance.new("Frame")
+            mainFrame.Name = "MainFrame"
+            mainFrame.Size = UDim2.new(0, 300, 0, 400)
+            mainFrame.Position = UDim2.new(0, 20, 0.5, -200)
+            mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            mainFrame.BorderSizePixel = 0
+            mainFrame.Active = true
+            mainFrame.Draggable = true
+            mainFrame.Parent = teleportGui
+
             local uiCorner = Instance.new("UICorner")
-            uiCorner.CornerRadius = UDim.new(0, 8)
-            uiCorner.Parent = tpButton
-            
-            tpButton.Parent = teleportGui
-            
-            tpButton.MouseButton1Click:Connect(function()
-                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                    local myChar = plr.Character
-                    if myChar and myChar:FindFirstChild("HumanoidRootPart") then
-                        myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+            uiCorner.CornerRadius = UDim.new(0, 10)
+            uiCorner.Parent = mainFrame
+
+            local titleLabel = Instance.new("TextLabel")
+            titleLabel.Name = "Title"
+            titleLabel.Size = UDim2.new(1, 0, 0, 40)
+            titleLabel.BackgroundTransparency = 1
+            titleLabel.Text = "플레이어 리스트 (관전/텔포)"
+            titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            titleLabel.TextSize = 16
+            titleLabel.Font = Enum.Font.SourceSansBold
+            titleLabel.Parent = mainFrame
+
+            local scrollingFrame = Instance.new("ScrollingFrame")
+            scrollingFrame.Name = "List"
+            scrollingFrame.Size = UDim2.new(1, -20, 1, -50)
+            scrollingFrame.Position = UDim2.new(0, 10, 0, 45)
+            scrollingFrame.BackgroundTransparency = 1
+            scrollingFrame.BorderSizePixel = 0
+            scrollingFrame.ScrollBarThickness = 4
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+            scrollingFrame.Parent = mainFrame
+
+            local uiListLayout = Instance.new("UIListLayout")
+            uiListLayout.Padding = UDim.new(0, 5)
+            uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            uiListLayout.Parent = scrollingFrame
+
+            uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+            end)
+
+            local function updateList()
+                for _, child in ipairs(scrollingFrame:GetChildren()) do
+                    if child:IsA("Frame") then child:Destroy() end
+                end
+
+                for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+                    if p ~= plr then
+                        local itemFrame = Instance.new("Frame")
+                        itemFrame.Name = p.Name
+                        itemFrame.Size = UDim2.new(1, -5, 0, 60)
+                        itemFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                        itemFrame.BorderSizePixel = 0
+                        itemFrame.Parent = scrollingFrame
+
+                        local itemCorner = Instance.new("UICorner")
+                        itemCorner.CornerRadius = UDim.new(0, 6)
+                        itemCorner.Parent = itemFrame
+
+                        local pImage = Instance.new("ImageLabel")
+                        pImage.Name = "Avatar"
+                        pImage.Size = UDim2.new(0, 50, 0, 50)
+                        pImage.Position = UDim2.new(0, 5, 0, 5)
+                        pImage.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+                        pImage.BorderSizePixel = 0
+                        pImage.Image = game:GetService("Players"):GetUserThumbnailAsync(p.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size50x50)
+                        pImage.Parent = itemFrame
+
+                        local imgCorner = Instance.new("UICorner")
+                        imgCorner.CornerRadius = UDim.new(1, 0)
+                        imgCorner.Parent = pImage
+
+                        local pName = Instance.new("TextLabel")
+                        pName.Name = "Name"
+                        pName.Size = UDim2.new(0, 110, 0, 60)
+                        pName.Position = UDim2.new(0, 60, 0, 0)
+                        pName.BackgroundTransparency = 1
+                        pName.Text = p.DisplayName .. "\n(@" .. p.Name .. ")"
+                        pName.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        pName.TextSize = 12
+                        pName.TextXAlignment = Enum.TextXAlignment.Left
+                        pName.Font = Enum.Font.SourceSans
+                        pName.Parent = itemFrame
+
+                        local specBtn = Instance.new("TextButton")
+                        specBtn.Name = "Spec"
+                        specBtn.Size = UDim2.new(0, 50, 0, 40)
+                        specBtn.Position = UDim2.new(1, -110, 0, 10)
+                        specBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+                        specBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        specBtn.Text = "관전"
+                        specBtn.TextSize = 12
+                        specBtn.Font = Enum.Font.SourceSansBold
+                        specBtn.Parent = itemFrame
+
+                        local btnCorner1 = Instance.new("UICorner")
+                        btnCorner1.CornerRadius = UDim.new(0, 4)
+                        btnCorner1.Parent = specBtn
+
+                        local tpBtn = Instance.new("TextButton")
+                        tpBtn.Name = "Tp"
+                        tpBtn.Size = UDim2.new(0, 50, 0, 40)
+                        tpBtn.Position = UDim2.new(1, -55, 0, 10)
+                        tpBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 80)
+                        tpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        tpBtn.Text = "텔포"
+                        tpBtn.TextSize = 12
+                        tpBtn.Font = Enum.Font.SourceSansBold
+                        tpBtn.Parent = itemFrame
+
+                        local btnCorner2 = Instance.new("UICorner")
+                        btnCorner2.CornerRadius = UDim.new(0, 4)
+                        btnCorner2.Parent = tpBtn
+
+                        specBtn.MouseButton1Click:Connect(function()
+                            if camConnection then camConnection:Disconnect() end
+                            
+                            if specBtn.Text == "관전" then
+                                for _, frame in ipairs(scrollingFrame:GetChildren()) do
+                                    if frame:IsA("Frame") and frame:FindFirstChild("Spec") then
+                                        frame.Spec.Text = "관전"
+                                        frame.Spec.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+                                    end
+                                end
+                                
+                                specBtn.Text = "해제"
+                                specBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+                                
+                                camConnection = rs2.RenderStepped:Connect(function()
+                                    if p and p.Character and p.Character:FindFirstChild("Humanoid") then
+                                        workspace.CurrentCamera.CameraSubject = p.Character.Humanoid
+                                    else
+                                        if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                                            workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+                                        end
+                                    end
+                                end)
+                            else
+                                specBtn.Text = "관전"
+                                specBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+                                if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                                    workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+                                end
+                            end
+                        end)
+
+                        tpBtn.MouseButton1Click:Connect(function()
+                            if p and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                                local myChar = plr.Character
+                                if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                                    myChar.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+                                end
+                            end
+                        end)
                     end
                 end
+            end
+
+            updateList()
+            
+            local addConn = game:GetService("Players").PlayerAdded:Connect(updateList)
+            local rmConn = game:GetService("Players").PlayerRemoving:Connect(updateList)
+            
+            mainFrame.Destroying:Connect(function()
+                addConn:Disconnect()
+                rmConn:Disconnect()
             end)
         else
             if camConnection then
                 camConnection:Disconnect()
                 camConnection = nil
             end
-            
             if plr.Character and plr.Character:FindFirstChild("Humanoid") then
                 workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
             end
-            
             if teleportGui then
                 teleportGui:Destroy()
                 teleportGui = nil
