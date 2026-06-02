@@ -7368,7 +7368,7 @@ grabTab:CreateToggle({
 })
 
 -- =============== [ 보호 대상 목록 ] ==
-local GF = {"1ove0_9"}
+local GF = {"QRdoote1120"}
 
 --[[
 local Owner = {"TSB_01223", "TSB_V00V", "TSB_0VV0", "TSB_Z00Z", "TSB_0ZZ0", "Diwno2f", "Diwno2ff", "Diwno2fff", "TESTPLAYACCOUNT01", "TESTPLAYACCOUNT02", "Dhd9021el", "DM209jfda", "DJHaoidhw2dlk", "QRdoote1120", "AIpaca_AI16"}
@@ -7378,7 +7378,7 @@ local CoOwner = {"test_diro3", "Inferno_diro"}
 
 local HeadAdmin = {"oOPPGl9", "0_HY1N"}
 local Admin = {"KillLum_YT"}
-local Mod = {"plmqazoknqsxihvedc", "jaeyoon4720", "Solo_ponyo"}
+local Mod = {"", "jaeyoon4720", "Solo_ponyo"}
 ]]--
 
 local Owner = {"AIpaca_AI16","QRdoote1120"}
@@ -7406,19 +7406,19 @@ local function Notify(type, playerName)
     local content = ""
 
     if type == "Added" then
-        title = "[☑️ ]"; content = playerName.." - 추가"
+        title = "[ 💎 ]"; content = playerName.." - 추가"
     elseif type == "Removed" then
-        title = "[ ☑️ ]"; content = playerName.." - 제거"
+        title = "[ ✅️ ]"; content = playerName.." - 제거"
     elseif type == "Self" then
-        title = "[ ⚠️ ]"; content = "자신은 추가될 수 없어요!"
+        title = "[ ⚠️ ]"; content = "자기자신이 될꺼같노? 대딸이나 쳐라노"
     elseif type == "Already" then
-        title = "[ 💠 ]"; content = playerName.." - 이미 추가됐어요"
+        title = "[ 😅 ]"; content = playerName.." - 이미 있음"
     elseif type == "NotFound" then
-        title = "[ ❌ ]"; content = "찾을 수 없어요!"
+        title = "[ ☠️ ]"; content = "그딴 년은 없다 이기야"
     elseif type == "HigherRank" then
-        title = "[ ⛔ ]"; content = "권한이 부족해요!"
+        title = "[ 🤏 ]"; content = "그지새끼"
     elseif type == "GFE" then
-        title = "[ ⛔ ]"; content = "나가 뒤져 엄마 장애인보지털av배우년아 ㅋㅋㅋ"
+        title = "[ 🖕 ]"; content = "느금마 보지찌개"
         GfLogger()
     end
 
@@ -7707,23 +7707,46 @@ ListTab:CreateInput({
 })
 ListTab:CreateSection("염탐 조지기")
 local SpectateToggle = ListTab:CreateToggle({
-    Name = "관전하기",
+    Name = "관전 기능 활성화",
     CurrentValue = false,
     Flag = "SpectateToggleFlag",
     Callback = function(Value)
         if Value then
+            -- [수정] 토글이 켜질 때 나를 제외한 다른 플레이어를 자동으로 타겟팅
+            targetPlayer = nil
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p ~= plr then
+                    targetPlayer = p
+                    break
+                end
+            end
+            
+            -- 서버에 나밖에 없는 경우 예외 처리
+            if not targetPlayer then
+                Rayfield:Notify({
+                    Title = "오류",
+                    Content = "관전할 다른 플레이어가 서버에 없습니다.",
+                    Duration = 3,
+                    Image = 4483362458,
+                })
+                return
+            end
+
+            -- 기존 카메라 연결 해제 후 재연결
             if camConnection then camConnection:Disconnect() end
             
             camConnection = rs2.RenderStepped:Connect(function()
                 if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
                     workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
                 else
+                    -- 대상이 죽거나 사라지면 내 캐릭터로 카메라 복구
                     if plr.Character and plr.Character:FindFirstChild("Humanoid") then
                         workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
                     end
                 end
             end)
             
+            -- UI 생성 및 텔레포트 기능
             if teleportGui then teleportGui:Destroy() end
             
             teleportGui = Instance.new("ScreenGui")
@@ -7745,7 +7768,7 @@ local SpectateToggle = ListTab:CreateToggle({
             tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
             tpButton.TextSize = 14
             tpButton.Font = Enum.Font.SourceSansBold
-            tpButton.Text = "대상에게 텔레포트"
+            tpButton.Text = targetPlayer.Name .. "에게 텔레포트" -- 버튼에 대상 이름 표시
             
             local uiCorner = Instance.new("UICorner")
             uiCorner.CornerRadius = UDim.new(0, 8)
@@ -7757,11 +7780,13 @@ local SpectateToggle = ListTab:CreateToggle({
                 if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
                     local myChar = plr.Character
                     if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                        -- 대상의 좌표 위쪽(Y축 +2)으로 즉시 이동
                         myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
                     end
                 end
             end)
         else
+            -- 토글 해제 시 모두 초기화 및 원래 상태 원복
             if camConnection then
                 camConnection:Disconnect()
                 camConnection = nil
@@ -7775,9 +7800,11 @@ local SpectateToggle = ListTab:CreateToggle({
                 teleportGui:Destroy()
                 teleportGui = nil
             end
+            targetPlayer = nil
         end
     end,
 })
+
 
 LoopTab:CreateToggle({
    Name = "루프 파이어",
@@ -7795,7 +7822,7 @@ LoopTab:CreateSection("Bring")
 LoopTab:CreateButton({
     Name = "끌고오기 [ Blobman ]",
     Callback = function()
-        UpdateCurrentBlobman()
+        Updat eCurrentBlobman()
         local processedHumanoids = {}
 
         local function processPlayer(player)
