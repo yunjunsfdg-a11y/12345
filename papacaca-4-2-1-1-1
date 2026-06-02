@@ -7535,12 +7535,17 @@ ListTab:CreateToggle({
         if Value then
             local targetPlayer = nil
             
-            for _, rawName in pairs(playersInLoop1V) do
-                local nameOnly = tostring(rawName):match("^(.-) %(") or tostring(rawName)
-                local found = game.Players:FindFirstChild(nameOnly)
-                if found then
-                    targetPlayer = found
-                    break
+            -- 테이블 내부의 문자열을 안전하게 꺼내기 위해 루프를 한 번 더 돕니다.
+            if type(playersInLoop1V) == "table" then
+                for _, value in pairs(playersInLoop1V) do
+                    local strName = tostring(value)
+                    -- '유저이름 (디스플레이)' 형태에서 순수 유저이름만 추출
+                    local nameOnly = strName:match("^(.-) %(") or strName
+                    local found = game.Players:FindFirstChild(nameOnly)
+                    if found then
+                        targetPlayer = found
+                        break
+                    end
                 end
             end
             
@@ -7627,6 +7632,7 @@ local function startSpectating(targetPlayer)
         end
     end)
 end
+
 
 LoopTab:CreateToggle({
    Name = "루프 파이어",
