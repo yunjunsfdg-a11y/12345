@@ -7367,196 +7367,7 @@ grabTab:CreateToggle({
     end
 })
 
-grabTab:CreateToggle({
-    Name = "[ 고정시키기 ]",
-    CurrentValue = false,
-    Flag = "1",
-    Callback = function(Value)
-        AnhKick = Value
-    end
-})
 
--- =============== [ 보호 대상 목록 ] ==
-local GF = {"1ove0_9"}
-
---[[
-local Owner = {"TSB_01223", "TSB_V00V", "TSB_0VV0", "TSB_Z00Z", "TSB_0ZZ0", "Diwno2f", "Diwno2ff", "Diwno2fff", "TESTPLAYACCOUNT01", "TESTPLAYACCOUNT02", "Dhd9021el", "DM209jfda", "DJHaoidhw2dlk", "QRdoote1120", "AIpaca_AI16"}
-
-local Overseer = {"AIpaca_AI16","QRdoote1120"}
-local CoOwner = {"test_diro3", "Inferno_diro"}
-
-local HeadAdmin = {"oOPPGl9", "0_HY1N"}
-local Admin = {"KillLum_YT"}
-local Mod = {"plmqazoknqsxihvedc", "jaeyoon4720", "Solo_ponyo"}
-]]--
-
-local Owner = {"AIpaca_AI16","QRdoote1120"}
-local Overseer = {""}
-local CoOwner = {""}
-local HeadAdmin = {""}
-local Admin = {""}
-local Mod = {""}
-
-local Ranks = {
-    Owner = 7,
-    GF = 6,
-    Overseer = 5,
-    CoOwner = 4,
-    HeadAdmin = 3,
-    Admin = 2,
-    Mod = 1,
-    User = 0
-}
--- =============== ---------------- ==
-
-local function Notify(type, playerName)
-    playerName = playerName or ""
-    local title = ""
-    local content = ""
-
-    if type == "Added" then
-        title = "[☑️ ]"; content = playerName.." - 추가"
-    elseif type == "Removed" then
-        title = "[ ☑️ ]"; content = playerName.." - 제거"
-    elseif type == "Self" then
-        title = "[ ⚠️ ]"; content = "자신은 추가될 수 없어요!"
-    elseif type == "Already" then
-        title = "[ 💠 ]"; content = playerName.." - 이미 추가됐어요"
-    elseif type == "NotFound" then
-        title = "[ ❌ ]"; content = "찾을 수 없어요!"
-    elseif type == "HigherRank" then
-        title = "[ ⛔ ]"; content = "권한이 부족해요!"
-    elseif type == "GFE" then
-        title = "[ ⛔ ]"; content = "나가 뒤져 엄마 장애인보지털av배우년아 ㅋㅋㅋ"
-        GfLogger()
-    end
-
-    if Rayfield then
-        Rayfield:Notify({Title = title, Content = content, Duration = 2})
-    end
-end
-
-local function GetPlayerRank(playerName)
-    if table.find(Owner, playerName) then return Ranks.Owner end
-    if table.find(GF, playerName) then return Ranks.GF end
-    if table.find(Overseer, playerName) then return Ranks.Overseer end
-    if table.find(CoOwner, playerName) then return Ranks.CoOwner end
-    if table.find(HeadAdmin, playerName) then return Ranks.HeadAdmin end
-    if table.find(Admin, playerName) then return Ranks.Admin end
-    if table.find(Mod, playerName) then return Ranks.Mod end
-    return Ranks.User
-end
-
-local function findPlayer(Value)
-    if not Value or Value == "" then return nil end
-    Value = Value:lower()
-
-    for _, p in ipairs(game.Players:GetPlayers()) do
-        if p.Name:lower() == Value or (p.DisplayName and p.DisplayName:lower() == Value) then
-            return p
-        end
-    end
-
-    local matches = {}
-    for _, p in ipairs(game.Players:GetPlayers()) do
-        local playerNameLower = p.Name:lower()
-        if playerNameLower:sub(1, #Value) == Value then
-            table.insert(matches, p)
-        elseif p.DisplayName then
-            local displayNameLower = p.DisplayName:lower()
-            if displayNameLower:sub(1, #Value) == Value then
-                table.insert(matches, p)
-            end
-        end
-    end
-
-    if #matches == 0 then
-        return nil
-    elseif #matches == 1 then
-        return matches[1]
-    else
-        return matches[1]
-    end
-end
-
-local function checkPermissions(targetPlayer)
-    local localPlayer = game.Players.LocalPlayer
-    local myRank = GetPlayerRank(localPlayer.Name)
-    local targetRank = GetPlayerRank(targetPlayer.Name)
-
-    if targetPlayer == localPlayer then return false, "Self" end
-
-    if myRank == Ranks.Owner then return true end
-
-    if myRank == Ranks.Overseer and targetRank == Ranks.Owner then
-        return true
-    end
-
-    if myRank == Ranks.CoOwner and targetRank == Ranks.Owner then
-        return true
-    end
-
-    if targetRank == Ranks.User then
-        return true
-    end
-
-    if targetRank == Ranks.GF then
-        return false, "GFE"
-    end
-
-    if myRank > targetRank then
-        return true
-    else
-        return false, "HigherRank"
-    end
-end
-
-local function addToList(listTable, dropdown, inputValue, useRankCheck)
-    local target = findPlayer(inputValue)
-    if not target then Notify("NotFound"); return end
-
-    if useRankCheck then
-        local allowed, errorType = checkPermissions(target)
-        if not allowed then Notify(errorType, target.Name); return end
-    end
-
-    if table.find(listTable, target.Name) then Notify("Already", target.Name); return end
-
-    table.insert(listTable, target.Name)
-    if dropdown then dropdown:Refresh(listTable, true) end
-    Notify("Added", target.Name)
-end
-
-local function removeFromList(listTable, dropdown, inputValue, useRankCheck)
-    local foundName, foundIndex = nil, nil
-    inputValue = inputValue:lower()
-
-    for i, name in ipairs(listTable) do
-        if name:lower():find(inputValue, 1, true) then
-            foundName = name; foundIndex = i; break
-        end
-    end
-
-    if not foundName then Notify("NotFound"); return end
-
-    if useRankCheck then
-        local targetRank = GetPlayerRank(foundName)
-        local localPlayer = game.Players.LocalPlayer
-        local myRank = GetPlayerRank(localPlayer.Name)
-
-        if foundName == localPlayer.Name then Notify("Self"); return end
-
-        if myRank == Ranks.Owner then
-        elseif targetRank == Ranks.User then
-        elseif myRank <= targetRank then
-            Notify("HigherRank", foundName); return
-        end
-    end
-
-    table.remove(listTable, foundIndex)
-    if dropdown then dropdown:Refresh(listTable, true) end
-    Notify("Removed", foundName)
-end
 
 
 antiTab:CreateSection("Friendly | Toggle")
@@ -8796,6 +8607,52 @@ local AntiGrab = antiTab:CreateToggle({
     end
 })
 AntiGrab:Set(true)
+antiTab:CreateToggle({
+    Name = "안티그랩V2",
+    Default = false,
+    Save = false,
+    Flag = "antiGrab",
+    Callback = function(enabled)
+        if enabled then
+            autoStruggleCoroutine = RunService.Heartbeat:Connect(function()
+                local character = localPlayer.Character
+                if character and character:FindFirstChild("Head") then
+                    local head = character.Head
+                    local partOwner = head:FindFirstChild("PartOwner")
+                    if partOwner then
+                        Struggle:FireServer()
+                        if game:GetService("ReplicatedStorage"):FindFirstChild("GameCorrectionEvents") and game:GetService("ReplicatedStorage").GameCorrectionEvents:FindFirstChild("StopAllVelocity") then
+                            game:GetService("ReplicatedStorage").GameCorrectionEvents.StopAllVelocity:FireServer()
+                        end
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = true
+                            end
+                        end
+                        if localPlayer:FindFirstChild("IsHeld") and localPlayer.IsHeld:IsA("ValueObject") then
+                            while localPlayer.IsHeld.Value do
+                                task.wait()
+                            end
+                        end
+                        for _, part in pairs(character:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.Anchored = false
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            if autoStruggleCoroutine then
+                autoStruggleCoroutine:Disconnect()
+                autoStruggleCoroutine = nil
+            end
+        end
+    end
+})
+
+blobmanInstanceS = nil
+
 
 
 local AntiGrabSticky = antiTab:CreateToggle({
@@ -8836,6 +8693,38 @@ local AntiBlob = antiTab:CreateToggle({
 	end
 })
 AntiBlob:Set(true)
+function SetAntiBlobman(enabled)
+    local function processPart(part)
+        local invalid = part.Name == "LeftWeld" or part.Name == "RightWeld" or part.Name == "LeftAlignOrientation" or
+                            part.Name == "RightAlignOrientation"
+
+        if invalid and part.Parent and part.Parent.Parent and part.Parent.Parent.Parent ~=
+            workspace:FindFirstChild(localPlayer.Name) then
+            part.Enabled = not enabled
+        end
+    end
+    for _, part in pairs(workspace:GetDescendants()) do
+        processPart(part)
+    end
+    if enabled then
+        if AntiCheatStates.blobConn then
+            AntiCheatStates.blobConn:Disconnect()
+        end
+        AntiCheatStates.blobConn = workspace.DescendantAdded:Connect(function(part)
+            processPart(part)
+        end)
+    elseif AntiCheatStates.blobConn then
+        AntiCheatStates.blobConn:Disconnect()
+        AntiCheatStates.blobConn = nil
+    end
+end
+antiTab:CreateToggle({
+    Name = "안티 블롭맨V2",
+    Default = false,
+    Callback = function(Value)
+        SetAntiBlobman(Value)
+    end
+})
 
 local AntiMassless = antiTab:CreateToggle({
     Name = "무질량 끄기",
@@ -8878,7 +8767,7 @@ local AntiVoid = antiTab:CreateToggle({
 AntiVoid:Set(true)
 
 local AntiExplode = antiTab:CreateToggle({
-    Name = "폭탄 방어",
+    Name = "안티 폭탄",
     CurrentValue = false,
     Flag = "antiExplodeToggleFlag",
     Callback = function(Value)
@@ -8892,6 +8781,61 @@ local AntiExplode = antiTab:CreateToggle({
     end
 })
 AntiExplode:Set(true)
+antiTab:CreateToggle({
+    Name = "안티 폭탄V2",
+    Default = false,
+    Save = false,
+    Flag = "AntiExplosion",
+    Callback = function(enabled)
+        if enabled then
+            if localPlayer.Character then
+                setupAntiExplosion(localPlayer.Character)
+            end
+            characterAddedConn = localPlayer.CharacterAdded:Connect(function(character)
+                if antiExplosionConnection then
+                    antiExplosionConnection:Disconnect()
+                end
+                setupAntiExplosion(character)
+            end)
+        else
+            if antiExplosionConnection then
+                antiExplosionConnection:Disconnect()
+                antiExplosionConnection = nil
+            end
+            if characterAddedConn then
+                characterAddedConn:Disconnect()
+                characterAddedConn = nil
+            end
+        end
+    end
+})
+local FF2 = nil
+local FF3 = "FireExtinguisher"
+function setupAntiExplosion(character)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if humanoid then
+        local partOwner = humanoid:FindFirstChild("Ragdolled")
+        if partOwner then
+            local partOwnerChangedConn
+            partOwnerChangedConn = partOwner:GetPropertyChangedSignal("Value"):Connect(function()
+                if partOwner.Value then
+                    for _, part in ipairs(character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.Anchored = true
+                        end
+                    end
+                else
+                    for _, part in ipairs(character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.Anchored = false
+                        end
+                    end
+                end
+            end)
+            antiExplosionConnection = partOwnerChangedConn
+        end
+    end
+end
 
 local AntiBurn = antiTab:CreateToggle({
     Name = "불 무적",
@@ -9653,7 +9597,111 @@ AuraTab:CreateToggle({
         end
     end,
 })
-funTab:CreateSection("TP")
+AuraTab:CreateSection("킬,플링")
+AuraTab:CreateInput({
+    Name = "범위 설정",
+    PlaceholderText = "기본값: 15 (원하는 정수 입력)",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local num = tonumber(Text)
+        if num then
+            auraRadius = num
+        else
+            auraRadius = 15
+        end
+    end
+})
+
+local runningAura = false
+
+AuraTab:CreateToggle({
+    Name = "필링 아우라",
+    Default = false,
+    Save = false,
+    Flag = "FlingAura",
+    Callback = function(enabled)
+        runningAura = enabled
+        if enabled then
+            coroutine.wrap(function()
+                while runningAura do
+                    local success, err = pcall(function()
+                        local character = localPlayer.Character
+                        if character and character:FindFirstChild("Head") and
+                            character:FindFirstChild("HumanoidRootPart") then
+                            local humanoidRootPart = character.HumanoidRootPart
+                            for _, player in pairs(Players:GetPlayers()) do
+                                if player ~= localPlayer and player.Character then
+                                    local isFriend = _G.Aurahowait and localPlayer:IsFriendsWith(player.UserId)
+                                    if not isFriend then
+                                        local targetChar = player.Character
+                                        local targetTorso = targetChar:FindFirstChild("Torso") or targetChar:FindFirstChild("UpperTorso")
+                                        local targetRoot = targetChar:FindFirstChild("HumanoidRootPart")
+                                        if targetTorso and targetRoot then
+                                            local distance =
+                                                (targetTorso.Position - humanoidRootPart.Position).Magnitude
+                                            if distance <= (auraRadius or 15) then
+                                                if SetNetworkOwner and SetNetworkOwner.FireServer then
+                                                    SetNetworkOwner:FireServer(targetTorso, targetRoot.CFrame)
+                                                end
+                                                task.wait(0.1)
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                    task.wait()
+                end
+            end)()
+        end
+    end
+})
+AuraTab:CreateToggle({
+    Name = "플링아우라V2",
+    Default = false,
+    Save = false,
+    Flag = "FlingAura",
+    Callback = function(enabled)
+        runningFlingAura = enabled
+        if enabled then
+            coroutine.wrap(function()
+                while runningFlingAura do
+                    pcall(function()
+                        local character = localPlayer.Character
+                        if character and character:FindFirstChild("HumanoidRootPart") then
+                            local root = character.HumanoidRootPart
+                            for _, player in pairs(Players:GetPlayers()) do
+                                if player ~= localPlayer and player.Character then
+                                    local isFriend = _G.Aurahowait and localPlayer:IsFriendsWith(player.UserId)
+                                    if not isFriend then
+                                        local targetChar = player.Character
+                                        local torso = targetChar:FindFirstChild("Torso") or targetChar:FindFirstChild("UpperTorso")
+                                        local targetRoot = targetChar:FindFirstChild("HumanoidRootPart")
+                                        if torso and targetRoot then
+                                            local distance = (torso.Position - root.Position).Magnitude
+                                            if distance <= (auraRadius or 15) then
+                                                local velocity = torso:FindFirstChild("l") or
+                                                                     Instance.new("BodyVelocity", torso)
+                                                velocity.Name = "l"
+                                                velocity.Velocity = Vector3.new(5e10, 5e15, 5e10)
+                                                velocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                                                Debris:AddItem(velocity, 2)
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                    task.wait()
+                end
+            end)()
+        end
+    end
+})
+
+funTab:CreateSection("텔포")
 local VoidInput = funTab:CreateInput({
    Name = "Y좌표 설정",
    CurrentValue = "",
