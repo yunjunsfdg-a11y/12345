@@ -8652,6 +8652,7 @@ antiTab:CreateToggle({
 })
 
 blobmanInstanceS = nil
+AntiGrabToggle:Set(true)
 
 
 
@@ -8693,7 +8694,14 @@ local AntiBlob = antiTab:CreateToggle({
 	end
 })
 AntiBlob:Set(true)
+if not AntiCheatStates then
+    _G.AntiCheatStates = { blobConn = nil }
+end
+
 function SetAntiBlobman(enabled)
+    local localPlayer = game.Players.LocalPlayer
+    if not localPlayer then return end
+    
     local function processPart(part)
         local invalid = part.Name == "LeftWeld" or part.Name == "RightWeld" or part.Name == "LeftAlignOrientation" or
                             part.Name == "RightAlignOrientation"
@@ -8707,17 +8715,18 @@ function SetAntiBlobman(enabled)
         processPart(part)
     end
     if enabled then
-        if AntiCheatStates.blobConn then
-            AntiCheatStates.blobConn:Disconnect()
+        if _G.AntiCheatStates.blobConn then
+            _G.AntiCheatStates.blobConn:Disconnect()
         end
-        AntiCheatStates.blobConn = workspace.DescendantAdded:Connect(function(part)
+        _G.AntiCheatStates.blobConn = workspace.DescendantAdded:Connect(function(part)
             processPart(part)
         end)
-    elseif AntiCheatStates.blobConn then
-        AntiCheatStates.blobConn:Disconnect()
-        AntiCheatStates.blobConn = nil
+    elseif _G.AntiCheatStates.blobConn then
+        _G.AntiCheatStates.blobConn:Disconnect()
+        _G.AntiCheatStates.blobConn = nil
     end
 end
+
 antiTab:CreateToggle({
     Name = "안티 블롭맨V2",
     Default = false,
@@ -8725,9 +8734,11 @@ antiTab:CreateToggle({
         SetAntiBlobman(Value)
     end
 })
+AntiBlobmanToggle:Set(true)
+
 
 local AntiMassless = antiTab:CreateToggle({
-    Name = "무질량 끄기",
+    Name = "안티 메슬리즈",
     CurrentValue = false,
     Flag = "17",
     Callback = function(Value)
@@ -8737,7 +8748,7 @@ local AntiMassless = antiTab:CreateToggle({
 })
 AntiMassless:Set(true)
 
-antiTab:CreateSection("플롯")
+antiTab:CreateSection("")
 
 
 local AntiInPlots = antiTab:CreateToggle({
@@ -8781,43 +8792,14 @@ local AntiExplode = antiTab:CreateToggle({
     end
 })
 AntiExplode:Set(true)
-antiTab:CreateToggle({
-    Name = "안티 폭탄V2",
-    Default = false,
-    Save = false,
-    Flag = "AntiExplosion",
-    Callback = function(enabled)
-        if enabled then
-            if localPlayer.Character then
-                setupAntiExplosion(localPlayer.Character)
-            end
-            characterAddedConn = localPlayer.CharacterAdded:Connect(function(character)
-                if antiExplosionConnection then
-                    antiExplosionConnection:Disconnect()
-                end
-                setupAntiExplosion(character)
-            end)
-        else
-            if antiExplosionConnection then
-                antiExplosionConnection:Disconnect()
-                antiExplosionConnection = nil
-            end
-            if characterAddedConn then
-                characterAddedConn:Disconnect()
-                characterAddedConn = nil
-            end
-        end
-    end
-})
-local FF2 = nil
-local FF3 = "FireExtinguisher"
 function setupAntiExplosion(character)
+    if not character then return end
     local humanoid = character:WaitForChild("Humanoid", 5)
     if humanoid then
         local partOwner = humanoid:FindFirstChild("Ragdolled")
         if partOwner then
-            local partOwnerChangedConn
-            partOwnerChangedConn = partOwner:GetPropertyChangedSignal("Value"):Connect(function()
+            if antiExplosionConnection then antiExplosionConnection:Disconnect() end
+            antiExplosionConnection = partOwner:GetPropertyChangedSignal("Value"):Connect(function()
                 if partOwner.Value then
                     for _, part in ipairs(character:GetChildren()) do
                         if part:IsA("BasePart") then
@@ -8832,10 +8814,40 @@ function setupAntiExplosion(character)
                     end
                 end
             end)
-            antiExplosionConnection = partOwnerChangedConn
         end
     end
 end
+
+antiTab:CreateToggle({
+    Name = "안티 폭발V2",
+    Default = false,
+    Save = false,
+    Flag = "AntiExplosion",
+    Callback = function(enabled)
+        local localPlayer = game.Players.LocalPlayer
+        if not localPlayer then return end
+
+        if enabled then
+            if localPlayer.Character then
+                setupAntiExplosion(localPlayer.Character)
+            end
+            if characterAddedConn then characterAddedConn:Disconnect() end
+            characterAddedConn = localPlayer.CharacterAdded:Connect(function(character)
+                setupAntiExplosion(character)
+            end)
+        else
+            if antiExplosionConnection then
+                antiExplosionConnection:Disconnect()
+                antiExplosionConnection = nil
+            end
+            if characterAddedConn then
+                characterAddedConn:Disconnect()
+                characterAddedConn = nil
+            end
+        end
+    end
+})
+AntiExplosionToggle:Set(true)
 
 local AntiBurn = antiTab:CreateToggle({
     Name = "불 무적",
