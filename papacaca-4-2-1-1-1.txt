@@ -8652,7 +8652,13 @@ antiTab:CreateToggle({
 })
 
 blobmanInstanceS = nil
-AntiGrabToggle:Set(true)
+task.spawn(function()
+    task.wait(0.5)
+    if AntiGrabToggle and AntiGrabToggle.Set then
+        AntiGrabToggle:Set(true)
+    end
+end)
+
 
 
 
@@ -8734,7 +8740,13 @@ antiTab:CreateToggle({
         SetAntiBlobman(Value)
     end
 })
-AntiBlobmanToggle:Set(true)
+task.spawn(function()
+    task.wait(0.5)
+    if AntiBlobmanToggle and AntiBlobmanToggle.Set then
+        AntiBlobmanToggle:Set(true)
+    end
+end)
+
 
 
 local AntiMassless = antiTab:CreateToggle({
@@ -8847,7 +8859,13 @@ antiTab:CreateToggle({
         end
     end
 })
-AntiExplosionToggle:Set(true)
+task.spawn(function()
+    task.wait(0.5)
+    if AntiExplosionToggle and AntiExplosionToggle.Set then
+        AntiExplosionToggle:Set(true)
+    end
+end)
+
 
 local AntiBurn = antiTab:CreateToggle({
     Name = "불 무적",
