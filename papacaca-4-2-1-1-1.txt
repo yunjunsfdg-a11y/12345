@@ -8924,7 +8924,25 @@ local AntiLag = antiTab:CreateToggle({
     end
 })
 AntiLag:Set(true)
+function antiLagF()
+    local char = plr.Character
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local hum = char:WaitForChild("Humanoid")
+    if antiLagT == true then
+        plr.PlayerScripts.CharacterAndBeamMove.Disabled = true
+    elseif antiLagT == false then
+        plr.PlayerScripts.CharacterAndBeamMove.Enabled = true
+    end
+end
 
+antiTab:CreateToggle({
+    Name = "안티 렉V2",
+    Default = false,
+    Callback = function(Value)
+        antiLagT = Value
+        antiLagF()
+    end
+})
 local AutoAttack  antiTab:CreateToggle({
     Name = "오토어택 | 킬",
     CurrentValue = false,
