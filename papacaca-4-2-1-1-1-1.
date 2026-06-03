@@ -6658,7 +6658,19 @@ passTab:CreateInput({
       local num = tonumber(text)
       if num and num >= 2 and num <= 4 then
          GradientLayers = math.floor(num)
-         if CustomGradientEnabled then updateLineColors() end
+         if CustomGradientEnabled and game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+            pcall(function()
+               local points = {}
+               if GradientLayers == 2 then
+                  points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+               elseif GradientLayers == 3 then
+                  points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val or Color3.new(0,0,0))}
+               elseif GradientLayers == 4 then
+                  points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val or Color3.new(0,0,0)), ColorSequenceKeypoint.new(1, Color4 or Color3.new(0,1,0))}
+               end
+               game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+            end)
+         end
       else
          Rayfield:Notify({
             Name = "Error",
@@ -6675,7 +6687,15 @@ passTab:CreateColorPicker({
     Color = Color3.new(1, 0, 0),
     Callback = function(color)
         Color1 = color
-        if CustomGradientEnabled then updateLineColors() end
+        if CustomGradientEnabled and game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+            pcall(function()
+               local points = {}
+               if GradientLayers == 2 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+               elseif GradientLayers == 3 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val or Color3.new(0,0,0))}
+               elseif GradientLayers == 4 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val or Color3.new(0,0,0)), ColorSequenceKeypoint.new(1, Color4 or Color3.new(0,1,0))} end
+               game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+            end)
+        end
     end
 })
 
@@ -6684,7 +6704,15 @@ passTab:CreateColorPicker({
     Color = Color3.new(0, 0, 1),
     Callback = function(color)
         Color2 = color
-        if CustomGradientEnabled then updateLineColors() end
+        if CustomGradientEnabled and game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+            pcall(function()
+               local points = {}
+               if GradientLayers == 2 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+               elseif GradientLayers == 3 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val or Color3.new(0,0,0))}
+               elseif GradientLayers == 4 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val or Color3.new(0,0,0)), ColorSequenceKeypoint.new(1, Color4 or Color3.new(0,1,0))} end
+               game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+            end)
+        end
     end
 })
 
@@ -6693,7 +6721,15 @@ passTab:CreateColorPicker({
     Color = Color3.new(0, 0, 0),
     Callback = function(color)
         Color3_Val = color
-        if CustomGradientEnabled then updateLineColors() end
+        if CustomGradientEnabled and game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+            pcall(function()
+               local points = {}
+               if GradientLayers == 2 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+               elseif GradientLayers == 3 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val)}
+               elseif GradientLayers == 4 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val), ColorSequenceKeypoint.new(1, Color4 or Color3.new(0,1,0))} end
+               game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+            end)
+        end
     end
 })
 
@@ -6702,7 +6738,15 @@ passTab:CreateColorPicker({
     Color = Color3.new(1, 1, 0),
     Callback = function(color)
         Color4 = color
-        if CustomGradientEnabled then updateLineColors() end
+        if CustomGradientEnabled and game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+            pcall(function()
+               local points = {}
+               if GradientLayers == 2 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+               elseif GradientLayers == 3 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val or Color3.new(0,0,0))}
+               elseif GradientLayers == 4 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val or Color3.new(0,0,0)), ColorSequenceKeypoint.new(1, Color4)} end
+               game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+            end)
+        end
     end
 })
 
@@ -6714,7 +6758,15 @@ passTab:CreateToggle({
       CustomGradientEnabled = val
       if val then
           RainbowLoopEnabled = false 
-          updateLineColors()
+          if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+              pcall(function()
+                 local points = {}
+                 if GradientLayers == 2 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(1, Color2)}
+                 elseif GradientLayers == 3 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.5, Color2), ColorSequenceKeypoint.new(1, Color3_Val or Color3.new(0,0,0))}
+                 elseif GradientLayers == 4 then points = {ColorSequenceKeypoint.new(0, Color1), ColorSequenceKeypoint.new(0.33, Color2), ColorSequenceKeypoint.new(0.66, Color3_Val or Color3.new(0,0,0)), ColorSequenceKeypoint.new(1, Color4 or Color3.new(0,1,0))} end
+                 game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new(points))
+              end)
+          end
       end
    end,
 })
@@ -6726,17 +6778,19 @@ passTab:CreateButton({
    Callback = function()
       CustomGradientEnabled = false
       RainbowLoopEnabled = false
-      pcall(function()
-         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
-            ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)),
-            ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)),
-            ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
-            ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)),
-            ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)),
-            ColorSequenceKeypoint.new(1, Color3.new(1,0,0))
-         }))
-      end)
+      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+          pcall(function()
+             game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
+                ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)),
+                ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
+                ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)),
+                ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)),
+                ColorSequenceKeypoint.new(1, Color3.new(1,0,0))
+             }))
+          end)
+      end
    end,
 })
 
@@ -6745,13 +6799,15 @@ passTab:CreateButton({
    Callback = function()
       CustomGradientEnabled = false
       RainbowLoopEnabled = false
-      pcall(function()
-         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
-            ColorSequenceKeypoint.new(0.5, Color3.new(1,0.5,0)),
-            ColorSequenceKeypoint.new(1, Color3.new(1,1,0))
-         }))
-      end)
+      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+          pcall(function()
+             game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(1,0.5,0)),
+                ColorSequenceKeypoint.new(1, Color3.new(1,1,0))
+             }))
+          end)
+      end
    end,
 })
 
@@ -6760,13 +6816,15 @@ passTab:CreateButton({
    Callback = function()
       CustomGradientEnabled = false
       RainbowLoopEnabled = false
-      pcall(function()
-         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.new(0,0,1)),
-            ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
-            ColorSequenceKeypoint.new(1, Color3.new(0,0.5,0.5))
-         }))
-      end)
+      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+          pcall(function()
+             game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0,0,1)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
+                ColorSequenceKeypoint.new(1, Color3.new(0,0.5,0.5))
+             }))
+          end)
+      end
    end,
 })
 
@@ -6775,13 +6833,15 @@ passTab:CreateButton({
    Callback = function()
       CustomGradientEnabled = false
       RainbowLoopEnabled = false
-      pcall(function()
-         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.new(0.5,0,0.5)),
-            ColorSequenceKeypoint.new(0.5, Color3.new(1,0,0.5)),
-            ColorSequenceKeypoint.new(1, Color3.new(1,0.5,0))
-         }))
-      end)
+      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+          pcall(function()
+             game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0.5,0,0.5)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(1,0,0.5)),
+                ColorSequenceKeypoint.new(1, Color3.new(1,0.5,0))
+             }))
+          end)
+      end
    end,
 })
 
@@ -6790,12 +6850,14 @@ passTab:CreateButton({
    Callback = function()
       CustomGradientEnabled = false
       RainbowLoopEnabled = false
-      pcall(function()
-         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.new(0,1,1)),
-            ColorSequenceKeypoint.new(1, Color3.new(1,0,1))
-         }))
-      end)
+      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+          pcall(function()
+             game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0,1,1)),
+                ColorSequenceKeypoint.new(1, Color3.new(1,0,1))
+             }))
+          end)
+      end
    end,
 })
 
@@ -6813,12 +6875,14 @@ passTab:CreateToggle({
               while RainbowLoopEnabled do
                   for i = 0, 1, 0.01 do
                       if not RainbowLoopEnabled then break end
-                      pcall(function()
-                          ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
-                              ColorSequenceKeypoint.new(0, Color3.fromHSV(i, 1, 1)),
-                              ColorSequenceKeypoint.new(1, Color3.fromHSV((i + 0.5) % 1, 1, 1))
-                          }))
-                      end)
+                      if game:GetService("ReplicatedStorage"):FindFirstChild("DataEvents") then
+                          pcall(function()
+                              game:GetService("ReplicatedStorage").DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                                  ColorSequenceKeypoint.new(0, Color3.fromHSV(i, 1, 1)),
+                                  ColorSequenceKeypoint.new(1, Color3.fromHSV((i + 0.5) % 1, 1, 1))
+                              }))
+                          end)
+                      end
                       task.wait(0.05)
                   end
               end
@@ -6837,7 +6901,7 @@ passTab:CreateButton({
       Reach.Parent = game.Players.LocalPlayer
       Reach.Value = true
 
-      local GamepassEvents = ReplicatedStorage:FindFirstChild("GamepassEvents")
+      local GamepassEvents = game:GetService("ReplicatedStorage"):FindFirstChild("GamepassEvents")
       local Notifier = GamepassEvents and GamepassEvents:FindFirstChild("FurtherReachBoughtNotifier")
 
       if Notifier and getconnections then
