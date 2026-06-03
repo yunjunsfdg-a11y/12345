@@ -12337,14 +12337,14 @@ passTab:CreateButton({
 				Name = "성공",
 				Content = "긴줄잠금해제완료!",
 				Duration = 4,
-				Image = 6023426923
+				Image = 0
 			})
 		else
 			Rayfield:Notify({
 				Name = "실패",
 				Content = "긴줄잠금해제실패!",
 				Duration = 4,
-				Image = 6023426923
+				Image = 0
 			})
 		end
 	end,
