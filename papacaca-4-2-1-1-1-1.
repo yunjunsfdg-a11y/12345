@@ -12277,8 +12277,9 @@ HubTab:CreateLabel("컬러 라인,긴줄 잠금해제 기능이 있습니다.")
 HubTab:CreateLabel("일부기능은 데스크톱만 지원합니다.")
 HubTab:CreateLabel("대부분의 기능은 명단에 정해진플레이어에게 이루어집니다.")
 HubTab:CreateLabel("그럼 재미있게 즐기세요!")
+HubTab:CreateLabel("☆6월 5일  대규모 업뎃 완료☆")
 HubTab:CreateSection("실행자 정보")
-HubTab:CreateSection("6월 5일  대규모 업뎃 완료")
+
 local playerNameLabel = HubTab:CreateLabel("플레이어: 로딩중...")
 
 
