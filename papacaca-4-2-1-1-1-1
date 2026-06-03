@@ -6648,15 +6648,230 @@ local AdminHackButton = RankTab:CreateButton({
         })
     end
 })
-local Reach = Instance.new("BoolValue")
-Reach.Name = "FartherReach"
-Reach.Parent = game.Players.LocalPlayer
-Reach.Value = true
+passTab:CreateSection("커스텀 그라데이션 설정")
 
-local Notifier = game.ReplicatedStorage.GamepassEvents:FindFirstChild("FurtherReachBoughtNotifier")
-for _, connection in ipairs(getconnections(Notifier.OnClientEvent)) do
-	pcall(connection.Function)
-end
+passTab:CreateInput({
+   Name = "그라데이션 레이어 수 설정 (2 ~ 4)",
+   PlaceholderText = "기본값: 2",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(text)
+      local num = tonumber(text)
+      if num and num >= 2 and num <= 4 then
+         GradientLayers = math.floor(num)
+         if CustomGradientEnabled then updateLineColors() end
+      else
+         Rayfield:Notify({
+            Name = "Error",
+            Content = "Layer amount must be between 2 and 4.",
+            Duration = 3,
+            Image = 4483345998,
+         })
+      end
+   end,
+})
+
+passTab:CreateColorPicker({
+    Name = "색상 1",
+    Color = Color3.new(1, 0, 0),
+    Callback = function(color)
+        Color1 = color
+        if CustomGradientEnabled then updateLineColors() end
+    end
+})
+
+passTab:CreateColorPicker({
+    Name = "색상 2",
+    Color = Color3.new(0, 0, 1),
+    Callback = function(color)
+        Color2 = color
+        if CustomGradientEnabled then updateLineColors() end
+    end
+})
+
+passTab:CreateColorPicker({
+    Name = "색상 3",
+    Color = Color3.new(0, 0, 0),
+    Callback = function(color)
+        Color3_Val = color
+        if CustomGradientEnabled then updateLineColors() end
+    end
+})
+
+passTab:CreateColorPicker({
+    Name = "색상 4",
+    Color = Color3.new(1, 1, 0),
+    Callback = function(color)
+        Color4 = color
+        if CustomGradientEnabled then updateLineColors() end
+    end
+})
+
+passTab:CreateToggle({
+   Name = "커스텀 그라데이션 적용",
+   CurrentValue = false,
+   Flag = "CustomGradientToggle",
+   Callback = function(val)
+      CustomGradientEnabled = val
+      if val then
+          RainbowLoopEnabled = false 
+          updateLineColors()
+      end
+   end,
+})
+
+passTab:CreateSection("라인 색상 고정 프리셋")
+
+passTab:CreateButton({
+   Name = "무지개 프리셋 (고정 고해상도)",
+   Callback = function()
+      CustomGradientEnabled = false
+      RainbowLoopEnabled = false
+      pcall(function()
+         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
+            ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)),
+            ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)),
+            ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
+            ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)),
+            ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)),
+            ColorSequenceKeypoint.new(1, Color3.new(1,0,0))
+         }))
+      end)
+   end,
+})
+
+passTab:CreateButton({
+   Name = "불꽃 프리셋 (레드/오렌지/옐로우)",
+   Callback = function()
+      CustomGradientEnabled = false
+      RainbowLoopEnabled = false
+      pcall(function()
+         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(1,0,0)),
+            ColorSequenceKeypoint.new(0.5, Color3.new(1,0.5,0)),
+            ColorSequenceKeypoint.new(1, Color3.new(1,1,0))
+         }))
+      end)
+   end,
+})
+
+passTab:CreateButton({
+   Name = "바다 프리셋 (딥블루/아쿠아)",
+   Callback = function()
+      CustomGradientEnabled = false
+      RainbowLoopEnabled = false
+      pcall(function()
+         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(0,0,1)),
+            ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)),
+            ColorSequenceKeypoint.new(1, Color3.new(0,0.5,0.5))
+         }))
+      end)
+   end,
+})
+
+passTab:CreateButton({
+   Name = "석양 프리셋 (퍼플/핑크/오렌지)",
+   Callback = function()
+      CustomGradientEnabled = false
+      RainbowLoopEnabled = false
+      pcall(function()
+         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(0.5,0,0.5)),
+            ColorSequenceKeypoint.new(0.5, Color3.new(1,0,0.5)),
+            ColorSequenceKeypoint.new(1, Color3.new(1,0.5,0))
+         }))
+      end)
+   end,
+})
+
+passTab:CreateButton({
+   Name = "네온 프리셋 (민트/마젠타)",
+   Callback = function()
+      CustomGradientEnabled = false
+      RainbowLoopEnabled = false
+      pcall(function()
+         ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(0,1,1)),
+            ColorSequenceKeypoint.new(1, Color3.new(1,0,1))
+         }))
+      end)
+   end,
+})
+
+passTab:CreateSection("실시간 애니메이션 효과")
+
+passTab:CreateToggle({
+   Name = "실시간 무지개 그라데이션 루프",
+   CurrentValue = false,
+   Flag = "RainbowLoopToggle",
+   Callback = function(val)
+      RainbowLoopEnabled = val
+      if val then
+          CustomGradientEnabled = false
+          task.spawn(function()
+              while RainbowLoopEnabled do
+                  for i = 0, 1, 0.01 do
+                      if not RainbowLoopEnabled then break end
+                      pcall(function()
+                          ReplicatedStorage.DataEvents.UpdateLineColorsEvent:FireServer(ColorSequence.new({
+                              ColorSequenceKeypoint.new(0, Color3.fromHSV(i, 1, 1)),
+                              ColorSequenceKeypoint.new(1, Color3.fromHSV((i + 0.5) % 1, 1, 1))
+                          }))
+                      end)
+                      task.wait(0.05)
+                  end
+              end
+          end)
+      end
+   end,
+})
+
+passTab:CreateSection("게임패스 잠금해제")
+
+passTab:CreateButton({
+   Name = "긴줄 잠금해제",
+   Callback = function()
+      local Reach = Instance.new("BoolValue")
+      Reach.Name = "FartherReach"
+      Reach.Parent = game.Players.LocalPlayer
+      Reach.Value = true
+
+      local GamepassEvents = ReplicatedStorage:FindFirstChild("GamepassEvents")
+      local Notifier = GamepassEvents and GamepassEvents:FindFirstChild("FurtherReachBoughtNotifier")
+
+      if Notifier and getconnections then
+         local ran = false
+         for _, connection in ipairs(getconnections(Notifier.OnClientEvent)) do
+            pcall(connection.Function)
+            ran = true
+         end
+         if ran then
+            Rayfield:Notify({
+               Name = "Success",
+               Content = "긴줄잠금해제완료!",
+               Duration = 4,
+               Image = 10734951437
+            })
+         else
+            Rayfield:Notify({
+               Name = "Failed",
+               Content = "긴줄잠금해제실패!",
+               Duration = 4,
+               Image = 10734925828
+            })
+         end
+      else
+         Rayfield:Notify({
+            Name = "Failed",
+            Content = "긴줄잠금해제실패!",
+            Duration = 4,
+            Image = 10734925828
+         })
+      end
+   end,
+})
+
 -- ================== 모바일 크로스헤어 TP (DevTab) ==================
 DevTab:CreateSection("Mobile Crosshair TP")
 
