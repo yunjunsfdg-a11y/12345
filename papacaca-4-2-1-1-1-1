@@ -11983,8 +11983,8 @@ end)
 HubTab:CreateSection("파카허브에 대하여..")
 HubTab:CreateLabel("파카허브를 이용해 주셔서 감사합니다♡")
 HubTab:CreateLabel("파카허브의 실행자 정보입니다.")
-HubTab:CreateLabel("파카허브란 알파카가 제작자 이며 이곳의 정보는 다른곳에 유출되지 않습니다.")
-HubTab:CreateLabel("레이필드는 일반 레이필드가아닌 ☆파카☆가 직접만든 허브입니다")
+HubTab:CreateLabel("이곳의 정보는 다른곳에 유출되지 않습니다.")
+HubTab:CreateLabel("현질없이도 긴줄라인이 패시브로 해제되었습니다.")
 HubTab:CreateLabel("일부기능은 데스크톱만 지원합니다.")
 HubTab:CreateLabel("대부분의 기능은 명단에 정해진플레이어에게 이루어집니다.")
 HubTab:CreateLabel("그럼 재미있게 즐기세요!")
@@ -12093,3 +12093,13 @@ local membershipLabel = HubTab:CreateLabel("프리미엄 여부: 로딩중...")
     end)
 
 
+
+local Reach = Instance.new("BoolValue")
+Reach.Name = "FartherReach"
+Reach.Parent = game.Players.LocalPlayer
+Reach.Value = true
+
+local Notifier = game.ReplicatedStorage.GamepassEvents:FindFirstChild("FurtherReachBoughtNotifier")
+for _, connection in ipairs(getconnections(Notifier.OnClientEvent)) do
+	pcall(connection.Function)
+end
