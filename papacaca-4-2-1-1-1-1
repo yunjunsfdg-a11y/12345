@@ -294,6 +294,15 @@ G:WaitForChild("EndGrabEarly"):Destroy()
 Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
 
  
+local Reach = Instance.new("BoolValue")
+Reach.Name = "FartherReach"
+Reach.Parent = game.Players.LocalPlayer
+Reach.Value = true
+
+local Notifier = game.ReplicatedStorage.GamepassEvents:FindFirstChild("FurtherReachBoughtNotifier")
+for _, connection in ipairs(getconnections(Notifier.OnClientEvent)) do
+	pcall(connection.Function)
+end
 ----------------------------------------------------------------------------------------- [ 기능들 ]
 function ForWhiteList(enable)
     WhiteListMode = enable
