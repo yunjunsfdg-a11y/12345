@@ -6504,7 +6504,7 @@ UtilityTab:CreateSection("이동 최적화")
 
 UtilityTab:CreateToggle({
     Name = "관성 제거 ",
-    CurrentValue = false,
+    CurrentValue = true,
     Callback = function(Value)
         _G.NoInertia = Value
         pcall(function()
