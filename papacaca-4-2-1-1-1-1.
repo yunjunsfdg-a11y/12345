@@ -6770,7 +6770,7 @@ passTab:CreateToggle({
       end
    end,
 })
-
+passTab:CreateLabel("그라데이션 숫자를 한번넣으세요 그래야작동합니다")
 passTab:CreateSection("라인 색상 고정 프리셋")
 
 passTab:CreateButton({
@@ -6890,7 +6890,7 @@ passTab:CreateToggle({
       end
    end,
 })
-
+passTab:CreateLabel("무지개 그라데이션의경우 다른게 켜져있어도 무시합니다.")
 passTab:CreateSection("게임패스 잠금해제")
 
 passTab:CreateButton({
@@ -12273,11 +12273,12 @@ HubTab:CreateSection("파카허브에 대하여..")
 HubTab:CreateLabel("파카허브를 이용해 주셔서 감사합니다♡")
 HubTab:CreateLabel("파카허브의 실행자 정보입니다.")
 HubTab:CreateLabel("이곳의 정보는 다른곳에 유출되지 않습니다.")
-HubTab:CreateLabel("현질없이도 긴줄라인이 패시브로 해제되었습니다.")
+HubTab:CreateLabel("컬러 라인,긴줄 잠금해제 기능이 있습니다.")
 HubTab:CreateLabel("일부기능은 데스크톱만 지원합니다.")
 HubTab:CreateLabel("대부분의 기능은 명단에 정해진플레이어에게 이루어집니다.")
 HubTab:CreateLabel("그럼 재미있게 즐기세요!")
 HubTab:CreateSection("실행자 정보")
+HubTab:CreateSection("6월 5일  대규모 업뎃 완료")
 local playerNameLabel = HubTab:CreateLabel("플레이어: 로딩중...")
 
 
