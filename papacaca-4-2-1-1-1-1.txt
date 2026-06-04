@@ -31,7 +31,8 @@ local playerTab = Window:CreateTab("플레이어 설정", 6034281935)
 local passTab = Window:CreateTab("패스잠금해제")
 local grabTab = Window:CreateTab("컴뱃", 6026568198)               
 local UtilityTab = Window:CreateTab("유틸리티", 6031094678)        
-local antiTab = Window:CreateTab("안전", 6034831332)               
+local antiTab = Window:CreateTab("안전", 6034831332)    
+local 1Tab = Window:CreateTab("집관련",0)
 local ListTab = Window:CreateTab("명단", 3572491301)              
 local LoopTab = Window:CreateTab("조지기", 6023426923)             
 local AuraTab = Window:CreateTab("아우라", 6031068423)            
@@ -11379,17 +11380,6 @@ local BarrierNoclip = keybindTab:CreateToggle({
 })
 BarrierNoclip:Set(true)
 
-keybindTab:CreateKeybind({
-    Name = "장벽 삭제 | 음식빵",
-    CurrentKeybind = "Y",
-    HoldToInteract = false,
-    Callback = function()
-        PlotBarrierDelete()
-    end,
-})
-
-local isExecuting = false
-
 local function getMyPlot()
     for i = 1, 5 do
         local plot = workspace.Plots:FindFirstChild("Plot" .. i)
@@ -11407,164 +11397,237 @@ local function getMyPlot()
             end
         end
     end
+    return nil
 end
 
-keybindTab:CreateKeybind({
-    Name = "하우스 그랩",
-    CurrentKeybind = "G",
-    HoldToInteract = false,
+local function PlotBarrierDelete()
+    if PBDrun then return end
+    PBDrun = true
+
+    local char = plr.Character
+    if not char then PBDrun = false return end
+
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then PBDrun = false return end
+
+    local metal = workspace.Plots.Plot1.TeslaCoil.Metal
+    if not metal then PBDrun = false return end
+
+    local TP = metal.CFrame
+    local OCF = hrp.CFrame
+
+    task.spawn(function()
+        rs.MenuToys.SpawnToyRemoteFunction:InvokeServer("FoodBread", hrp.CFrame, Vector3.new(0,0,0))
+    end)
+
+    task.wait(0.2)
+
+    local foodBread = inv:FindFirstChild("FoodBread")
+    if not foodBread then PBDrun = false return end
+
+    if foodBread then
+        task.spawn(function()
+            foodBread.HoldPart.HoldItemRemoteFunction:InvokeServer(foodBread, char)
+        end)
+    end
+
+    task.wait(0.1)
+
+    hrp.CFrame = TP
+    task.wait(0.17)
+
+    if foodBread then
+        rs.MenuToys.DestroyToy:FireServer(foodBread)
+    end
+
+    hrp.CFrame = OCF
+    task.wait(0.4)
+
+    PBDrun = false
+end
+
+local function runAnchorLogic()
+    local original = workspace:FindFirstChild("GrabParts")
+    if not original then return end
+
+    local grabPart = original:FindFirstChild("GrabPart", true)
+    if not grabPart or not grabPart:IsA("BasePart") then return end
+
+    local wasCollide = grabPart.CanCollide
+    grabPart.CanCollide = true
+    task.wait(0.1)
+
+    local targetModel = nil
+    local touchingParts = grabPart:GetTouchingParts()
+
+    if #touchingParts == 0 then
+        grabPart.CanCollide = wasCollide
+        return
+    end
+
+    for _, part in ipairs(touchingParts) do
+        if not part:IsDescendantOf(original) then
+            local current = part
+            while current and current ~= workspace do
+                if current:IsA("Model") then
+                    targetModel = current
+                    break
+                end
+                current = current.Parent
+            end
+            if targetModel then break end
+        end
+    end
+
+    grabPart.CanCollide = wasCollide
+
+    if not targetModel then return end
+
+    if not targetModel.Parent then
+        local found = false
+        local connection
+        connection = targetModel.AncestryChanged:Connect(function(_, parent)
+            if parent then
+                found = true
+                connection:Disconnect()
+            end
+        end)
+
+        local startTime = tick()
+        while not found and tick() - startTime < 2 do
+            task.wait(0.1)
+        end
+
+        if not found then return end
+    end
+
+    local existing = targetModel:FindFirstChild("Force")
+    if existing then
+        local existingHighlight = targetModel:FindFirstChild("AnchorHighlight")
+        if existingHighlight then
+            existingHighlight:Destroy()
+        end
+        existing:Destroy()
+        return
+    end
+
+    local clone = original:Clone()
+    clone.Name = "Force"
+
+    for _, desc in ipairs(clone:GetDescendants()) do
+        if desc:IsA("BasePart") then
+            desc.Transparency = 1
+            desc.CanCollide = false
+
+            local beam = desc:FindFirstChild("GrabBeam")
+            if beam then beam:Destroy() end
+
+            for _, sName in ipairs({"AttachSound1", "AttachSound", "BeamSound", "BeamSound1"}) do
+                local sound = desc:FindFirstChild(sName)
+                if sound then sound:Destroy() end
+            end
+        end
+    end
+
+    clone.Parent = targetModel
+
+    local hl = Instance.new("Highlight")
+    hl.Name = "AnchorHighlight"
+    hl.FillColor = Color3.fromRGB(0, 0, 255)
+    hl.FillTransparency = 0.9
+    hl.OutlineColor = Color3.fromRGB(0, 0, 255)
+    hl.OutlineTransparency = 0.5
+    hl.Adornee = targetModel
+    hl.Parent = targetModel
+
+    local connection
+    connection = game:GetService("RunService").Heartbeat:Connect(function()
+        if not clone or not clone.Parent or not targetModel or not targetModel.Parent then
+            if connection then connection:Disconnect() end
+            return
+        end
+
+        if hl and hl.Parent then
+            hl.Adornee = targetModel
+        else
+            connection:Disconnect()
+        end
+    end)
+end
+
+
+1Tab:CreateButton({
+    Name = "장벽 무력화",
     Callback = function()
-        if isExecuting then
-            return
+        PlotBarrierDelete()
+    end,
+})
+
+local rayAnchorToggle = nil
+rayAnchorToggle = 1Tab:CreateToggle({
+    Name = "고정",
+    CurrentValue = false,
+    Flag = "AnchoredToggle",
+    Callback = function(Value)
+        toggleButtonVisibility(mAnchorBtn, Value)
+        if Value then 
+            runAnchorLogic()
         end
-
-        isExecuting = true
-
-        local plr = game.Players.LocalPlayer
-        local char = plr.Character or plr.CharacterAdded:Wait()
-        local torso = char:WaitForChild("Torso")
-
-        local inPlot = plr:FindFirstChild("InPlot")
-        if not inPlot or inPlot.Value == false then
-            isExecuting = false
-            return
-        end
-
-        local TP = getMyPlot()
-        if not TP then
-            isExecuting = false
-            return
-        end
-
-        local GrabParts = workspace:FindFirstChild("GrabParts")
-        if GrabParts then
-        mouse1click()
-        end
-
-        local torso = char:WaitForChild("Torso")
-        local OCF = torso.CFrame
-        torso.CFrame = TP.CFrame
-        task.wait(0.15)
-        torso.CFrame = OCF
-        task.wait(0.15)
-        mouse1click()
-        isExecuting = false
     end
 })
 
-keybindTab:CreateSection("앵커")
-keybindTab:CreateKeybind({
-    Name = "고정",
-    CurrentKeybind = "H",
-    HoldToInteract = false,
-    Flag = "AnchoredKeybind",
-    Callback = function()
-			local original = workspace:FindFirstChild("GrabParts")
-			if not original then return end
+mAnchorBtn.MouseButton1Click:Connect(function()
+    if rayAnchorToggle and rayAnchorToggle.CurrentValue then
+        runAnchorLogic() 
+    end
+end)
 
-			local grabPart = original:FindFirstChild("GrabPart", true)
-			if not grabPart or not grabPart:IsA("BasePart") then return end
+local rayHouseToggle = nil
+rayHouseToggle = 1Tab:CreateToggle({
+    Name = "하우스그랩",
+    CurrentValue = false,
+    Flag = "HouseGrabToggle",
+    Callback = function(Value)
+        houseGrabLoop = Value
+        toggleButtonVisibility(mHouseBtn, Value)
+        
+        if houseGrabLoop then
+            task.spawn(function()
+                while houseGrabLoop do
+                    if not isExecuting then
+                        isExecuting = true
 
-			local wasCollide = grabPart.CanCollide
-			grabPart.CanCollide = true
-			task.wait(0.1)
+                        local char = plr.Character
+                        local torso = char and char:FindFirstChild("Torso")
 
-			local targetModel = nil
-			local touchingParts = grabPart:GetTouchingParts()
+                        if torso then
+                            local inPlot = plr:FindFirstChild("InPlot")
+                            if inPlot and inPlot.Value == true then
+                                local TP = getMyPlot()
+                                if TP then
+                                    local GrabParts = workspace:FindFirstChild("GrabParts")
+                                    if GrabParts and typeof(mouse1click) == "function" then
+                                        mouse1click()
+                                    end
 
-			if #touchingParts == 0 then
-				grabPart.CanCollide = wasCollide
-				return
-			end
-
-			for _, part in ipairs(touchingParts) do
-				if not part:IsDescendantOf(original) then
-					local current = part
-					while current and current ~= workspace do
-						if current:IsA("Model") then
-							targetModel = current
-							break
-						end
-						current = current.Parent
-					end
-					if targetModel then break end
-				end
-			end
-
-			grabPart.CanCollide = wasCollide
-
-			if not targetModel then return end
-
-			if not targetModel.Parent then
-				local found = false
-				local connection
-				connection = targetModel.AncestryChanged:Connect(function(_, parent)
-					if parent then
-						found = true
-						connection:Disconnect()
-					end
-				end)
-
-				local startTime = tick()
-				while not found and tick() - startTime < 2 do
-					task.wait(0.1)
-				end
-
-				if not found then return end
-			end
-
-			local existing = targetModel:FindFirstChild("Force")
-			if existing then
-				local existingHighlight = targetModel:FindFirstChild("AnchorHighlight")
-				if existingHighlight then
-					existingHighlight:Destroy()
-				end
-				existing:Destroy()
-				return
-			end
-
-			local clone = original:Clone()
-			clone.Name = "Force" -- CleanedGrabParts
-
-			for _, desc in ipairs(clone:GetDescendants()) do
-				if desc:IsA("BasePart") then
-					desc.Transparency = 1
-					desc.CanCollide = false
-
-					local beam = desc:FindFirstChild("GrabBeam")
-					if beam then beam:Destroy() end
-
-					for _, sName in ipairs({"AttachSound1", "AttachSound", "BeamSound", "BeamSound1"}) do
-						local sound = desc:FindFirstChild(sName)
-						if sound then sound:Destroy() end
-					end
-				end
-			end
-
-			clone.Parent = targetModel
-
-			local hl = Instance.new("Highlight")
-			hl.Name = "AnchorHighlight"
-			hl.FillColor = Color3.fromRGB(0, 0, 255)
-			hl.FillTransparency = 0.9
-			hl.OutlineColor = Color3.fromRGB(0, 0, 255)
-			hl.OutlineTransparency = 0.5
-			hl.Adornee = targetModel
-			hl.Parent = targetModel
-
-			local connection
-			connection = game:GetService("RunService").Heartbeat:Connect(function()
-				if not clone or not clone.Parent or not targetModel or not targetModel.Parent then
-					if connection then connection:Disconnect() end
-					return
-				end
-
-				if hl and hl.Parent then
-					hl.Adornee = targetModel
-				else
-					connection:Disconnect()
-				end
-			end)
+                                    local OCF = torso.CFrame
+                                    torso.CFrame = TP.CFrame
+                                    task.wait(0.15)
+                                    torso.CFrame = OCF
+                                    task.wait(0.15)
+                                    
+                                    if typeof(mouse1click) == "function" then
+                                        mouse1click()
+                                    end
+                                end
+                            end
+                        end
+                        isExecuting = false
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        end
     end
 })
 
