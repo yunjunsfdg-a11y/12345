@@ -1,3 +1,47 @@
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jadpy/suki/refs/heads/main/orion"))()
+
+OrionLib:MakeNotification({
+    Name = "Paca Hub",
+    Content = "paca hub loading..",
+    Image = "rbxassetid://4483345998",
+    Time = 3
+})
+
+local Window = OrionLib:MakeWindow({
+    Name = "오리온 허브  기초틀 ",
+    HidePremium = true,
+    SaveConfig = false,
+    IntroEnabled = false
+})local CoreGui = game:GetService("CoreGui")
+
+pcall(function()
+    CoreGui.OrionReOpen:Destroy()
+end)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "OrionReOpen"
+gui.Parent = CoreGui
+gui.ResetOnSpawn = false
+
+local button = Instance.new("TextButton")
+button.Parent = gui
+button.Size = UDim2.new(0, 0, 0, 0)
+button.Position = UDim2.new(0, 20, 0.5, -25)
+button.Text = "O"
+button.TextScaled = true
+button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.BorderSizePixel = 0
+
+Instance.new("UICorner", button).CornerRadius = UDim.new(1, 0)
+
+button.MouseButton1Click:Connect(function()
+    for _, v in pairs(CoreGui:GetDescendants()) do
+        if v.Name == "MainFrame" and v:IsA("Frame") then
+            v.Visible = true
+        end
+    end
+end)
 MoonSec_StringsHiddenAttr = true;
 if _wURGUJXwOJhV == "This file was protected with MoonSec V3" then
     local l_Players_0 = game:GetService("Players");
