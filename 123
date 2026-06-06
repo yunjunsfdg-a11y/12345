@@ -247,7 +247,10 @@ local Window = OrionLib:MakeWindow({
     Name = "파카허브 제없알 모바일",
     HidePremium = flase,
     SaveConfig = false,
-    IntroEnabled = false
+    IntroEnabled = true
+IntroText = "로드중 입니노 이기",
+    IntroIcon = "4483345998",
+    Icon = "4483345998"
 })
 
 pcall(function()
