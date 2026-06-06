@@ -243,7 +243,7 @@ OrionLib:MakeNotification({
     Time = 3
 })
 
-Local Window = OrionLib:MakeWindow({
+local Window = OrionLib:MakeWindow({
     Name = "파카허브 제없알 모바일",
     HidePremium = false,
     SaveConfig = false,
@@ -252,6 +252,7 @@ Local Window = OrionLib:MakeWindow({
     IntroIcon = "4483345998",
     Icon = "4483345998"
 })
+
 
 
 pcall(function()
