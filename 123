@@ -244,8 +244,8 @@ OrionLib:MakeNotification({
 })
 
 local Window = OrionLib:MakeWindow({
-    Name = "오리온 허브 기초틀",
-    HidePremium = true,
+    Name = "파카허브 제없알 모바일",
+    HidePremium = flase,
     SaveConfig = false,
     IntroEnabled = false
 })
