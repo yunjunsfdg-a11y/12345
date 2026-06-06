@@ -713,7 +713,7 @@ LocationTab:AddSection({ Name = "주요 지역" })
 
 local TeleportLocations = {
     ["스폰"] = CFrame.new(-152.783508, 139.910004, 1791.16602, 1, 0, 0, 0, 1, 0, 0, 0, 1),
-    ["이름 몰?루"] = CFrame.new(-5.18880367, 140.157761, 2492.52466, -0.91892904, 0.0095216129, -0.394307911, -0.0174374916, 0.997750401, 0.0647310913, 0.394037217, 0.0663590208, -0.916695774),
+    ["겨울성?"] = CFrame.new(-5.18880367, 140.157761, 2492.52466, -0.91892904, 0.0095216129, -0.394307911, -0.0174374916, 0.997750401, 0.0647310913, 0.394037217, 0.0663590208, -0.916695774),
     ["피라미드"] = CFrame.new(-294.798401, 245, 4799.24561, 1, 0, 0, 0, 1, 0, 0, 0, 1),
     ["무사관"] = CFrame.new(-1433.65576, 192.344635, 3796.99072, 0.712066472, 0.0192845948, 0.701847136, 3.82279977e-05, 0.99962163, -0.0275053065, -0.702112019, 0.0196124371, 0.711796343),
     ["메이플 월드"] = CFrame.new(-682.302002, 150.36142, 3476.62207, -0.758712471, 0.0163987316, 0.651219189, 4.14453643e-05, 0.999684334, -0.0251253452, -0.65142566, -0.0190359224, -0.758473635),
@@ -858,8 +858,8 @@ local BodyVel, BodyGyro = nil, nil
 CharacterTab:AddSection({ Name = "이동 속도 및 점프" })
 
 CharacterTab:AddSlider({
-    Name = "이동 속도 (WalkSpeed)",
-    Min = 16, Max = 300, Default = 16,
+    Name = "이동 속도",
+    Min = 1, Max = 300, Default = 35,
     Color = Color3.fromRGB(255,255,255), Increment = 1, ValueName = "Speed",
     Callback = function(Value)
         local char = LocalPlayer.Character
@@ -869,7 +869,7 @@ CharacterTab:AddSlider({
 })
 
 CharacterTab:AddSlider({
-    Name = "점프력 (JumpPower)",
+    Name = "점프력",
     Min = 50, Max = 500, Default = 50,
     Color = Color3.fromRGB(255,255,255), Increment = 1, ValueName = "Power",
     Callback = function(Value)
@@ -882,10 +882,10 @@ CharacterTab:AddSlider({
     end,
 })
 
-CharacterTab:AddSection({ Name = "유틸리티 (노클립/플라이)" })
+CharacterTab:AddSection({ Name = "노클립/플라이" })
 
 CharacterTab:AddToggle({
-    Name = "노클립 (벽 통과)",
+    Name = "노클립",
     Default = false,
     Callback = function(Value)
         if Value then
@@ -908,14 +908,14 @@ CharacterTab:AddToggle({
 })
 
 CharacterTab:AddSlider({
-    Name = "플라이 속도",
-    Min = 1, Max = 200, Default = 20,
+    Name = "플라이 속도(안티 치트업뎃여파 40미만 만가능)",
+    Min = 1, Max = 200, Default = 35,
     Color = Color3.fromRGB(255,255,255), Increment = 1, ValueName = "Speed",
     Callback = function(Value) FlySpeed = Value end
 })
 
 CharacterTab:AddToggle({
-    Name = "플라이 (날기)",
+    Name = "플라이",
     Default = false,
     Callback = function(Value)
         local char = LocalPlayer.Character
@@ -973,84 +973,13 @@ CharacterTab:AddToggle({
     end,
 })
 
--- ==========================================
--- [[ 6. 콘픽(설정) 탭 ]]
--- ==========================================
-local ConfigTab = Window:MakeTab({
-    Name = "콘픽",
-    Icon = "rbxassetid://4483362458",
-    PremiumOnly = false
-})
 
-local ConfigSection = ConfigTab:AddSection({ Name = "사냥터 프리셋" })
-
-local function applyPresetData(mobName, posVector, heightOffset, direction)
-    SavedPosition = CFrame.new(posVector)
-    AutoTpOnDeath = true
-    
-    pcall(function()
-        UI_Registry.PosInput:Set(string.format("%.1f, %.1f, %.1f", posVector.X, posVector.Y, posVector.Z))
-    end)
-
-    AutoFarmConfig.Enabled = true
-    AutoFarmConfig.AutoClickEnabled = true
-    AutoFarmConfig.TargetMob = mobName
-    AutoFarmConfig.HeightOffset = heightOffset
-    AttackDirection = direction
-    
-    pcall(function()
-        UI_Registry.MobDropdown:Refresh({AutoFarmConfig.TargetMob}, true)
-        UI_Registry.MobDropdown:Set(AutoFarmConfig.TargetMob)
-    end)
-
-    AutoFarmConfig.AutoSkillEnabled = true
-    AutoFarmConfig.Skills.E = true
-    AutoFarmConfig.Skills.R = true
-    AutoFarmConfig.Skills.T = true
-    AntiMacroEnabled = true
-
-    startAutoFarm()
-end
-
-ConfigTab:AddButton({
-    Name = "나락화 수호자 콘픽 적용 + 리셋",
-    Callback = function()
-        applyPresetData("나락화 수호자", Vector3.new(246.6, -983.3, 4647.6), 11, "Up")
-        OrionLib:MakeNotification({
-            Name = "설정 적용됨",
-            Content = "설정 완료! 캐릭터를 재설정하여 이동합니다...",
-            Time = 3
-        })
-        task.wait(0.2)
-        local player = game:GetService("Players").LocalPlayer
-        if player.Character and player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.Health = 0
-        end
-    end,
-})
-
-ConfigTab:AddButton({
-    Name = "예티 콘픽 적용 + 리셋",
-    Callback = function()
-        applyPresetData("예티", Vector3.new(1370.4, 198.7, 4141.8), 9, "Up")
-        OrionLib:MakeNotification({
-            Name = "예티 콘픽 적용됨",
-            Content = "설정 완료! 캐릭터를 재설정하여 이동합니다...",
-            Time = 3
-        })
-        task.wait(0.2)
-        local player = game:GetService("Players").LocalPlayer
-        if player.Character and player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.Health = 0
-        end
-    end,
-})
 
 -- 라이브러리 초기화 호출
 OrionLib:Init()
 
 OrionLib:MakeNotification({
     Name = "스크립트 로드 완료",
-    Content = "guns.lol/bgsn1.",
+    Content = "이기야 응디 대라노",
     Time = 6.5
 })
