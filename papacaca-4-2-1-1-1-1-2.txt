@@ -6226,182 +6226,29 @@ end
 
 ----------------------------------------------------------------------------------------- [ 시작 설정 ]
 
-CombatTab:CreateSection("물리 조작 및 전투")
-CombatTab:CreateToggle({Name = "자동 그랩 방어", CurrentValue = false, Flag = "C1", Callback = function(v) _G.A_G = v while _G.A_G do pcall(function() for _,x in pairs(game.Players.LocalPlayer.Character:GetChildren()) do if x:IsA("BasePart") then x.CanTouch = false end end end) task.wait(0.1) end end})
-CombatTab:CreateToggle({Name = "주변 유저 밀기", CurrentValue = false, Flag = "C2", Callback = function(v) _G.P_H = v while _G.P_H do for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local d = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude if d < 12 then p.Character.HumanoidRootPart.Velocity = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Unit * 60 end end end task.wait(0.1) end end})
-CombatTab:CreateToggle({Name = "라그돌 자동 해제", CurrentValue = false, Flag = "C3", Callback = function(v) _G.N_R = v while _G.N_R do pcall(function() if game.Players.LocalPlayer.Character:FindFirstChild("RagdollConfig") then game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false end end) task.wait(0.1) end end})
-CombatTab:CreateToggle({Name = "무게 무시", CurrentValue = false, Flag = "C4", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Massless = v end end end})
-CombatTab:CreateToggle({Name = "자동 점프", CurrentValue = false, Flag = "C5", Callback = function(v) _G.A_J = v while _G.A_J do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Jump = true end) task.wait(0.1) end end})
-CombatTab:CreateToggle({Name = "스핀 공격", CurrentValue = false, Flag = "C6", Callback = function(v) _G.S_N = v while _G.S_N do pcall(function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0, math.rad(35), 0) end) task.wait() end end})
-CombatTab:CreateToggle({Name = "그랩 파트 삭제", CurrentValue = false, Flag = "C7", Callback = function(v) if v and workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
-CombatTab:CreateToggle({Name = "유저 위치 고정", CurrentValue = false, Flag = "C8", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Anchored = v end end end})
-CombatTab:CreateToggle({Name = "캐릭터 투명화", CurrentValue = false, Flag = "C9", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Transparency = v and 0.6 or 0 end end end})
-CombatTab:CreateToggle({Name = "주변 물체 날리기", CurrentValue = false, Flag = "C10", Callback = function(v) _G.B_W = v while _G.B_W do for _,x in pairs(workspace:GetChildren()) do if x:IsA("BasePart") and (x.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then x.Velocity = Vector3.new(0, 60, 0) end end task.wait(0.2) end end})
-CombatTab:CreateToggle({Name = "플레이어 강조", CurrentValue = false, Flag = "C11", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local h = p.Character:FindFirstChild("Highlight") or Instance.new("Highlight", p.Character) h.Enabled = v end end end})
-CombatTab:CreateButton({Name = "전원 소환", Callback = function() for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position) end end end})
-CombatTab:CreateButton({Name = "구조물 삭제", Callback = function() for _,x in pairs(workspace:GetChildren()) do if x:IsA("Part") and x.Name ~= "Baseplate" then x:Destroy() end end end})
-CombatTab:CreateButton({Name = "지옥 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -600, 0) end})
-CombatTab:CreateButton({Name = "우주 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 10000, 0) end})
-CombatTab:CreateButton({Name = "스폰 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 15, 0) end})
-CombatTab:CreateButton({Name = "랜덤 유저 TP", Callback = function() local ps = game.Players:GetPlayers() local r = ps[math.random(1, #ps)] if r.Character then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = r.Character.HumanoidRootPart.CFrame end end})
-CombatTab:CreateButton({Name = "강제 앉기", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Sit = true end})
-CombatTab:CreateButton({Name = "맵 청소", Callback = function() if workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
-CombatTab:CreateButton({Name = "몸체 고정", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true end})
-CombatTab:CreateButton({Name = "고정 해제", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false end})
-CombatTab:CreateButton({Name = "이동 속도 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16 end})
-CombatTab:CreateButton({Name = "점프력 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 end})
-CombatTab:CreateButton({Name = "닉네임 출력", Callback = function() print(game.Players.LocalPlayer.Name) end})
+RankTab:AddSection("제작자")
+RankTab:AddLabel("제작자 : baby_Alpaca | 알파카")
 
-EnvironmentTab:CreateSection("시각 및 시스템")
-EnvironmentTab:CreateToggle({Name = "풀브라이트", CurrentValue = false, Flag = "E1", Callback = function(v) if v then game:GetService("Lighting").Brightness = 2 game:GetService("Lighting").ClockTime = 14 else game:GetService("Lighting").Brightness = 1 end end})
-EnvironmentTab:CreateToggle({Name = "그림자 제거", CurrentValue = false, Flag = "E2", Callback = function(v) game:GetService("Lighting").GlobalShadows = not v end})
-EnvironmentTab:CreateToggle({Name = "저사양 모드", CurrentValue = false, Flag = "E3", Callback = function(v) if v then for _,x in pairs(game:GetDescendants()) do if x:IsA("BasePart") then x.Material = Enum.Material.SmoothPlastic end end end end})
-EnvironmentTab:CreateToggle({Name = "안개 제거", CurrentValue = false, Flag = "E4", Callback = function(v) if v then game:GetService("Lighting").FogEnd = 100000 end end})
-EnvironmentTab:CreateToggle({Name = "시야 확장 (120)", CurrentValue = false, Flag = "E5", Callback = function(v) workspace.CurrentCamera.FieldOfView = v and 120 or 70 end})
-EnvironmentTab:CreateToggle({Name = "물 위 걷기", CurrentValue = false, Flag = "E6", Callback = function(v) if v then local p = Instance.new("Part", workspace) p.Name = "WaterPart" p.Size = Vector3.new(2048, 10, 2048) p.Position = Vector3.new(0, -19, 0) p.Anchored = true p.Transparency = 0.8 else if workspace:FindFirstChild("WaterPart") then workspace.WaterPart:Destroy() end end end})
-EnvironmentTab:CreateToggle({Name = "발판 생성", CurrentValue = false, Flag = "E7", Callback = function(v) _G.P_S = v while _G.P_S do pcall(function() local p = Instance.new("Part", workspace) p.Size = Vector3.new(30,1,30) p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-3.5,0) p.Anchored = true task.wait(0.5) p:Destroy() end) task.wait(0.1) end end})
-EnvironmentTab:CreateToggle({Name = "모든 데칼 숨기기", CurrentValue = false, Flag = "E8", Callback = function(v) for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Decal") then x.Transparency = v and 1 or 0 end end end})
-EnvironmentTab:CreateToggle({Name = "아이템 ESP", CurrentValue = false, Flag = "E9", Callback = function(v) for _,x in pairs(workspace:GetChildren()) do if x.Name == "GrabParts" then local h = x:FindFirstChild("Highlight") or Instance.new("Highlight", x) h.Enabled = v end end end})
-EnvironmentTab:CreateToggle({Name = "이름표 숨기기", CurrentValue = false, Flag = "E10", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.NameTag.Enabled = not v end) end})
-EnvironmentTab:CreateToggle({Name = "FPS 해제", CurrentValue = false, Flag = "E11", Callback = function(v) setfpscap(v and 999 or 60) end})
-EnvironmentTab:CreateToggle({Name = "히트박스 확장", CurrentValue = false, Flag = "E12", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Size = v and Vector3.new(10,10,10) or Vector3.new(2,2,1) p.Character.HumanoidRootPart.Transparency = v and 0.7 or 1 end end end})
-EnvironmentTab:CreateToggle({Name = "서버 렉 최적화", CurrentValue = false, Flag = "E13", Callback = function(v) settings().Rendering.QualityLevel = v and 1 or 5 end})
-EnvironmentTab:CreateToggle({Name = "자동 앉기 방지", CurrentValue = false, Flag = "E14", Callback = function(v) _G.N_S = v while _G.N_S do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Sit = false end) task.wait(0.5) end end})
-EnvironmentTab:CreateToggle({Name = "머리 크기 확장", CurrentValue = false, Flag = "E15", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.Size = v and Vector3.new(5,5,5) or Vector3.new(1,1,1) end) end})
-EnvironmentTab:CreateToggle({Name = "맵 텍스처 삭제", CurrentValue = false, Flag = "E16", Callback = function(v) if v then for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Texture") then x:Destroy() end end end end})
-EnvironmentTab:CreateToggle({Name = "중력 낮추기", CurrentValue = false, Flag = "E17", Callback = function(v) workspace.Gravity = v and 50 or 196.2 end})
-EnvironmentTab:CreateToggle({Name = "중력 높이기", CurrentValue = false, Flag = "E18", Callback = function(v) workspace.Gravity = v and 500 or 196.2 end})
-EnvironmentTab:CreateToggle({Name = "채팅 감시", CurrentValue = false, Flag = "E19", Callback = function(v) _G.S_P = v end})
-EnvironmentTab:CreateButton({Name = "서버 재접속", Callback = function() game:GetService("TeleportService"):Teleport(game.PlaceId) end})
-EnvironmentTab:CreateButton({Name = "즉시 사망", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Health = 0 end})
-EnvironmentTab:CreateButton({Name = "UI 숨기기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false) end})
-EnvironmentTab:CreateButton({Name = "UI 보이기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, true) end})
-EnvironmentTab:CreateButton({Name = "F3X 소환", Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/dread-scripts/f3x/master/f3x.lua"))() end})
-EnvironmentTab:CreateButton({Name = "스크립트 종료", Callback = function() Rayfield:Destroy() end})
+RankTab:AddSection("친구 목록")
+RankTab:AddLabel("헬로, 썸머, 누나, 이에스, 까망, 연우, 온유, 대환, 서은")
 
+RankTab:AddSection("어드민 권한 획득")
 
-
-
-
-
--- ================== [ 유틸리티 기능 ] ==================
-
-
--- ================== 모바일 TP (DevTab) ==================
-DevTab:CreateS
-
-local tpGui = nil
-
-local function performTeleport()
-    local char = game.Players.LocalPlayer.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-
-    local root = char.HumanoidRootPart
-    local cam = workspace.CurrentCamera
-    local unitRay = cam:ViewportPointToRay(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
-    
-    local params = RaycastParams.new()
-    params.FilterDescendantsInstances = {char}
-    params.FilterType = Enum.RaycastFilterType.Exclude
-    params.IgnoreWater = true
-
-    local result = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1500, params)
-    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) 
-                     or (unitRay.Origin + unitRay.Direction * 200)
-
-    root.CFrame = CFrame.new(targetPos) * CFrame.Angles(0, root.CFrame.Rotation.Y, 0)
-end
-
-local function createTPButton()
-    if tpGui then tpGui:Destroy() end
-    
-    tpGui = Instance.new("ScreenGui")
-    tpGui.Name = "AlpacaMobileTP"
-    tpGui.ResetOnSpawn = false
-    tpGui.Parent = game.CoreGui
-
-    local btn = Instance.new("TextButton")
-    btn.Name = "TPButton"
-    btn.Size = UDim2.new(0, 75, 0, 75)
-    btn.Position = UDim2.new(1, -95, 1, -180)  -- 오른쪽 아래 (빨간색 위치)
-    btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    btn.BackgroundTransparency = 0.25
-    btn.Text = "TP"
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 22
-    btn.BorderSizePixel = 0
-    btn.Parent = tpGui
-
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1, 0)
-    corner.Parent = btn
-
-    local stroke = Instance.new("UIStroke")
-    stroke.Color = Color3.fromRGB(0, 200, 255)
-    stroke.Thickness = 3.5
-    stroke.Parent = btn
-
-    -- 버튼 드래그 가능
-    local dragging = false
-    btn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-        end
-    end)
-    btn.InputEnded:Connect(function() dragging = false end)
-
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging then
-            -- 드래그 기능 (간단)
-        end
-    end)
-
-    btn.MouseButton1Click:Connect(performTeleport)
-end
-
--- 토글 (스크립트 로드 시 자동 ON)
-DevTab:CreateToggle({
-    Name = "Mobile Crosshair TP",
-    CurrentValue = true,     -- 자동 ON
-    Flag = "MobileTP",
-    Callback = function(Value)
-        if Value then
-            createTPButton()
-            Rayfield:Notify({Title = "✅ TP ON", Content = "화면 중앙 보고 TP 버튼 누르세요", Duration = 3})
-        else
-            if tpGui then 
-                tpGui:Destroy() 
-                tpGui = nil 
-            end
-        end
-    end
-})
-
-
-RankTab:CreateSection("제작자")
-RankTab:CreateLabel("제작자 : baby_Alpaca | 알파카")
-
-RankTab:CreateSection("친구 목록")
-RankTab:CreateLabel("헬로, 썸머, 누나, 이에스, 까망, 연우, 온유, 대환, 서은")
-
-RankTab:CreateSection("어드민 권한 획득")
-
-local AdminHackButton = RankTab:CreateButton({
+local AdminHackButton = RankTab:AddButton({
     Name = "iY 어드민 핵",
     Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
         
-        Rayfield:Notify({
-            Title = "🔓 iY 어드민",
-            Content = "Infinite Yield 어드민 스크립트가 실행되었습니다.",
-            Duration = 5
-        })
+        OrionLib:MakeNotification({
+    Name = "wait",
+    Content = "어드민 실행중",
+    Time = 4
+})
     end
 })
-passTab:CreateSection("커스텀 그라데이션 설정")
+passTab:AddSection("커스텀 그라데이션 설정")
 
-passTab:CreateInput({
+passTab:AddInput({
    Name = "그라데이션 레이어 수 설정 (2 ~ 4)",
    PlaceholderText = "기본값: 2",
    RemoveTextAfterFocusLost = false,
@@ -6423,17 +6270,16 @@ passTab:CreateInput({
             end)
          end
       else
-         Rayfield:Notify({
-            Name = "Error",
-            Content = "Layer amount must be between 2 and 4.",
-            Duration = 3,
-            Image = 4483345998,
-         })
+         OrionLib:MakeNotification({
+    Name = "fali",
+    Content = "2~4만 입력 ㄱㄴ",
+    Time = 4
+})
       end
    end,
 })
 
-passTab:CreateColorPicker({
+passTab:AddColorPicker({
     Name = "색상 1",
     Color = Color3.new(1, 0, 0),
     Callback = function(color)
@@ -6450,7 +6296,7 @@ passTab:CreateColorPicker({
     end
 })
 
-passTab:CreateColorPicker({
+passTab:AddColorPicker({
     Name = "색상 2",
     Color = Color3.new(0, 0, 1),
     Callback = function(color)
@@ -6467,7 +6313,7 @@ passTab:CreateColorPicker({
     end
 })
 
-passTab:CreateColorPicker({
+passTab:AddColorPicker({
     Name = "색상 3",
     Color = Color3.new(0, 0, 0),
     Callback = function(color)
@@ -6484,7 +6330,7 @@ passTab:CreateColorPicker({
     end
 })
 
-passTab:CreateColorPicker({
+passTab:AddColorPicker({
     Name = "색상 4",
     Color = Color3.new(1, 1, 0),
     Callback = function(color)
@@ -6501,7 +6347,7 @@ passTab:CreateColorPicker({
     end
 })
 
-passTab:CreateToggle({
+passTab:AddToggle({
    Name = "커스텀 그라데이션 적용",
    CurrentValue = false,
    Flag = "CustomGradientToggle",
@@ -6522,9 +6368,9 @@ passTab:CreateToggle({
    end,
 })
 
-passTab:CreateSection("라인 색상 고정 프리셋")
+passTab:AddSection("라인 색상 고정 프리셋")
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "무지개 프리셋 (고정 고해상도)",
    Callback = function()
       CustomGradientEnabled = false
@@ -6545,7 +6391,7 @@ passTab:CreateButton({
    end,
 })
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "불꽃 프리셋 (레드/오렌지/옐로우)",
    Callback = function()
       CustomGradientEnabled = false
@@ -6562,7 +6408,7 @@ passTab:CreateButton({
    end,
 })
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "바다 프리셋 (딥블루/아쿠아)",
    Callback = function()
       CustomGradientEnabled = false
@@ -6579,7 +6425,7 @@ passTab:CreateButton({
    end,
 })
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "석양 프리셋 (퍼플/핑크/오렌지)",
    Callback = function()
       CustomGradientEnabled = false
@@ -6596,7 +6442,7 @@ passTab:CreateButton({
    end,
 })
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "네온 프리셋 (민트/마젠타)",
    Callback = function()
       CustomGradientEnabled = false
@@ -6612,9 +6458,9 @@ passTab:CreateButton({
    end,
 })
 
-passTab:CreateSection("실시간 애니메이션 효과")
+passTab:AddSection("실시간 애니메이션 효과")
 
-passTab:CreateToggle({
+passTab:AddToggle({
    Name = "실시간 무지개 그라데이션 루프",
    CurrentValue = false,
    Flag = "RainbowLoopToggle",
@@ -6642,9 +6488,9 @@ passTab:CreateToggle({
    end,
 })
 
-passTab:CreateSection("게임패스 잠금해제")
+passTab:AddSection("게임패스 잠금해제")
 
-passTab:CreateButton({
+passTab:AddButton({
    Name = "긴줄 잠금해제",
    Callback = function()
       local Reach = Instance.new("BoolValue")
@@ -6661,136 +6507,32 @@ passTab:CreateButton({
             pcall(connection.Function)
             ran = true
          end
-         if ran then
-            Rayfield:Notify({
-               Name = "Success",
-               Content = "긴줄잠금해제완료!",
-               Duration = 4,
-               Image = 10734951437
-            })
-         else
-            Rayfield:Notify({
-               Name = "Failed",
-               Content = "긴줄잠금해제실패!",
-               Duration = 4,
-               Image = 10734925828
-            })
+        else
+            OrionLib:MakeNotification({
+    Name = "fali",
+    Content = "긴줄잠금해제실패",
+    Time = 4
+})
          end
       else
-         Rayfield:Notify({
-            Name = "Failed",
-            Content = "긴줄잠금해제실패!",
-            Duration = 4,
-            Image = 10734925828
-         })
+         OrionLib:MakeNotification({
+    Name = "Success",
+    Content = "긴줄잠금해제완료!",
+    Time = 4
+})
       end
    end,
 })
 
--- ================== 모바일 크로스헤어 TP (DevTab) ==================
-DevTab:CreateSection("Mobile Crosshair TP")
 
-local tpGui = nil
-local tpEnabled = true
-local camera = workspace.CurrentCamera
-local lp = game.Players.LocalPlayer
 
-local function performTeleport()
-    local char = lp.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
 
-    local root = char.HumanoidRootPart
-    local unitRay = camera:ViewportPointToRay(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
-    
-    local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {char}
-    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
-    raycastParams.IgnoreWater = true
 
-    local result = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1500, raycastParams)
-    
-    local targetPos = result and (result.Position + Vector3.new(0, 4, 0)) 
-                     or (unitRay.Origin + unitRay.Direction * 200)
 
-    root.CFrame = CFrame.new(targetPos) * CFrame.Angles(0, root.CFrame.Rotation.Y, 0)
-end
 
-local function createMobileTPButton()
-    if tpGui then tpGui:Destroy() end
-    
-    tpGui = Instance.new("ScreenGui")
-    tpGui.Name = "AlpacaMobileTP"
-    tpGui.ResetOnSpawn = false
-    tpGui.Parent = game:GetService("CoreGui")
 
-    local btn = Instance.new("TextButton")
-    btn.Name = "TPButton"
-    btn.Parent = tpGui
-    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    btn.BackgroundTransparency = 0.35
-    btn.Text = "TP"
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 18
-    btn.Size = UDim2.new(0, 65, 0, 65)
-    btn.Position = UDim2.new(1, -85, 1, -150)
-    btn.BorderSizePixel = 0
-
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1, 0)
-    corner.Parent = btn
-
-    local stroke = Instance.new("UIStroke")
-    stroke.Color = Color3.fromRGB(0, 180, 255)
-    stroke.Thickness = 3
-    stroke.Parent = btn
-
-    -- 드래그 기능
-    local dragging, dragInput, mousePos, framePos
-    btn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            mousePos = input.Position
-            framePos = btn.Position
-        end
-    end)
-
-    btn.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = false
-        end
-    end)
-
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local delta = input.Position - mousePos
-            btn.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-        end
-    end)
-
-    btn.MouseButton1Click:Connect(performTeleport)
-end
-
-DevTab:CreateToggle({
-    Name = "Mobile Crosshair TP (기본 ON)",
-    CurrentValue = flase,   -- ← 스크립트 실행 시 자동 ON
-    Flag = "MobileTPDev",
-    Callback = function(Value)
-        tpEnabled = Value
-        if Value then
-            createMobileTPButton()
-            Rayfield:Notify({Title = "✅ Mobile TP", Content = "크로스헤어 TP 활성화 (버튼 드래그 가능)", Duration = 4})
-        else
-            if tpGui then 
-                tpGui:Destroy() 
-                tpGui = nil 
-            end
-        end
-    end
-})
-
-DevTab:CreateSection("Gam")
-DevTab:CreateToggle({
+DevTab:AddSection("알림")
+DevTab:AddToggle({
     Name = "킥알림!",
     CurrentValue = true,
     Flag = "5",
@@ -6802,122 +6544,11 @@ DevTab:CreateToggle({
     end
 })
 
-headMatrix = {0,0,0,0,0,0,0,1,0}
-torsoMatrix = {0,0,0,0,0,0,0,1,0}
-rightArmMatrix = {0,0,2,0,0,0,0,0,1}
-
-DevTab:CreateSection("")
-DevTab:CreateToggle({ 
-    Name = "락", 
-    CurrentValue = false,
-    Flag = "ToggleSpam",
-    Callback = function(Value)
-        isSpamming = Value
-
-        if isSpamming then
-            if heartbeatConnection then
-                heartbeatConnection:Disconnect()
-            end
-
-            heartbeatConnection = rs2.Heartbeat:Connect(function()
-                rs.CharacterEvents.Look:FireServer(
-                    CFrame.new(0, 0, 0, headMatrix[1], headMatrix[2], headMatrix[3], headMatrix[4], headMatrix[5], headMatrix[6], headMatrix[7], headMatrix[8], headMatrix[9]),
-                    CFrame.new(0, 0, 0, torsoMatrix[1], torsoMatrix[2], torsoMatrix[3], torsoMatrix[4], torsoMatrix[5], torsoMatrix[6], torsoMatrix[7], torsoMatrix[8], torsoMatrix[9]),
-                    CFrame.new(0, 0, 0, rightArmMatrix[1], rightArmMatrix[2], rightArmMatrix[3], rightArmMatrix[4], rightArmMatrix[5], rightArmMatrix[6], rightArmMatrix[7], rightArmMatrix[8], rightArmMatrix[9]),
-                    "high"
-                )
-            end)
-        else
-            if heartbeatConnection then
-                heartbeatConnection:Disconnect()
-                heartbeatConnection = nil
-            end
---[[
-            rs.CharacterEvents.Look:FireServer(
-                CFrame.new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                CFrame.new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                CFrame.new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                intensity
-            )
-]]--
-        end
-    end
-})
-
-local HR = DevTab:CreateInput({
-    Name = "대가리 회전",
-    CurrentValue = "0,0,0,0,0,0,0,1,0",
-    PlaceholderText = "xx, xy, xz, yx, yy, yz, zx, zy, zz",
-    RemoveTextAfterFocusLost = false,
-    Flag = "HeadMatrix",
-    Callback = function(Value)
-        local numbers = {}
-        for num in Value:gmatch("[^,]+") do
-            table.insert(numbers, tonumber(num) or 0)
-        end
-
-        for i = 1, 9 do
-            headMatrix[i] = numbers[i] or 0
-        end
-    end
-})
-
-local TR = DevTab:CreateInput({
-    Name = "몸통회전",
-    CurrentValue = "0,0,0,0,0,0,0,1,0",
-    PlaceholderText = "xx, xy, xz, yx, yy, yz, zx, zy, zz",
-    RemoveTextAfterFocusLost = false,
-    Flag = "TorsoMatrix",
-    Callback = function(Value)
-        local numbers = {}
-        for num in Value:gmatch("[^,]+") do
-            table.insert(numbers, tonumber(num) or 0)
-        end
-
-        for i = 1, 9 do
-            torsoMatrix[i] = numbers[i] or 0
-        end
-    end
-})
-
-local ARA = DevTab:CreateInput({
-    Name = "오른팔 회전(딸딸이치기)",
-    CurrentValue = "0,0,2,0,0,0,0,0,1",
-    PlaceholderText = "xx, xy, xz, yx, yy, yz, zx, zy, zz",
-    RemoveTextAfterFocusLost = false,
-    Flag = "ArmMatrix",
-    Callback = function(Value)
-        local numbers = {}
-        for num in Value:gmatch("[^,]+") do
-            table.insert(numbers, tonumber(num) or 0)
-        end
-
-        for i = 1, 9 do
-            rightArmMatrix[i] = numbers[i] or 0
-        end
-    end
-})
-
-DevTab:CreateButton({
-    Name = "리셋",
-    Callback = function()
-
-headMatrix = {0,0,0,0,0,0,0,1,0}
-torsoMatrix = {0,0,0,0,0,0,0,1,0}
-rightArmMatrix = {0,0,2,0,0,0,0,0,1}
-
-HR:Set("0,0,0,0,0,0,0,1,0")
-TR:Set("0,0,0,0,0,0,0,1,0")
-ARA:Set("0,0,2,0,0,0,0,0,1")
-
-    end
-})
-
 local TextChatService = game:GetService("TextChatService")
 local RunService = game:GetService("RunService")
 
-DevTab:CreateSection("Chat")
-DevTab:CreateInput({
+DevTab:AddSection("Chat")
+DevTab:AddInput({
     Name = "소리",
     CurrentValue = "",
     PlaceholderText = "Value",
@@ -6928,7 +6559,7 @@ DevTab:CreateInput({
     end
 })
 
-DevTab:CreateInput({
+DevTab:AddInput({
     Name = "소리 나오는 속도",
     CurrentValue = "",
     PlaceholderText = "Value",
@@ -6944,7 +6575,7 @@ DevTab:CreateInput({
     end
 })
 
-DevTab:CreateToggle({ 
+DevTab:AddToggle({ 
     Name = "토클", 
     CurrentValue = false,
     Flag = "SpamToggle",
@@ -6977,14 +6608,13 @@ DevTab:CreateToggle({
         end
     end
 })
-DevTab:CreateSection("Tweened Objects")
-DevTab:CreateButton({
+DevTab:AddButton({
     Name = "열차조종[fly혹은 그랩으로 가능]",
     Callback = TrSw
 })
 
-DevTab:CreateSection("OWNER")
-local Loop1 = DevTab:CreateToggle({
+DevTab:AddSection("OWNER")
+local Loop1 = DevTab:AddToggle({
     Name = "PTM",
     CurrentValue = false,
     Flag = "21",
@@ -7004,7 +6634,7 @@ local Loop1 = DevTab:CreateToggle({
     end
 })
 
-DevTab:CreateButton({
+DevTab:AddButton({
     Name = "킬 [ Owner ]",
     Callback = function()
         table.clear(playersInLoop2V)
@@ -7061,7 +6691,7 @@ DevTab:CreateButton({
     end
 })
 
-DevTab:CreateButton({
+DevTab:AddButton({
     Name = "날리기 [ Owner ]",
     Callback = function()
         table.clear(playersInLoop2V)
