@@ -48,37 +48,7 @@ local TargetTab = Window:CreateTab("ui설정(현재 불가)")
 
 
 
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
-
-local targetAnimSpeed = 1.0
-
-humanoid.AnimationPlayed:Connect(function(animTrack)
-	animTrack:AdjustSpeed(targetAnimSpeed)
-end)
-
-for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
-	track:AdjustSpeed(targetAnimSpeed)
-end
-
-RunService.RenderStepped:Connect(function()
-	if humanoid.MoveDirection.Magnitude > 0 then
-		local moveDir = humanoid.MoveDirection.Unit
-		rootPart.Velocity = Vector3.new(moveDir.X * humanoid.WalkSpeed, rootPart.Velocity.Y, moveDir.Z * humanoid.WalkSpeed)
-	else
-		rootPart.Velocity = Vector3.new(0, rootPart.Velocity.Y, 0)
-	end
-end)
-
-UserInputService.JumpRequest:Connect(function()
-	humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-end)
 
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
