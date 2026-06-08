@@ -577,7 +577,7 @@ function updateWalkSpeedF()
                 end
             end)
         else
-            hum.WalkSpeed = 16
+            hum.WalkSpeed = 100
         end
     end
 
@@ -9985,7 +9985,7 @@ local Dropdown = antiTab:CreateDropdown({
 playerTab:CreateSection("플레이어")
 playerTab:CreateToggle({
     Name = "이동 속도",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "28",
     Callback = function(Value)
         walkSpeedT = Value 
@@ -9995,7 +9995,7 @@ playerTab:CreateToggle({
 
 local walkSpeedInput = playerTab:CreateInput({
     Name = "값",
-    CurrentValue = 16,
+    CurrentValue = 100,
     PlaceholderText = "Value",
     RemoveTextAfterFocusLost = true,
     Flag = "29",
@@ -10004,7 +10004,7 @@ local walkSpeedInput = playerTab:CreateInput({
         updateWalkSpeedF()
     end
 })
-walkSpeedInput:Set(80)
+walkSpeedInput:Set(100)
 
 
 
@@ -10012,7 +10012,7 @@ walkSpeedInput:Set(80)
 
 playerTab:CreateToggle({
     Name = "점프 높이",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "30",
     Callback = function(Value)
         jumpPowerT = Value
@@ -10022,7 +10022,7 @@ playerTab:CreateToggle({
 
 local jumpPowerInput = playerTab:CreateInput({
     Name = "값",
-    CurrentValue = 24,
+    CurrentValue = 60,
     PlaceholderText = "Value",
     RemoveTextAfterFocusLost = false,
     Flag = "31",
