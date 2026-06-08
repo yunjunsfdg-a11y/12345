@@ -3537,7 +3537,7 @@ function AntiGrabF(enable)
             end
         end
 
-        if hum.Health <= 10 then
+        if hum.Health <= 0 then
             lastHeldState = false
             shouldKeepSit = false
             sitHoldTimer = 0
@@ -3546,7 +3546,7 @@ function AntiGrabF(enable)
             hum.AutoRotate = true
         end
 
-        if not hrp or hum.Health <= 10 then
+        if not hrp or hum.Health <= 0 then
             hum:ChangeState(Enum.HumanoidStateType.Dead)
             char:BreakJoints()
             --rs.CharacterEvents.Struggle:FireServer()
