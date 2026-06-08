@@ -6,49 +6,120 @@ print("AP FTAP Script 시작 - 설정 저장 활성화")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 
-local Window = Rayfield:CreateWindow({
+local Window = OrionLib:MakeWindow({
     Name = "FTAP(반물사) | (made by 알파카)",
-    LoadingTitle = "알파스크립트 로딩중",
-    LoadingSubtitle = "by Alpaca",
-    ConfigurationSaving = {
-        Enabled = true,
-        FolderName = "파카허브(1티어)",
-        FileName = "AIPA_FTAP_Config"
-    },
-    KeySystem = true,
-    KeySettings = {
-        Title = "파카허브 키시스템",
-        Subtitle = "인증 키를 입력하세요",
-        Note = "오너(알파카👑)에게서 키를 받을수있습니다.(800로벅)",
-        FileName   = "AIPA_Key", 
-        SaveKey = true, 
-        GrabKeyFromSite = false, 
-        Key = {"파카허브v30"} 
-    }
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "파카허브(1티어)"
 })
-local HubTab = Window:CreateTab("파카허브란",0)
-local playerTab = Window:CreateTab("플레이어 설정", 6034281935)    
-local passTab = Window:CreateTab("패스잠금해제")
-local grabTab = Window:CreateTab("컴뱃", 6026568198)               
-local UtilityTab = Window:CreateTab("유틸리티", 6031094678)        
-local antiTab = Window:CreateTab("안전", 6034831332)               
-local ListTab = Window:CreateTab("명단", 3572491301)              
-local LoopTab = Window:CreateTab("조지기", 6023426923)             
-local AuraTab = Window:CreateTab("아우라", 6031068423)            
-local funTab = Window:CreateTab("찌끄레기", 4483345998)            
-local keybindTab = Window:CreateTab("설정", 6031094678)            
-local DevTab = Window:CreateTab("잡기능", 3944680095)             
-local RankTab = Window:CreateTab("제작자 친구", 6034281935)       
-local environmentTab = Window:CreateTab("환경 설정", 6023426923)   
-local combatTab = Window:CreateTab("전투 확장", 6026568198)        
-local BlacklistTab = Window:CreateTab("블랙리스트(좆장애창녀 모음집)", 6034831332)  
-local cmdWindowTab = Window:CreateTab("명령어 콘솔",6023426923 )
-local TargetTab = Window:CreateTab("ui설정(현재 불가)")
 
+local HubTab = Window:MakeTab({
+    Name = "파카허브란",
+    Icon = "rbxassetid://0",
+    PremiumOnly = false
+})
 
+local playerTab = Window:MakeTab({
+    Name = "플레이어 설정",
+    Icon = "rbxassetid://6034281935",
+    PremiumOnly = false
+})
 
+local passTab = Window:MakeTab({
+    Name = "패스잠금해제",
+    Icon = "rbxassetid://0",
+    PremiumOnly = false
+})
 
+local grabTab = Window:MakeTab({
+    Name = "컴뱃",
+    Icon = "rbxassetid://6026568198",
+    PremiumOnly = false
+})
 
+local UtilityTab = Window:MakeTab({
+    Name = "유틸리티",
+    Icon = "rbxassetid://6031094678",
+    PremiumOnly = false
+})
+
+local antiTab = Window:MakeTab({
+    Name = "안전",
+    Icon = "rbxassetid://6034831332",
+    PremiumOnly = false
+})
+
+local ListTab = Window:MakeTab({
+    Name = "명단",
+    Icon = "rbxassetid://3572491301",
+    PremiumOnly = false
+})
+
+local LoopTab = Window:MakeTab({
+    Name = "조지기",
+    Icon = "rbxassetid://6023426923",
+    PremiumOnly = false
+})
+
+local AuraTab = Window:MakeTab({
+    Name = "아우라",
+    Icon = "rbxassetid://6031068423",
+    PremiumOnly = false
+})
+
+local funTab = Window:MakeTab({
+    Name = "찌끄레기",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local keybindTab = Window:MakeTab({
+    Name = "설정",
+    Icon = "rbxassetid://6031094678",
+    PremiumOnly = false
+})
+
+local DevTab = Window:MakeTab({
+    Name = "잡기능",
+    Icon = "rbxassetid://3944680095",
+    PremiumOnly = false
+})
+
+local RankTab = Window:MakeTab({
+    Name = "제작자 친구",
+    Icon = "rbxassetid://6034281935",
+    PremiumOnly = false
+})
+
+local environmentTab = Window:MakeTab({
+    Name = "환경 설정",
+    Icon = "rbxassetid://6023426923",
+    PremiumOnly = false
+})
+
+local combatTab = Window:MakeTab({
+    Name = "전투 확장",
+    Icon = "rbxassetid://6026568198",
+    PremiumOnly = false
+})
+
+local BlacklistTab = Window:MakeTab({
+    Name = "블랙리스트(좆장애창녀 모음집)",
+    Icon = "rbxassetid://6034831332",
+    PremiumOnly = false
+})
+
+local cmdWindowTab = Window:MakeTab({
+    Name = "명령어 콘솔",
+    Icon = "rbxassetid://6023426923",
+    PremiumOnly = false
+})
+
+local TargetTab = Window:MakeTab({
+    Name = "ui설정(현재 불가)",
+    Icon = "rbxassetid://0",
+    PremiumOnly = false
+})
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
 cam = workspace.CurrentCamera
@@ -5543,13 +5614,14 @@ function ifKickThenF()
         if anchoredCache[plr] == true then
             local DISP = plr.DisplayName
             local NAP = plr.Name
-            Rayfield:Notify({
-                Title = "[ Kick ]", 
-                Content = "[" .. DISP .. "] ( @" .. NAP ..  ")", 
-                Duration = 7, 
-                Image = 0
+
+            OrionLib:MakeNotification({
+                Name = "[ Kick ]",
+                Content = "[" .. DISP .. "] ( @" .. NAP .. ")",
+                Time = 7
             })
         end
+
         anchoredCache[plr] = nil
     end)
 
@@ -6153,391 +6225,70 @@ end
 end
 
 ----------------------------------------------------------------------------------------- [ 시작 설정 ]
-combatTab:CreateSection("물리 조작 및 전투")
-combatTab:CreateToggle({Name = "자동 그랩 방어", CurrentValue = false, Flag = "C1", Callback = function(v) _G.A_G = v while _G.A_G do pcall(function() for _,x in pairs(game.Players.LocalPlayer.Character:GetChildren()) do if x:IsA("BasePart") then x.CanTouch = false end end end) task.wait(0.1) end end})
-combatTab:CreateToggle({Name = "주변 유저 밀기", CurrentValue = false, Flag = "C2", Callback = function(v) _G.P_H = v while _G.P_H do for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local d = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude if d < 12 then p.Character.HumanoidRootPart.Velocity = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Unit * 60 end end end task.wait(0.1) end end})
-combatTab:CreateToggle({Name = "라그돌 자동 해제", CurrentValue = false, Flag = "C3", Callback = function(v) _G.N_R = v while _G.N_R do pcall(function() if game.Players.LocalPlayer.Character:FindFirstChild("RagdollConfig") then game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false end end) task.wait(0.1) end end})
-combatTab:CreateToggle({Name = "무게 무시", CurrentValue = false, Flag = "C4", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Massless = v end end end})
-combatTab:CreateToggle({Name = "자동 점프", CurrentValue = false, Flag = "C5", Callback = function(v) _G.A_J = v while _G.A_J do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Jump = true end) task.wait(0.1) end end})
-combatTab:CreateToggle({Name = "스핀 공격", CurrentValue = false, Flag = "C6", Callback = function(v) _G.S_N = v while _G.S_N do pcall(function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0, math.rad(35), 0) end) task.wait() end end})
-combatTab:CreateToggle({Name = "그랩 파트 삭제", CurrentValue = false, Flag = "C7", Callback = function(v) if v and workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
-combatTab:CreateToggle({Name = "유저 위치 고정", CurrentValue = false, Flag = "C8", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Anchored = v end end end})
-combatTab:CreateToggle({Name = "캐릭터 투명화", CurrentValue = false, Flag = "C9", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Transparency = v and 0.6 or 0 end end end})
-combatTab:CreateToggle({Name = "주변 물체 날리기", CurrentValue = false, Flag = "C10", Callback = function(v) _G.B_W = v while _G.B_W do for _,x in pairs(workspace:GetChildren()) do if x:IsA("BasePart") and (x.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then x.Velocity = Vector3.new(0, 60, 0) end end task.wait(0.2) end end})
-combatTab:CreateToggle({Name = "플레이어 강조", CurrentValue = false, Flag = "C11", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local h = p.Character:FindFirstChild("Highlight") or Instance.new("Highlight", p.Character) h.Enabled = v end end end})
-combatTab:CreateButton({Name = "전원 소환", Callback = function() for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position) end end end})
-combatTab:CreateButton({Name = "구조물 삭제", Callback = function() for _,x in pairs(workspace:GetChildren()) do if x:IsA("Part") and x.Name ~= "Baseplate" then x:Destroy() end end end})
-combatTab:CreateButton({Name = "지옥 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -600, 0) end})
-combatTab:CreateButton({Name = "우주 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 10000, 0) end})
-combatTab:CreateButton({Name = "스폰 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 15, 0) end})
-combatTab:CreateButton({Name = "랜덤 유저 TP", Callback = function() local ps = game.Players:GetPlayers() local r = ps[math.random(1, #ps)] if r.Character then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = r.Character.HumanoidRootPart.CFrame end end})
-combatTab:CreateButton({Name = "강제 앉기", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Sit = true end})
 
-combatTab:CreateButton({Name = "맵 청소", Callback = function() if workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
-combatTab:CreateButton({Name = "몸체 고정", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true end})
-combatTab:CreateButton({Name = "고정 해제", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false end})
-combatTab:CreateButton({Name = "이동 속도 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16 end})
-combatTab:CreateButton({Name = "점프력 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 end})
-combatTab:CreateButton({Name = "닉네임 출력", Callback = function() print(game.Players.LocalPlayer.Name) end})
-environmentTab:CreateSection("시각 및 시스템")
-environmentTab:CreateToggle({Name = "풀브라이트", CurrentValue = false, Flag = "E1", Callback = function(v) if v then game:GetService("Lighting").Brightness = 2 game:GetService("Lighting").ClockTime = 14 else game:GetService("Lighting").Brightness = 1 end end})
-environmentTab:CreateToggle({Name = "그림자 제거", CurrentValue = false, Flag = "E2", Callback = function(v) game:GetService("Lighting").GlobalShadows = not v end})
-environmentTab:CreateToggle({Name = "저사양 모드", CurrentValue = false, Flag = "E3", Callback = function(v) if v then for _,x in pairs(game:GetDescendants()) do if x:IsA("BasePart") then x.Material = Enum.Material.SmoothPlastic end end end end})
-environmentTab:CreateToggle({Name = "안개 제거", CurrentValue = false, Flag = "E4", Callback = function(v) if v then game:GetService("Lighting").FogEnd = 100000 end end})
-environmentTab:CreateToggle({Name = "시야 확장 (120)", CurrentValue = false, Flag = "E5", Callback = function(v) workspace.CurrentCamera.FieldOfView = v and 120 or 70 end})
-environmentTab:CreateToggle({Name = "물 위 걷기", CurrentValue = false, Flag = "E6", Callback = function(v) if v then local p = Instance.new("Part", workspace) p.Name = "WaterPart" p.Size = Vector3.new(2048, 10, 2048) p.Position = Vector3.new(0, -19, 0) p.Anchored = true p.Transparency = 0.8 else if workspace:FindFirstChild("WaterPart") then workspace.WaterPart:Destroy() end end end})
-environmentTab:CreateToggle({Name = "발판 생성", CurrentValue = false, Flag = "E7", Callback = function(v) _G.P_S = v while _G.P_S do pcall(function() local p = Instance.new("Part", workspace) p.Size = Vector3.new(30,1,30) p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-3.5,0) p.Anchored = true task.wait(0.5) p:Destroy() end) task.wait(0.1) end end})
-environmentTab:CreateToggle({Name = "모든 데칼 숨기기", CurrentValue = false, Flag = "E8", Callback = function(v) for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Decal") then x.Transparency = v and 1 or 0 end end end})
-environmentTab:CreateToggle({Name = "아이템 ESP", CurrentValue = false, Flag = "E9", Callback = function(v) for _,x in pairs(workspace:GetChildren()) do if x.Name == "GrabParts" then local h = x:FindFirstChild("Highlight") or Instance.new("Highlight", x) h.Enabled = v end end end})
-environmentTab:CreateToggle({Name = "이름표 숨기기", CurrentValue = false, Flag = "E10", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.NameTag.Enabled = not v end) end})
-environmentTab:CreateToggle({Name = "FPS 해제", CurrentValue = false, Flag = "E11", Callback = function(v) setfpscap(v and 999 or 60) end})
-environmentTab:CreateToggle({Name = "히트박스 확장", CurrentValue = false, Flag = "E12", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Size = v and Vector3.new(10,10,10) or Vector3.new(2,2,1) p.Character.HumanoidRootPart.Transparency = v and 0.7 or 1 end end end})
-environmentTab:CreateToggle({Name = "서버 렉 최적화", CurrentValue = false, Flag = "E13", Callback = function(v) settings().Rendering.QualityLevel = v and 1 or 5 end})
-environmentTab:CreateToggle({Name = "자동 앉기 방지", CurrentValue = false, Flag = "E14", Callback = function(v) _G.N_S = v while _G.N_S do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Sit = false end) task.wait(0.5) end end})
-environmentTab:CreateToggle({Name = "머리 크기 확장", CurrentValue = false, Flag = "E15", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.Size = v and Vector3.new(5,5,5) or Vector3.new(1,1,1) end) end})
-environmentTab:CreateToggle({Name = "맵 텍스처 삭제", CurrentValue = false, Flag = "E16", Callback = function(v) if v then for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Texture") then x:Destroy() end end end end})
-environmentTab:CreateToggle({Name = "중력 낮추기", CurrentValue = false, Flag = "E17", Callback = function(v) workspace.Gravity = v and 50 or 196.2 end})
-environmentTab:CreateToggle({Name = "중력 높이기", CurrentValue = false, Flag = "E18", Callback = function(v) workspace.Gravity = v and 500 or 196.2 end})
-environmentTab:CreateToggle({Name = "채팅 감시", CurrentValue = false, Flag = "E19", Callback = function(v) _G.S_P = v end})
-environmentTab:CreateButton({Name = "서버 재접속", Callback = function() game:GetService("TeleportService"):Teleport(game.PlaceId) end})
-environmentTab:CreateButton({Name = "즉시 사망", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Health = 0 end})
-environmentTab:CreateButton({Name = "UI 숨기기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false) end})
-environmentTab:CreateButton({Name = "UI 보이기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, true) end})
-environmentTab:CreateButton({Name = "F3X 소환", Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/dread-scripts/f3x/master/f3x.lua"))() end})
-environmentTab:CreateButton({Name = "스크립트 종료", Callback = function() Rayfield:Destroy() end})
+CombatTab:CreateSection("물리 조작 및 전투")
+CombatTab:CreateToggle({Name = "자동 그랩 방어", CurrentValue = false, Flag = "C1", Callback = function(v) _G.A_G = v while _G.A_G do pcall(function() for _,x in pairs(game.Players.LocalPlayer.Character:GetChildren()) do if x:IsA("BasePart") then x.CanTouch = false end end end) task.wait(0.1) end end})
+CombatTab:CreateToggle({Name = "주변 유저 밀기", CurrentValue = false, Flag = "C2", Callback = function(v) _G.P_H = v while _G.P_H do for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local d = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude if d < 12 then p.Character.HumanoidRootPart.Velocity = (p.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Unit * 60 end end end task.wait(0.1) end end})
+CombatTab:CreateToggle({Name = "라그돌 자동 해제", CurrentValue = false, Flag = "C3", Callback = function(v) _G.N_R = v while _G.N_R do pcall(function() if game.Players.LocalPlayer.Character:FindFirstChild("RagdollConfig") then game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false end end) task.wait(0.1) end end})
+CombatTab:CreateToggle({Name = "무게 무시", CurrentValue = false, Flag = "C4", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Massless = v end end end})
+CombatTab:CreateToggle({Name = "자동 점프", CurrentValue = false, Flag = "C5", Callback = function(v) _G.A_J = v while _G.A_J do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Jump = true end) task.wait(0.1) end end})
+CombatTab:CreateToggle({Name = "스핀 공격", CurrentValue = false, Flag = "C6", Callback = function(v) _G.S_N = v while _G.S_N do pcall(function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0, math.rad(35), 0) end) task.wait() end end})
+CombatTab:CreateToggle({Name = "그랩 파트 삭제", CurrentValue = false, Flag = "C7", Callback = function(v) if v and workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
+CombatTab:CreateToggle({Name = "유저 위치 고정", CurrentValue = false, Flag = "C8", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Anchored = v end end end})
+CombatTab:CreateToggle({Name = "캐릭터 투명화", CurrentValue = false, Flag = "C9", Callback = function(v) for _,x in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do if x:IsA("BasePart") then x.Transparency = v and 0.6 or 0 end end end})
+CombatTab:CreateToggle({Name = "주변 물체 날리기", CurrentValue = false, Flag = "C10", Callback = function(v) _G.B_W = v while _G.B_W do for _,x in pairs(workspace:GetChildren()) do if x:IsA("BasePart") and (x.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then x.Velocity = Vector3.new(0, 60, 0) end end task.wait(0.2) end end})
+CombatTab:CreateToggle({Name = "플레이어 강조", CurrentValue = false, Flag = "C11", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then local h = p.Character:FindFirstChild("Highlight") or Instance.new("Highlight", p.Character) h.Enabled = v end end end})
+CombatTab:CreateButton({Name = "전원 소환", Callback = function() for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position) end end end})
+CombatTab:CreateButton({Name = "구조물 삭제", Callback = function() for _,x in pairs(workspace:GetChildren()) do if x:IsA("Part") and x.Name ~= "Baseplate" then x:Destroy() end end end})
+CombatTab:CreateButton({Name = "지옥 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -600, 0) end})
+CombatTab:CreateButton({Name = "우주 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 10000, 0) end})
+CombatTab:CreateButton({Name = "스폰 TP", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 15, 0) end})
+CombatTab:CreateButton({Name = "랜덤 유저 TP", Callback = function() local ps = game.Players:GetPlayers() local r = ps[math.random(1, #ps)] if r.Character then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = r.Character.HumanoidRootPart.CFrame end end})
+CombatTab:CreateButton({Name = "강제 앉기", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Sit = true end})
+CombatTab:CreateButton({Name = "맵 청소", Callback = function() if workspace:FindFirstChild("GrabParts") then workspace.GrabParts:Destroy() end end})
+CombatTab:CreateButton({Name = "몸체 고정", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true end})
+CombatTab:CreateButton({Name = "고정 해제", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false end})
+CombatTab:CreateButton({Name = "이동 속도 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16 end})
+CombatTab:CreateButton({Name = "점프력 리셋", Callback = function() game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 end})
+CombatTab:CreateButton({Name = "닉네임 출력", Callback = function() print(game.Players.LocalPlayer.Name) end})
+
+EnvironmentTab:CreateSection("시각 및 시스템")
+EnvironmentTab:CreateToggle({Name = "풀브라이트", CurrentValue = false, Flag = "E1", Callback = function(v) if v then game:GetService("Lighting").Brightness = 2 game:GetService("Lighting").ClockTime = 14 else game:GetService("Lighting").Brightness = 1 end end})
+EnvironmentTab:CreateToggle({Name = "그림자 제거", CurrentValue = false, Flag = "E2", Callback = function(v) game:GetService("Lighting").GlobalShadows = not v end})
+EnvironmentTab:CreateToggle({Name = "저사양 모드", CurrentValue = false, Flag = "E3", Callback = function(v) if v then for _,x in pairs(game:GetDescendants()) do if x:IsA("BasePart") then x.Material = Enum.Material.SmoothPlastic end end end end})
+EnvironmentTab:CreateToggle({Name = "안개 제거", CurrentValue = false, Flag = "E4", Callback = function(v) if v then game:GetService("Lighting").FogEnd = 100000 end end})
+EnvironmentTab:CreateToggle({Name = "시야 확장 (120)", CurrentValue = false, Flag = "E5", Callback = function(v) workspace.CurrentCamera.FieldOfView = v and 120 or 70 end})
+EnvironmentTab:CreateToggle({Name = "물 위 걷기", CurrentValue = false, Flag = "E6", Callback = function(v) if v then local p = Instance.new("Part", workspace) p.Name = "WaterPart" p.Size = Vector3.new(2048, 10, 2048) p.Position = Vector3.new(0, -19, 0) p.Anchored = true p.Transparency = 0.8 else if workspace:FindFirstChild("WaterPart") then workspace.WaterPart:Destroy() end end end})
+EnvironmentTab:CreateToggle({Name = "발판 생성", CurrentValue = false, Flag = "E7", Callback = function(v) _G.P_S = v while _G.P_S do pcall(function() local p = Instance.new("Part", workspace) p.Size = Vector3.new(30,1,30) p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-3.5,0) p.Anchored = true task.wait(0.5) p:Destroy() end) task.wait(0.1) end end})
+EnvironmentTab:CreateToggle({Name = "모든 데칼 숨기기", CurrentValue = false, Flag = "E8", Callback = function(v) for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Decal") then x.Transparency = v and 1 or 0 end end end})
+EnvironmentTab:CreateToggle({Name = "아이템 ESP", CurrentValue = false, Flag = "E9", Callback = function(v) for _,x in pairs(workspace:GetChildren()) do if x.Name == "GrabParts" then local h = x:FindFirstChild("Highlight") or Instance.new("Highlight", x) h.Enabled = v end end end})
+EnvironmentTab:CreateToggle({Name = "이름표 숨기기", CurrentValue = false, Flag = "E10", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.NameTag.Enabled = not v end) end})
+EnvironmentTab:CreateToggle({Name = "FPS 해제", CurrentValue = false, Flag = "E11", Callback = function(v) setfpscap(v and 999 or 60) end})
+EnvironmentTab:CreateToggle({Name = "히트박스 확장", CurrentValue = false, Flag = "E12", Callback = function(v) for _,p in pairs(game.Players:GetPlayers()) do if p ~= game.Players.LocalPlayer and p.Character then p.Character.HumanoidRootPart.Size = v and Vector3.new(10,10,10) or Vector3.new(2,2,1) p.Character.HumanoidRootPart.Transparency = v and 0.7 or 1 end end end})
+EnvironmentTab:CreateToggle({Name = "서버 렉 최적화", CurrentValue = false, Flag = "E13", Callback = function(v) settings().Rendering.QualityLevel = v and 1 or 5 end})
+EnvironmentTab:CreateToggle({Name = "자동 앉기 방지", CurrentValue = false, Flag = "E14", Callback = function(v) _G.N_S = v while _G.N_S do pcall(function() game.Players.LocalPlayer.Character.Humanoid.Sit = false end) task.wait(0.5) end end})
+EnvironmentTab:CreateToggle({Name = "머리 크기 확장", CurrentValue = false, Flag = "E15", Callback = function(v) pcall(function() game.Players.LocalPlayer.Character.Head.Size = v and Vector3.new(5,5,5) or Vector3.new(1,1,1) end) end})
+EnvironmentTab:CreateToggle({Name = "맵 텍스처 삭제", CurrentValue = false, Flag = "E16", Callback = function(v) if v then for _,x in pairs(workspace:GetDescendants()) do if x:IsA("Texture") then x:Destroy() end end end end})
+EnvironmentTab:CreateToggle({Name = "중력 낮추기", CurrentValue = false, Flag = "E17", Callback = function(v) workspace.Gravity = v and 50 or 196.2 end})
+EnvironmentTab:CreateToggle({Name = "중력 높이기", CurrentValue = false, Flag = "E18", Callback = function(v) workspace.Gravity = v and 500 or 196.2 end})
+EnvironmentTab:CreateToggle({Name = "채팅 감시", CurrentValue = false, Flag = "E19", Callback = function(v) _G.S_P = v end})
+EnvironmentTab:CreateButton({Name = "서버 재접속", Callback = function() game:GetService("TeleportService"):Teleport(game.PlaceId) end})
+EnvironmentTab:CreateButton({Name = "즉시 사망", Callback = function() game.Players.LocalPlayer.Character.Humanoid.Health = 0 end})
+EnvironmentTab:CreateButton({Name = "UI 숨기기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false) end})
+EnvironmentTab:CreateButton({Name = "UI 보이기", Callback = function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, true) end})
+EnvironmentTab:CreateButton({Name = "F3X 소환", Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/dread-scripts/f3x/master/f3x.lua"))() end})
+EnvironmentTab:CreateButton({Name = "스크립트 종료", Callback = function() Rayfield:Destroy() end})
+
+
+
+
 
 
 -- ================== [ 유틸리티 기능 ] ==================
 
-UtilityTab:CreateSection("환경 및 시야")
-
--- 1. 줌 제한 해제
-UtilityTab:CreateButton({
-    Name = "최대 줌 거리 무제한",
-    Callback = function()
-        pcall(function()
-            plr.CameraMaxZoomDistance = 100000000000000000000000000000000000000
-        end)
-    end,
-})
-
--- 2. 안개 제거
-UtilityTab:CreateButton({
-    Name = "맵 안개 제거",
-    Callback = function()
-        pcall(function()
-            game:GetService("Lighting").FogEnd = 9e9
-        end)
-    end,
-})
-
--- 3. 시간대 변경 (낮)
-UtilityTab:CreateButton({
-    Name = "서버 시간 낮으로 고정",
-    Callback = function()
-        pcall(function()
-            game:GetService("Lighting").ClockTime = 14
-        end)
-    end,
-})
-
-UtilityTab:CreateSection("캐릭터 비주얼")
-
--- 4. 캐릭터 반투명화
-UtilityTab:CreateToggle({
-    Name = "유령 모드 (반투명)",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            local char = plr.Character
-            if char then
-                for _, v in pairs(char:GetChildren()) do
-                    if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
-                        v.Transparency = Value and 0.5 or 0
-                    end
-                end
-            end
-        end)
-    end,
-})
-
--- 5. 머리 크기 변경 (시각용)
-UtilityTab:CreateSlider({
-    Name = "머리 크기 조절",
-    Range = {0, 100},
-    Increment = 1,
-    CurrentValue = 1,
-    Callback = function(Value)
-        pcall(function()
-            local head = plr.Character and plr.Character:FindFirstChild("Head")
-            if head then
-                head.Size = Vector3.new(Value, Value, Value)
-            end
-        end)
-    end,
-})
-
--- 6. 내 이름 숨기기 (로컬 전용)
-UtilityTab:CreateToggle({
-    Name = "내 머리위 이름표 제거",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            local head = plr.Character and plr.Character:FindFirstChild("Head")
-            if head then
-                local bgui = head:FindFirstChildOfClass("BillboardGui")
-                if bgui then bgui.Enabled = not Value end
-            end
-        end)
-    end,
-})
-
-UtilityTab:CreateSection("시스템 유틸")
-
--- 7. 핑 확인
-UtilityTab:CreateButton({
-    Name = "현재 핑(Ping) 확인",
-    Callback = function()
-        pcall(function()
-            local ping = math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
-            Rayfield:Notify({Title = "시스템", Content = "현재 핑: "..ping.."ms", Duration = 3})
-        end)
-    end,
-})
-
--- 8. 물리 렉 감소
-UtilityTab:CreateButton({
-    Name = "물리 렉 최적화",
-    Callback = function()
-        pcall(function()
-            for _, v in pairs(workspace:GetDescendants()) do
-                if v:IsA("BasePart") then
-                    v.Velocity = Vector3.new(0,0,0)
-                    v.RotVelocity = Vector3.new(0,0,0)
-                end
-            end
-        end)
-    end,
-})
-
--- 9. 서버 인원수 확인
-UtilityTab:CreateButton({
-    Name = "서버 총 인원수 확인",
-    Callback = function()
-        local count = #game.Players:GetPlayers()
-        Rayfield:Notify({Title = "서버 정보", Content = "현재 인원: "..count.."명", Duration = 3})
-    end,
-})
-
--- 10. 채팅창 숨기기/보이기
-UtilityTab:CreateToggle({
-    Name = "채팅 UI 숨기기",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            plr.PlayerGui.Chat.Frame.Visible = not Value
-        end)
-    end,
-})
-
-
-UtilityTab:CreateSection("물리 및 엔진 조작")
-
-UtilityTab:CreateToggle({
-    Name = "무마찰 모드 (미끄러지기)",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            local char = game.Players.LocalPlayer.Character
-            for _, v in pairs(char:GetChildren()) do
-                if v:IsA("BasePart") then
-                    v.CustomPhysicalProperties = PhysicalProperties.new(Value and 0 or 0.7, 0.3, 0.5)
-                end
-            end
-        end)
-    end,
-})
-
-
-local clicking = false
-UtilityTab:CreateToggle({
-    Name = "자동 클릭 (마우스 왼쪽)",
-    CurrentValue = false,
-    Callback = function(Value)
-        clicking = Value
-        task.spawn(function()
-            while clicking do
-                pcall(function()
-                    local VirtualUser = game:GetService("VirtualUser")
-                    VirtualUser:CaptureController()
-                    VirtualUser:ClickButton1(Vector2.new(0, 0))
-                end)
-                task.wait(0.1)
-            end
-        end)
-    end,
-})
-
-
-UtilityTab:CreateButton({
-    Name = "모든 화면 효과 제거 (깔끔한 시야)",
-    Callback = function()
-        pcall(function()
-            local lighting = game:GetService("Lighting")
-            for _, v in pairs(lighting:GetChildren()) do
-                if v:IsA("PostProcessEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") then
-                    v.Enabled = false
-                end
-            end
-        end)
-    end,
-})
-
-UtilityTab:CreateSection("플레이어 특수 조작")
-
--- 4. 1인칭 강제 고정 (조준 시 유용)
-UtilityTab:CreateToggle({
-    Name = "강제 1인칭 시점",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            game.Players.LocalPlayer.CameraMode = Value and Enum.CameraMode.LockFirstPerson or Enum.CameraMode.Classic
-        end)
-    end,
-})
-
-
-UtilityTab:CreateSlider({
-    Name = "캐릭터 회전 민감도",
-    Range = {1, 10},
-    Increment = 1,
-    CurrentValue = 3,
-    Callback = function(Value)
-        pcall(function()
-            game.Players.LocalPlayer.Character.Humanoid.AutoRotate = true
-            
-        end)
-    end,
-})
-
--- 6. 가짜 래그 (서버에 자신의 위치를 끊겨 보이게 함)
-local fakeLag = false
-UtilityTab:CreateToggle({
-    Name = "가짜 렉 (위치 끊기기)",
-    CurrentValue = false,
-    Callback = function(Value)
-        fakeLag = Value
-        task.spawn(function()
-            while fakeLag do
-                pcall(function()
-                    game:GetService("NetworkClient"):SetOutgoingKBPSLimit(1)
-                    task.wait(0.3)
-                    game:GetService("NetworkClient"):SetOutgoingKBPSLimit(9e9)
-                end)
-                task.wait(0.5)
-            end
-        end)
-    end,
-})
-
-UtilityTab:CreateSection("기타 유틸리티")
-
-
-UtilityTab:CreateToggle({
-    Name = "3D 렌더링 비활성화 (잠수용)",
-    CurrentValue = false,
-    Callback = function(Value)
-        pcall(function()
-            game:GetService("RunService"):Set3dRenderingEnabled(not Value)
-        end)
-    end,
-})
-
-
-UtilityTab:CreateButton({
-    Name = "현재 좌표 복사 (클립보드)",
-    Callback = function()
-        pcall(function()
-            local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-            setclipboard(tostring(pos))
-            Rayfield:Notify({Title="알림", Content="좌표가 복사되었습니다.", Duration=2})
-        end)
-    end,
-})
-
-
-UtilityTab:CreateButton({
-    Name = "맵 전체 오브젝트 개수 스캔",
-    Callback = function()
-        local count = #workspace:GetDescendants()
-        Rayfield:Notify({Title="스캔 완료", Content="현재 맵에 "..count.."개의 물체가 있습니다.", Duration=3})
-    end,
-})
-
-
-UtilityTab:CreateButton({
-    Name = "서버훅v2",
-    Callback = function()
-        pcall(function()
-            local HttpService = game:GetService("HttpService")
-            local TPS = game:GetService("TeleportService")
-            local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
-            for _, s in pairs(Servers.data) do
-                if s.playing < s.maxPlayers and s.id ~= game.JobId then
-                    TPS:TeleportToPlaceInstance(game.PlaceId, s.id, game.Players.LocalPlayer)
-                    break
-                end
-            end
-        end)
-    end,
-})
-
-UtilityTab:CreateSection("이동 최적화")
-
-UtilityTab:CreateToggle({
-    Name = "관성 제거 ",
-    CurrentValue = true,
-    Callback = function(Value)
-        _G.NoInertia = Value
-        pcall(function()
-            local char = game.Players.LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            
-            if _G.NoInertia then
-                
-                for _, v in pairs(char:GetChildren()) do
-                    if v:IsA("BasePart") then
-                        v.CustomPhysicalProperties = PhysicalProperties.new(100, 0.3, 0.5)
-                    end
-                end
-                
-                
-                task.spawn(function()
-                    while _G.NoInertia do
-                        if hum and hum.MoveDirection.Magnitude <= 0 then
-                            local hrp = char:FindFirstChild("HumanoidRootPart")
-                            if hrp then
-                                hrp.Velocity = Vector3.new(0, hrp.Velocity.Y, 0)
-                            end
-                        end
-                        task.wait()
-                    end
-                end)
-            else
-                
-                for _, v in pairs(char:GetChildren()) do
-                    if v:IsA("BasePart") then
-                        v.CustomPhysicalProperties = nil
-                    end
-                end
-            end
-        end)
-    end,
-})
-
 
 -- ================== 모바일 TP (DevTab) ==================
-DevTab:CreateSection("📱 Mobile Crosshair TP")
+DevTab:CreateS
 
 local tpGui = nil
 
