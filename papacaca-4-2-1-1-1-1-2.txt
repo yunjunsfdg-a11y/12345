@@ -179,7 +179,7 @@ function PcldOwner()
                                     if not Players:FindFirstChild(player.Name) or 
                                        not player.Character or 
                                        player.Character:FindFirstChild("Humanoid") and 
-                                       player.Character.Humanoid.Health <= 0 then
+                                       player.Character.Humanoid.Health <= 10 then
                                         value:Destroy()
                                         break
                                     end
