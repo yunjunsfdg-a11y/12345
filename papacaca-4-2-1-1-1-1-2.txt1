@@ -8655,16 +8655,16 @@ LoopTab:CreateLabel("스팸킥의 경우 렉이걸릴시 잘 되지않습니다.
 LoopTab:CreateToggle({
     Name = "블롭 루프킬V2",
     CurrentValue = false,
-    Flag = "BlobLoopKill3", 
+    Flag = "BlobLoopKill34", 
     Callback = function(Value)
         
-        blobLoopT3 = Value
+        blobLoopT34 = Value
         
         if Value then
             print("블롭 루프킬 3 활성화")
             
             task.spawn(function()
-                loopPlayerBlobF3()
+                loopPlayerBlobF34()
             end)
         else
             print("블롭 루프킬 3 비활성화")
@@ -8672,7 +8672,7 @@ LoopTab:CreateToggle({
         end
     end,
 })
-function loopPlayerBlobF3()
+function loopPlayerBlobF34()
 
     UpdateCurrentBlobman()
 
@@ -8687,7 +8687,7 @@ function loopPlayerBlobF3()
     local runningTasks = {}
 
     local function waitForRespawn(player)
-        while blobLoopT3 do
+        while blobLoopT34 do
             local char = player.Character
             local hum = char and char:FindFirstChildOfClass("Humanoid")
             if hum and hum.Health > 0 then
@@ -8698,9 +8698,9 @@ function loopPlayerBlobF3()
     end
 
     task.spawn(function()
-        while blobLoopT3 do
+        while blobLoopT34 do
             for _, name in ipairs(playersInLoop2V) do
-                if not blobLoopT3 then break end
+                if not blobLoopT34 then break end
 
                 local player = game.Players:FindFirstChild(name)
                 if not player then continue end
@@ -8710,10 +8710,10 @@ function loopPlayerBlobF3()
                 runningTasks[player] = task.spawn(function()
                     local beforeTP
 
-                    while blobLoopT3 do
+                    while blobLoopT34 do
                         local myChar = plr.Character
                         local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
-                        if not myHrp then task.wait(0.1) continue end
+                        if not myHrp then task.wait(0.0001) continue end
 
                         if not beforeTP then
                             beforeTP = myHrp.CFrame
@@ -8739,15 +8739,15 @@ function loopPlayerBlobF3()
                         end
 
                         if not hum then
-                            task.wait(0.000000000000015)
+                            task.wait(0.00000000000000000000015)
                             continue
                         end
 
                         local hrp = char:FindFirstChild("HumanoidRootPart")
-                        if not hrp then task.wait(0.0000000000000005) continue end
+                        if not hrp then task.wait(0.00000000000000005) continue end
 
                         local distance = (myHrp.Position - hrp.Position).Magnitude
-                        if distance > 30 then
+                        if distance > 40 then
                             TP(player)
                             task.wait(0.0000000000000015)
                             continue
