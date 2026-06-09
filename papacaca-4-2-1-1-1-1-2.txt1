@@ -3825,7 +3825,6 @@ local Workspace = game:GetService("Workspace")
 
 local plr = Players.LocalPlayer
 
--- Anti Grab Sticky Function (Rayfield Compatible)
 function AntiGrabStickyF()
     while AntiGrabStickyT and plr do
         task.wait(0.1)
@@ -3942,7 +3941,7 @@ function AntiGrabStickyF()
     end
 end
 
--- Snowball Loop Function
+
 function LoopfireF()
     if fireLoopThread and coroutine.status(fireLoopThread) ~= "dead" then
         return
@@ -5629,7 +5628,7 @@ function AntiBlobUseF()
         local cleanupInterval = 2
 
         while AntiBlobUseT do
-            task.wait(0.1)
+            task.wait(0.01)
 
             local char = plr.Character
             local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -6074,32 +6073,43 @@ function PlrEspF()
 end
 
 function AntiPCLDF()
-    targetValueName = "[ " .. plr.DisplayName .. " ] ( @" .. plr.Name .. " )"
-        while AntiPCLDT do
-            task.wait()
-            if not hasDetectedFirstTime and AntiPCLDT then
-                for _, item in ipairs(workspace:GetChildren()) do
-                    if item.Name == "PlayerCharacterLocationDetector" then
-                        for _, child in ipairs(item:GetChildren()) do
-                            if child:IsA("BoolValue") and child.Name == targetValueName then
-                                plr.Character.HumanoidRootPart.CFrame = CFrame.new(0,999999,0)
-                                task.wait(0.1)
-                                plr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-                                hasDetectedFirstTime = true
-                            end
-                        end
-                    end
+    local targetValueName = "[ " .. plr.DisplayName .. " ] ( @" .. plr.Name .. " )"
+    
+    while AntiPCLDT do
+        task.wait(0.1) 
+        
+        local character = plr.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        local hrp = character and character:FindFirstChild("HumanoidRootPart")
+        
+           if not character or not humanoid or humanoid.Health <= 0 or not hrp then
+            continue
+        end
+        
+        
+        local isDetected = false
+        for _, item in ipairs(workspace:GetChildren()) do
+            if item.Name == "PlayerCharacterLocationDetector" then
+                local foundValue = item:FindFirstChild(targetValueName)
+                if foundValue and foundValue:IsA("BoolValue") then
+                    isDetected = true
+                    break
                 end
-            else
-                if AntiPCLDT and hasDetectedFirstTime and plr.Character.Humanoid.Died:Connect() then
-                character = plr.Character or plr.CharacterAdded:Wait()
-                CF = character:WaitForChild("Torso").CFrame
-                char = plr.CharacterAdded:Wait()
-                char:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-                char:WaitForChild("Torso").CFrame = CF
-                task.wait(5)
-				if not AntiPCLDT then hasDetectedFirstTime = false end
             end
+        end
+        
+           if isDetected then
+            pcall(function()
+                
+                hrp.CFrame = CFrame.new(0, 999999, 0)
+                task.wait(0.05)
+                
+                       humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+            end)
+            
+                    local currentCharacter = plr.Character
+            plr.CharacterAdded:Wait() 
+            task.wait(1.5) 
         end
     end
 end
