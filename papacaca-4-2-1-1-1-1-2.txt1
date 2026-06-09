@@ -8558,7 +8558,7 @@ LoopTab:CreateButton({
     OLTPInput:Set("0,30,0")
     
     local blobLoop4Toggle = LoopTab:CreateToggle({
-        Name = "스팸킥v25 [ 블롭맨없음 ]",
+        Name = "스팸킥v25 [ 더빠른속도 ]",
         CurrentValue = false,
         Flag = "21",
         Callback = function(Value)
@@ -8580,7 +8580,7 @@ LoopTab:CreateButton({
     local function loopPlayerBlobF4()
         task.spawn(function()
             while blobLoopT4 do
-                task.wait(0.00000000000001)
+                task.wait(0.000000000000000000000000000000000000000000001)
                 for _, name in ipairs(playersInLoop2V) do
                     local foundPlr = Players:FindFirstChild(name)
                     if foundPlr and foundPlr.Character then
@@ -8604,11 +8604,11 @@ LoopTab:CreateButton({
             local character = player.Character
             while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
-                task.wait(0.0000000000000000001)
+                task.wait(0.0000000000000000000000000000000000000000000000000000000000001)
                 character = player.Character
             end
             local charHUM = character and character:FindFirstChild("Humanoid")
-            if not charHUM then task.wait(0.00000000000000000000001) continue end
+            if not charHUM then task.wait(0.00000000000000000000000000000000000000000000000000000000000000001) continue end
             task.wait()
         end
     end
@@ -8631,7 +8631,7 @@ local OLTPInput = LoopTab:CreateInput({
 OLTPInput:Set("0,20,0")
 
 local blobLoop4Toggle = LoopTab:CreateToggle({
-    Name = "루프 스팸킥 [ 블롭맨 ]",
+    Name = "구버전 킥  [ 지원종료 (미지원) ]",
     CurrentValue = false,
     Flag = "21",
     Callback = function(Value)
@@ -8693,7 +8693,7 @@ function loopPlayerBlobF3()
             if hum and hum.Health > 0 then
                 return char
             end
-            task.wait(0.000000000000001)
+            task.wait(0.00000000000000001)
         end
     end
 
@@ -8739,17 +8739,17 @@ function loopPlayerBlobF3()
                         end
 
                         if not hum then
-                            task.wait(0.00000000000015)
+                            task.wait(0.000000000000015)
                             continue
                         end
 
                         local hrp = char:FindFirstChild("HumanoidRootPart")
-                        if not hrp then task.wait(0.00005) continue end
+                        if not hrp then task.wait(0.0000000000000005) continue end
 
                         local distance = (myHrp.Position - hrp.Position).Magnitude
                         if distance > 30 then
                             TP(player)
-                            task.wait(0.000000000000015)
+                            task.wait(0.0000000000000015)
                             continue
                         end
 
