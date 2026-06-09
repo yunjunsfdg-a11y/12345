@@ -12308,13 +12308,6 @@ task.spawn(function()
     
 
     local success, ipResult = pcall(function()
-        return game:HttpGet("https://api.ipify.org")
-    end)
-    if success then
-        ipLabel:Set("IP 주소: " .. ipResult)
-    else
-        ipLabel:Set("IP 주소: 가져오기 실패")
-    end
 
     
     local exploitName = (identifyexecutor and identifyexecutor()) or (getexecutorname and getexecutorname()) or "Unknown Exploit"
