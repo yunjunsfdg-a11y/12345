@@ -9704,28 +9704,6 @@ antiTab:CreateSection("킥")
 
 local flyingResetConn = nil
 local resetProtectionConn = nil
-local healthConn = nil 
-
-
-local function safeReset(char, hum)
-   
-    if healthConn then
-        healthConn:Disconnect()
-        healthConn = nil
-    end
-    
-    
-    hum.BreakJointsOnDeath = true
-    
-    
-        rs.CharacterEvents.Struggle:FireServer()
-    end)
-    
-    hum.Health = 0
-    hum:ChangeState(Enum.HumanoidStateType.Dead)
-    char:BreakJoints()
-end
-
 local FlyingReset = antiTab:CreateToggle({
     Name = "킥 방지리셋",
     CurrentValue = false,
@@ -9734,7 +9712,6 @@ local FlyingReset = antiTab:CreateToggle({
             flyingResetConn:Disconnect()
             flyingResetConn = nil
         end
-        
         if Value then
             flyingResetConn = rs.GameCorrectionEvents.GameCorrectionsNotify.OnClientEvent:Connect(function(Type)
                 if Type == "Flying" then
@@ -9742,7 +9719,12 @@ local FlyingReset = antiTab:CreateToggle({
                     if char then
                         local hum = char:FindFirstChildOfClass("Humanoid")
                         if hum then
-                            safeReset(char, hum) 
+                            pcall(function()
+                                rs.CharacterEvents.Struggle:FireServer()
+                            end)
+                            hum.Health = 0
+                            hum:ChangeState(Enum.HumanoidStateType.Dead)
+                            char:BreakJoints()
                         end
                     end
                 end
@@ -9750,20 +9732,15 @@ local FlyingReset = antiTab:CreateToggle({
         end
     end
 })
-
-
 resetProtectionConn = plr.CharacterAdded:Connect(function(char)
-    task.wait(0.5) 
+    task.wait(0.2)
     local hum = char:WaitForChild("Humanoid", 5)
     if hum then
         hum.MaxHealth = math.huge
         hum.Health = math.huge
         hum.BreakJointsOnDeath = false
         hum.PlatformStand = false
-        
-        
-        if healthConn then healthConn:Disconnect() end
-        healthConn = hum.HealthChanged:Connect(function(health)
+        hum.HealthChanged:Connect(function(health)
             if health < hum.MaxHealth then
                 hum.Health = hum.MaxHealth
             end
@@ -9772,6 +9749,7 @@ resetProtectionConn = plr.CharacterAdded:Connect(function(char)
 end)
 
 FlyingReset:Set(true)
+
 
 
 local AntiKick = antiTab:CreateToggle({
