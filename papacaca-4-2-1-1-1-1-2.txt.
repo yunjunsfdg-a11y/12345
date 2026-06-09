@@ -12280,12 +12280,15 @@ HubTab:CreateLabel("대부분의 기능은 명단에 정해진플레이어에게
 HubTab:CreateLabel("그럼 재미있게 즐기세요!")
 HubTab:CreateLabel("ip주소가 실패로 뜨는 이유는 혹시라도 불안하실까봐 제거하여 실패로 뜹니다")
 HubTab:CreateSection("실행자 정보")
+
+local plr = game.Players.LocalPlayer
+
 local countryLabel = HubTab:CreateLabel("서버 국가: 로딩중...")
 
 task.spawn(function()
     local LocalizationService = game:GetService("LocalizationService")
     local success, code = pcall(function()
-        return LocalizationService:GetCountryRegionForPlayerAsync(game.Players.LocalPlayer)
+        return LocalizationService:GetCountryRegionForPlayerAsync(plr)
     end)
     
     local finalCode = (success and code) and code:upper() or "US"
@@ -12327,6 +12330,7 @@ task.spawn(function()
     
     countryLabel:Set("서버 국가: " .. emoji .. name)
 end)
+
 local houseStatusLabel = UtilityTab:CreateLabel("내 집 상태: 확인 중...")
 local outsidePlayersLabel = UtilityTab:CreateLabel("집 밖에 있는 유저: 로딩중...")
 
@@ -12338,7 +12342,6 @@ task.spawn(function()
     while task.wait(1) do
         local insideMyPlot = false
         local outsideNames = {}
-
         
         if plr.Character and plr.Character.Parent == playersInPlots then
             insideMyPlot = true
@@ -12349,17 +12352,14 @@ task.spawn(function()
         else
             houseStatusLabel:Set("나의 상태: 🌲 집 밖에 있음")
         end
-
         
         for _, p in ipairs(Players:GetPlayers()) do
             if p ~= plr and p.Character then
-                
                 if p.Character.Parent ~= playersInPlots then
                     table.insert(outsideNames, p.DisplayName)
                 end
             end
         end
-
         
         if #outsideNames > 0 then
             outsidePlayersLabel:Set("집 밖의 유저들: " .. table.concat(outsideNames, ", "))
@@ -12370,33 +12370,17 @@ task.spawn(function()
 end)
 
 local playerNameLabel = HubTab:CreateLabel("플레이어: 로딩중...")
-
-
 local executorLabel = HubTab:CreateLabel("실행자: 로딩중...")
-
-
 local ipLabel = HubTab:CreateLabel("IP 주소: 로딩중...")
-
-
 local exploitLabel = HubTab:CreateLabel("실행기: 로딩중...")
-
-
 local gameNameLabel = HubTab:CreateLabel("게임: 로딩중...")
-
-
 local userIdLabel = HubTab:CreateLabel("유저 ID: 로딩중...")
-
-
 local placeIdLabel = HubTab:CreateLabel("게임 ID: 로딩중...")
 
 task.spawn(function()
-
-    local plr = game.Players.LocalPlayer
     playerNameLabel:Set("플레이어: " .. plr.DisplayName .. " (@" .. plr.Name .. ")")
-    
     executorLabel:Set("실행자: " .. plr.DisplayName .. " (@" .. plr.Name .. ")")
     
-
     local success, ipResult = pcall(function()
         return game:HttpGet("no")
     end)
@@ -12405,15 +12389,12 @@ task.spawn(function()
     else
         ipLabel:Set("IP 주소: 실패(주소 삭제됨)")
     end
-
     
     local exploitName = (identifyexecutor and identifyexecutor()) or (getexecutorname and getexecutorname()) or "Unknown Exploit"
     exploitLabel:Set("실행기: " .. exploitName)
     
-    
     userIdLabel:Set("유저 ID: " .. plr.UserId)
     
-
     local marketSuccess, marketResult = pcall(function()
         return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
     end)
@@ -12423,7 +12404,6 @@ task.spawn(function()
         gameNameLabel:Set("게임: 정보 불러오기 실패")
     end
     
-
     placeIdLabel:Set("게임 ID: " .. game.PlaceId)
 end)
 
@@ -12434,50 +12414,45 @@ local fpsLabel = HubTab:CreateLabel("FPS: 로딩중...")
 local accountAgeLabel = HubTab:CreateLabel("계정 생성일 수: 로딩중...")
 local membershipLabel = HubTab:CreateLabel("프리미엄 여부: 로딩중...")
 
-    
-    local userInputService = game:GetService("UserInputService")
-    local deviceType = "PC"
-    if userInputService.TouchEnabled and not userInputService.KeyboardEnabled then
-        deviceType = "Mobile"
-    elseif userInputService.GamepadEnabled and not userInputService.KeyboardEnabled then
-        deviceType = "Console"
-    end
-    deviceLabel:Set("기기: " .. deviceType)
-    
-    
-    local hwid = (gethwid and gethwid()) or "지원하지 않음"
-    hwidLabel:Set("HWID: " .. hwid)
-    
-    
-    accountAgeLabel:Set("계정 생성일 수: " .. plr.AccountAge .. "일")
-    membershipLabel:Set("프리미엄 여부: " .. (plr.MembershipType == Enum.MembershipType.Premium and "Yes" or "No"))
-    
+local userInputService = game:GetService("UserInputService")
+local deviceType = "PC"
+if userInputService.TouchEnabled and not userInputService.KeyboardEnabled then
+    deviceType = "Mobile"
+elseif userInputService.GamepadEnabled and not userInputService.KeyboardEnabled then
+    deviceType = "Console"
+end
+deviceLabel:Set("기기: " .. deviceType)
 
-    task.spawn(function()
-        while task.wait(1) do
-            local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
-            pingLabel:Set("핑: " .. string.split(ping, " ")[1] .. "ms")
-        end
-    end)
-    
-    
-    task.spawn(function()
-        local runService = game:GetService("RunService")
-        while true do
-            local startTime = os.clock()
-            runService.RenderStepped:Wait()
-            local fps = math.floor(1 / (os.clock() - startTime))
-            fpsLabel:Set("FPS: " .. fps)
-            task.wait(0.3)
-        end
-    end)
+local hwid = (gethwid and gethwid()) or "지원하지 않음"
+hwidLabel:Set("HWID: " .. hwid)
+
+accountAgeLabel:Set("계정 생성일 수: " .. plr.AccountAge .. "일")
+membershipLabel:Set("프리미엄 여부: " .. (plr.MembershipType == Enum.MembershipType.Premium and "Yes" or "No"))
+
+task.spawn(function()
+    while task.wait(1) do
+        local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+        pingLabel:Set("핑: " .. string.split(ping, " ")[1] .. "ms")
+    end
+end)
+
+task.spawn(function()
+    local runService = game:GetService("RunService")
+    while true do
+        local startTime = os.clock()
+        runService.RenderStepped:Wait()
+        local fps = math.floor(1 / (os.clock() - startTime))
+        fpsLabel:Set("FPS: " .. fps)
+        task.wait(0.3)
+    end
+end)
+
 local posLabel = HubTab:CreateLabel("좌표: X: 0, Y: 0, Z: 0")
 
 task.spawn(function()
-    local player = game.Players.LocalPlayer
     game:GetService("RunService").Heartbeat:Connect(function()
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local pos = player.Character.HumanoidRootPart.Position
+        if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            local pos = plr.Character.HumanoidRootPart.Position
             posLabel:Set(string.format("좌표: X: %.1f, Y: %.1f, Z: %.1f", pos.X, pos.Y, pos.Z))
         else
             posLabel:Set("좌표: 캐릭터 없음")
@@ -12496,9 +12471,10 @@ task.spawn(function()
     Players.PlayerRemoving:Connect(updateCount)
     updateCount()
 end)
+
 local toolLabel = HubTab:CreateLabel("장착 중인 아이템: 없음")
 game:GetService("RunService").Heartbeat:Connect(function()
-    local char = game.Players.LocalPlayer.Character
+    local char = plr.Character
     local tool = char and char:FindFirstChildOfClass("Tool")
     toolLabel:Set("장착 중인 아이템: " .. (tool and tool.Name or "맨손"))
 end)
@@ -12522,7 +12498,6 @@ task.spawn(function()
     while task.wait(5) do
         local maxPing, laggyPlr = -1, "없음"
         for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
-            local stats = p:FindFirstChild("leaderstats") or p
             local pSuccess, pPing = pcall(function() return game:GetService("Stats").Network:GetPlayerCustomStat(p, "Ping") end)
             if pSuccess and pPing and pPing > maxPing then
                 maxPing = pPing
@@ -12533,3 +12508,5 @@ task.spawn(function()
     end
 end)
 
+        
+        
