@@ -6072,47 +6072,6 @@ function PlrEspF()
     end
 end
 
-function AntiPCLDF()
-    local targetValueName = "[ " .. plr.DisplayName .. " ] ( @" .. plr.Name .. " )"
-    
-    while AntiPCLDT do
-        task.wait(1) 
-        
-        local character = plr.Character
-        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-        local hrp = character and character:FindFirstChild("HumanoidRootPart")
-        
-           if not character or not humanoid or humanoid.Health <= 0 or not hrp then
-            continue
-        end
-        
-        
-        local isDetected = false
-        for _, item in ipairs(workspace:GetChildren()) do
-            if item.Name == "PlayerCharacterLocationDetector" then
-                local foundValue = item:FindFirstChild(targetValueName)
-                if foundValue and foundValue:IsA("BoolValue") then
-                    isDetected = true
-                    break
-                end
-            end
-        end
-        
-           if isDetected then
-            pcall(function()
-                
-                hrp.CFrame = CFrame.new(0, 999999, 0)
-                task.wait(0.5)
-                
-                       humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-            end)
-            
-                    local currentCharacter = plr.Character
-            plr.CharacterAdded:Wait() 
-            task.wait(2) 
-        end
-    end
-end
 
 function TrSw()
 char = plr.Character
