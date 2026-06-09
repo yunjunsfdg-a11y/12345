@@ -12455,3 +12455,40 @@ task.spawn(function()
     Players.PlayerRemoving:Connect(updateCount)
     updateCount()
 end)
+local toolLabel = HubTab:CreateLabel("장착 중인 아이템: 없음")
+game:GetService("RunService").Heartbeat:Connect(function()
+    local char = game.Players.LocalPlayer.Character
+    local tool = char and char:FindFirstChildOfClass("Tool")
+    toolLabel:Set("장착 중인 아이템: " .. (tool and tool.Name or "맨손"))
+end)
+
+local adminLabel = HubTab:CreateLabel("어드민 감지: 안전함")
+task.spawn(function()
+    for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+        if p:GetRankInGroup(1200769) >= 200 or p.UserId == game.CreatorId then
+            adminLabel:Set("⚠️ 어드민/개발자 감지됨: " .. p.Name)
+        end
+    end
+    game:GetService("Players").PlayerAdded:Connect(function(p)
+        if p:GetRankInGroup(1200769) >= 200 or p.UserId == game.CreatorId then
+            adminLabel:Set("⚠️ 어드민/개발자 입장!!: " .. p.Name)
+        end
+    end)
+end)
+
+local lagLabel = HubTab:CreateLabel("서버 최고 렉 유저: 찾는 중...")
+task.spawn(function()
+    while task.wait(5) do
+        local maxPing, laggyPlr = -1, "없음"
+        for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+            local stats = p:FindFirstChild("leaderstats") or p
+            local pSuccess, pPing = pcall(function() return game:GetService("Stats").Network:GetPlayerCustomStat(p, "Ping") end)
+            if pSuccess and pPing and pPing > maxPing then
+                maxPing = pPing
+                laggyPlr = p.DisplayName
+            end
+        end
+        lagLabel:Set("최고 렉 유저: " .. laggyPlr)
+    end
+end)
+
