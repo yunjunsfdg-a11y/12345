@@ -6076,7 +6076,7 @@ function AntiPCLDF()
     local targetValueName = "[ " .. plr.DisplayName .. " ] ( @" .. plr.Name .. " )"
     
     while AntiPCLDT do
-        task.wait(0.1) 
+        task.wait(1) 
         
         local character = plr.Character
         local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -6102,14 +6102,14 @@ function AntiPCLDF()
             pcall(function()
                 
                 hrp.CFrame = CFrame.new(0, 999999, 0)
-                task.wait(0.05)
+                task.wait(0.5)
                 
                        humanoid:ChangeState(Enum.HumanoidStateType.Dead)
             end)
             
                     local currentCharacter = plr.Character
             plr.CharacterAdded:Wait() 
-            task.wait(1.5) 
+            task.wait(2) 
         end
     end
 end
