@@ -3,8 +3,7 @@ local TESTPP = false
 
 print("AP FTAP Script 시작 - 설정 저장 활성화")
 -- ================== Rayfield 윈도우 생성 및 키 시스템 설정 ==================
-local Rayfield =  loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
-
+local Rayfield =   loadstring(game:HttpGet("https://raw.githubusercontent.com/qwer123476/Rayfield/main/Rayfield523"))()
 local Window = Rayfield:CreateWindow({
     Name = "누나용 V103",
     LoadingTitle = "로딩중",
