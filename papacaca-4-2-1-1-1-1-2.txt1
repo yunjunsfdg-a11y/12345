@@ -12430,3 +12430,28 @@ local membershipLabel = HubTab:CreateLabel("프리미엄 여부: 로딩중...")
             task.wait(0.3)
         end
     end)
+local posLabel = HubTab:CreateLabel("좌표: X: 0, Y: 0, Z: 0")
+
+task.spawn(function()
+    local player = game.Players.LocalPlayer
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local pos = player.Character.HumanoidRootPart.Position
+            posLabel:Set(string.format("좌표: X: %.1f, Y: %.1f, Z: %.1f", pos.X, pos.Y, pos.Z))
+        else
+            posLabel:Set("좌표: 캐릭터 없음")
+        end
+    end)
+end)
+
+local playerCountLabel = HubTab:CreateLabel("서버 인원: 로딩중...")
+
+task.spawn(function()
+    local Players = game:GetService("Players")
+    local function updateCount()
+        playerCountLabel:Set("서버 인원: " .. #Players:GetPlayers() .. " / " .. Players.MaxPlayers .. " 명")
+    end
+    Players.PlayerAdded:Connect(updateCount)
+    Players.PlayerRemoving:Connect(updateCount)
+    updateCount()
+end)
