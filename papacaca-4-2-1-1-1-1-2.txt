@@ -8557,7 +8557,7 @@ LoopTab:CreateButton({
     })
     OLTPInput:Set("0,30,0")
     
-    local blobLoop4Toggle = LoopTab:CreateToggle({
+    local blobLoop45Toggle = LoopTab:CreateToggle({
         Name = "스팸킥v25 [ 더빠른속도 ]",
         CurrentValue = false,
         Flag = "21",
@@ -8569,17 +8569,17 @@ LoopTab:CreateButton({
                     local nameOnly = e:match("^(.-) %(") or e
                     table.insert(playersInLoop2V, nameOnly)
                 end
-                loopPlayerBlobF4()
+                loopPlayerBlobF45()
             else
-                blobLoopT4 = false
+                blobLoopT45 = false
                 table.clear(playersInLoop2V)
             end
         end
     })
 
-    local function loopPlayerBlobF4()
+    local function loopPlayerBlobF45()
         task.spawn(function()
-            while blobLoopT4 do
+            while blobLoopT45 do
                 task.wait(0.000000000000000000000000000000000000000000001)
                 for _, name in ipairs(playersInLoop2V) do
                     local foundPlr = Players:FindFirstChild(name)
@@ -8597,12 +8597,12 @@ LoopTab:CreateButton({
 
     local function processPlayer(player)
         if not player then return end
-        while blobLoopT4 do
+        while blobLoopT45 do
             if not player.Parent then
                 return
             end
             local character = player.Character
-            while blobLoopT4 and (not character or not character:FindFirstChild("Humanoid")) do
+            while blobLoopT45 and (not character or not character:FindFirstChild("Humanoid")) do
                 if not player.Parent then return end
                 task.wait(0.0000000000000000000000000000000000000000000000000000000000001)
                 character = player.Character
