@@ -24,6 +24,13 @@ local Window = Rayfield:CreateWindow({
         Key = {"파카허브v30"} 
     }
 })
+local SaveManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/sirius-menu/rayfield/main/modules/SaveManager.lua'))()
+
+SaveManager:SetLibrary(Rayfield)
+SaveManager:IgnoreThemeSettings() 
+SaveManager:SetFolder("파카허브") 
+SaveManager:BuildConfigSection(Tab) 
+
 local HubTab = Window:CreateTab("파카허브란",0)
 local playerTab = Window:CreateTab("플레이어 설정", 6034281935)    
 local passTab = Window:CreateTab("패스잠금해제")
@@ -43,6 +50,11 @@ local BlacklistTab = Window:CreateTab("블랙리스트(좆장애창녀 모음집
 local cmdWindowTab = Window:CreateTab("명령어 콘솔",6023426923 )
 local TargetTab = Window:CreateTab("ui설정(현재 불가)")
 
+
+local SettingsTab = Window:CreateTab("설정 관리", 4483362458)
+
+
+SaveManager:BuildConfigSection(SettingsTab)
 
 
 
