@@ -8303,7 +8303,7 @@ LoopTab:CreateToggle({
 })
 
 
-LoopTab:CreateSection("Bring")
+LoopTab:CreateSection("끌고오기")
 LoopTab:CreateButton({
     Name = "끌고오기 [ Blobman ]",
     Callback = function()
@@ -8812,7 +8812,7 @@ SitMODED = false
 OnlyOwner = false
 SkipOL = false
 OLTPValue = Vector3.new(0, 20, 0)
-
+LoopTab:CreateSection("메슬리즈")
 LoopTab:CreateButton({
     Name = "무질량 끄기",
     Callback = function()
@@ -8833,7 +8833,7 @@ LoopTab:CreateButton({
 
     end
 })
-
+LoopTab:CreateSection("킥,킬,스팸")
 local blobLoopToggle = LoopTab:CreateToggle({
     Name = "루프킥 [ Blobman (오토) ]",
     CurrentValue = false,
@@ -8905,10 +8905,145 @@ local blobLoop2Toggle = LoopTab:CreateToggle({
         end
     end
 })
+LoopTab:CreateSection("스팸")
+LoopTab:CreateToggle({
+    Name = "구버전 스팸 [ 수정버전 ]",
+    CurrentValue = false,
+    Flag = "21",
+    Callback = function(Value)
+        blobLoopT4 = Value
+        if blobLoopT4 then
+            loopPlayerBlobF4()
+        else
+            blobLoopT4 = false
+            table.clear(playersInLoop2V)
+        end
+    end
+})
+LoopTab:CreateToggle({
+    Name = "루프 그랩  스팸 [ Blobman ]",
+    CurrentValue = false,
+    Flag = "21",
+    Callback = function(Value)
+        blobLoopT2 = Value
+        if blobLoopT2 then
+            table.clear(playersInLoop2V)
+            for i, e in ipairs(playersInLoop1V) do
+                local nameOnly = e:match("^(.-) %(") or e
+                table.insert(playersInLoop2V, nameOnly)
+            end
+            loopPlayerBlobF2()
+        else
+            blobLoopT2 = false
+            table.clear(playersInLoop2V)
+        end
+    end
+})
 
+function loopPlayerBlobF4() 
+    task.spawn(function()
+        table.clear(playersInLoop2V)
+        for i, e in ipairs(playersInLoop1V) do
+            local nameOnly = e:match("^(.-) %(") or e
+            table.insert(playersInLoop2V, nameOnly)
+        end
+        for i, name in ipairs(playersInLoop2V) do
+            local target = game.Players:FindFirstChild(name)
+            if target then pullSinglePlayerFast(target, i) end
+        end
+        while blobLoopT4 do
+            UpdateCurrentBlobman()
+            local myHRP = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+            if not myHRP then task.wait(); continue end
+            for i, name in ipairs(playersInLoop2V) do
+                local player = game.Players:FindFirstChild(name)
+                if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local hrp = player.Character.HumanoidRootPart
+                    if (myHRP.Position - hrp.Position).Magnitude > 50 then
+                        pullSinglePlayerFast(player, i)
+                    end
+                    local targetCF = myHRP.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
+                    hrp.CFrame = targetCF
+                    SetNetworkOwner:FireServer(hrp, targetCF)
+                    DestroyGrabLine:FireServer(hrp, targetCF)
+                    if currentBlobS then
+                        BlobGrab(currentBlobS, hrp, "Right")
+                        BlobRelease(currentBlobS, hrp, "Right")
+                    end
+                end
+            end
+            task.wait()
+        end
+    end)
+end
+local loopSpamActive = false
+LoopTab:CreateToggle({
+    Name = "최강스팸 (락/강제TP)",
+    CurrentValue = false,
+    Flag = "LoopSpamToggle",
+    Callback = function(Value)
+        loopSpamActive = Value
+        if loopSpamActive then
+            task.spawn(function()
+                table.clear(playersInLoop2V)
+                for i, e in ipairs(playersInLoop1V) do
+                    local nameOnly = e:match("^(.-) %(") or e
+                    table.insert(playersInLoop2V, nameOnly)
+                end
+                for i, name in ipairs(playersInLoop2V) do
+                    local target = game.Players:FindFirstChild(name)
+                    if target then pullSinglePlayerFast(target, i) end
+                end
+                while loopSpamActive do
+                    UpdateCurrentBlobman()
+                    local myChar = plr.Character
+                    local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                    if myHrp and currentBlobS then
+                        for i, name in ipairs(playersInLoop2V) do
+                            local target = game.Players:FindFirstChild(name)
+                            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                                local hrp = target.Character.HumanoidRootPart
+                                if (myHrp.Position - hrp.Position).Magnitude > 50 then
+                                    pullSinglePlayerFast(target, i)
+                                end
+                                local targetCF = myHrp.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
+                                hrp.CFrame = targetCF
+                                SetNetworkOwner:FireServer(hrp, targetCF)
+                                DestroyGrabLine:FireServer(hrp, targetCF)
+                                BlobGrab(currentBlobS, hrp, "Right")
+                                BlobRelease(currentBlobS, hrp, "Right")
+                            end
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
 
+local blobLoopT2 = false
+local function loopPlayerBlobF2()
+    task.spawn(function()
+        while blobLoopT2 do
+            UpdateCurrentBlobman()
+            for i, name in ipairs(playersInLoop2V) do
+                local player = game.Players:FindFirstChild(name)
+                if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local hrp = player.Character.HumanoidRootPart
+                    if currentBlobS then
+                        BlobGrab(currentBlobS, hrp, "Right")
+                        BlobRelease(currentBlobS, hrp, "Right")
+                    end
+                end
+            end
+            task.wait()
+        end
+    end)
+end
+LoopTab:CreateSection("블롭맨 필요없음")
 local Loop1 = LoopTab:CreateToggle({
-    Name = "루프킬 [ Owner ]",
+    Name = "루프킬 [ NO BLOB ]",
     CurrentValue = false,
     Flag = "21",
     Callback = function(Value)
@@ -8928,7 +9063,7 @@ local Loop1 = LoopTab:CreateToggle({
 })
 
 local Loop2 = LoopTab:CreateToggle({
-    Name = "루프킥 [ Owner ]",
+    Name = "루프킥 [ NO BLOB ]",
     CurrentValue = false,
     Flag = "21",
     Callback = function(Value)
@@ -8949,7 +9084,7 @@ local Loop2 = LoopTab:CreateToggle({
 
 LoopTab:CreateSection("스팸")
 LoopTab:CreateToggle({
-    Name = "스팸",
+    Name = "스노우볼 스팸",
     CurrentValue = false,
     Flag = "27",
     Callback = function(Value)
@@ -9236,7 +9371,7 @@ local Toggle = LoopTab:CreateToggle({
 
 
 
-antiTab:CreateSection("Teleport | Toggle")
+antiTab:CreateSection("텔포")
 local AntiGrabV1 = antiTab:CreateToggle({
     Name = "무질량 이동 | TP",
     CurrentValue = false,
