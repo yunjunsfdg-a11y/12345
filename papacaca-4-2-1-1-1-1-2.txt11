@@ -34,8 +34,6 @@ local UtilityTab = Window:CreateTab("유틸리티", 6031094678)
 local antiTab = Window:CreateTab("안전", 6034831332)               
 local ListTab = Window:CreateTab("명단", 3572491301)              
 local LoopTab = Window:CreateTab("조지기", 6023426923)   
-local spamTab = Window:CreateTab("블롭맨 스팸",6023426923 )
-
 local AuraTab = Window:CreateTab("아우라", 6031068423)            
 local funTab = Window:CreateTab("찌끄레기", 4483345998)            
 local keybindTab = Window:CreateTab("설정", 6031094678)            
@@ -12419,5 +12417,6 @@ task.spawn(function()
         task.wait(0.3)
     end
 end)
+local spamTab = Window:CreateTab("블롭맨 스팸",6023426923 )
 
  loadstring(game:HttpGet("https://raw.githubusercontent.com/qwer123476/rspy/main/spamF"))()
