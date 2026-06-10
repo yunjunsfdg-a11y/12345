@@ -12417,3 +12417,89 @@ task.spawn(function()
         task.wait(0.3)
     end
 end)
+
+
+local Services = setmetatable({}, {__index = function(self, key) return game:GetService(key) end})
+local Players = Services.Players
+local LocalPlayer = Players.LocalPlayer
+local RunService = Services.RunService
+local HttpService = Services.HttpService
+local TeleportService = Services.TeleportService
+local ContentProvider = Services.ContentProvider
+local LogService = Services.LogService
+
+getgenv().AntiBanEnabled = true
+
+pcall(function()
+    local mt = getrawmetatable(game)
+    local oldNamecall = mt.__namecall
+    setreadonly(mt, false)
+    mt.__namecall = newcclosure(function(self, ...)
+        local method = getnamecallmethod()
+        if not getgenv().AntiBanEnabled then return oldNamecall(self, ...) end
+        if method == "Kick" or method == "kick" then return end
+        if method == "FireServer" then
+            local name = tostring(self.Name or "")
+            if name:find("Ban") or name:find("Kick") or name:find("Report") or name:find("Detect") or name:find("Punish") or name:find("Cheat") then return end
+        end
+        return oldNamecall(self, ...)
+    end)
+    setreadonly(mt, true)
+end)
+
+pcall(function() hookfunction(LocalPlayer.Kick, function() end) end)
+
+local connections = {}
+table.insert(connections, RunService.Heartbeat:Connect(function()
+    if not getgenv().AntiBanEnabled then return end
+    pcall(function()
+        setfflag("DebugRunParallelLuaOnMainThread", "False")
+        setfflag("HttpCurlMaxRedirects", "0")
+        if LocalPlayer.Character then
+            for _, v in ipairs(LocalPlayer.Character:GetDescendants()) do
+                if v:IsA("Humanoid") then
+                    v.PlatformStand = false
+                    v.Sit = false
+                end
+            end
+        end
+    end)
+end))
+
+pcall(function()
+    local oldGet = HttpService.GetAsync
+    HttpService.GetAsync = newcclosure(function(self, url, ...)
+        if tostring(url or ""):find("ban") or tostring(url or ""):find("kick") then return "{}" end
+        return oldGet(self, url, ...)
+    end)
+end)
+
+pcall(function()
+    local oldPost = HttpService.PostAsync
+    HttpService.PostAsync = newcclosure(function(self, url, ...)
+        if tostring(url or ""):find("ban") or tostring(url or ""):find("kick") then return "{}" end
+        return oldPost(self, url, ...)
+    end)
+end)
+
+pcall(function()
+    ContentProvider.PreloadAsync = newcclosure(function(self, assets, cb)
+        if typeof(assets) == "table" then
+            for _, a in ipairs(assets) do
+                if tostring(a):find("delta") or tostring(a):find("ban") then
+                    if cb then cb(a, Enum.AssetFetchStatus.Failure) end
+                    return
+                end
+            end
+        end
+        return ContentProvider.PreloadAsync(self, assets, cb)
+    end)
+end)
+
+pcall(function() TeleportService.Teleport = newcclosure(function() return end) end)
+pcall(function() hookfunction(LogService.MessageOut, function() end) end)
+
+getgenv().DestroyAntiBan = function()
+    getgenv().AntiBanEnabled = false
+    for _, conn in ipairs(connections) do pcall(function() conn:Disconnect() end) end
+end
