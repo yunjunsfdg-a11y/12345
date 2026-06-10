@@ -2572,7 +2572,7 @@ function loopPlayerF() -- 룹1
                                 local success = processPlayer(player)
 
                                 if success then
-                                    task.wait(2)
+                                    task.wait(0.000000002)
                                 end
 
                                 currentProcessing[player] = nil
@@ -2587,7 +2587,7 @@ function loopPlayerF() -- 룹1
                     end
                 end
             end
-            task.wait(0.05)
+            task.wait(0.000000005)
         end
     end)
 end
@@ -2700,7 +2700,7 @@ function loopPlayerF2() -- 룹2
                     rs.GrabEvents.DestroyGrabLine:FireServer(head, head.CFrame)
                     hrp.CFrame = CFrame.new(99999999, 99999999, 99999999)
                 end
-                task.wait(0.02)
+                task.wait(0.0000000000000002)
             end
         end)
 
@@ -2800,7 +2800,7 @@ function loopPlayerF3() -- 룹3
                                 local success = processPlayer(player)
 
                                 if success then
-                                    task.wait(1)
+                                    task.wait(0.00001)
                                 end
 
                                 currentProcessing[player] = nil
