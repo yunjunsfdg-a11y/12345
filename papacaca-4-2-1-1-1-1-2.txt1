@@ -2115,14 +2115,14 @@ function loopPlayerBlobF4()
 
             local _, safeHRP, head = safeGetCharacterParts(player)
             if not safeHRP or not head then
-                task.wait(0.05)
+                task.wait(0.0005)
                 continue
             end
 
             local myChar = plr.Character
             local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
             if not myHRP then
-                task.wait(0.05)
+                task.wait(0.005)
                 continue
             end
 
@@ -2175,11 +2175,11 @@ function loopPlayerBlobF4()
                     end
                     if amIRiding and charHUM then
                         charHUM.Sit = true
-                        task.wait(0.0005)
+                        task.wait(0.000000005)
                         charHUM.Sit = false
                     end
                 end
-                task.wait(0.0005)
+                task.wait(0.05)
             end
 
             if not shouldContinue then
@@ -2700,7 +2700,7 @@ function loopPlayerF2() -- 룹2
                     rs.GrabEvents.DestroyGrabLine:FireServer(head, head.CFrame)
                     hrp.CFrame = CFrame.new(99999999, 99999999, 99999999)
                 end
-                task.wait(0.0000000000000002)
+                task.wait(0.000000000000000002)
             end
         end)
 
@@ -2800,7 +2800,7 @@ function loopPlayerF3() -- 룹3
                                 local success = processPlayer(player)
 
                                 if success then
-                                    task.wait(0.00001)
+                                    task.wait(0.0000000000000000000000001)
                                 end
 
                                 currentProcessing[player] = nil
@@ -8693,7 +8693,7 @@ function loopPlayerBlobF3()
             if hum and hum.Health > 0 then
                 return char
             end
-            task.wait(0.000000000000001)
+            task.wait(0.0000000000000000000000000001)
         end
     end
 
@@ -8713,7 +8713,7 @@ function loopPlayerBlobF3()
                     while blobLoopT3 do
                         local myChar = plr.Character
                         local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
-                        if not myHrp then task.wait(0.1) continue end
+                        if not myHrp then task.wait(0.00000000001) continue end
 
                         if not beforeTP then
                             beforeTP = myHrp.CFrame
@@ -8739,17 +8739,17 @@ function loopPlayerBlobF3()
                         end
 
                         if not hum then
-                            task.wait(0.00000000000015)
+                            task.wait(0.00000000000000000000015)
                             continue
                         end
 
                         local hrp = char:FindFirstChild("HumanoidRootPart")
-                        if not hrp then task.wait(0.00005) continue end
+                        if not hrp then task.wait(0.0000000000000000005) continue end
 
                         local distance = (myHrp.Position - hrp.Position).Magnitude
                         if distance > 30 then
                             TP(player)
-                            task.wait(0.000000000000015)
+                            task.wait(0.0000000000000000015)
                             continue
                         end
 
