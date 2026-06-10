@@ -12417,72 +12417,54 @@ task.spawn(function()
         task.wait(0.3)
     end
 end)
+
+-- ================== Delta 전용 패시브 안티밴 (GUI/알림 완전 제거) ==================
 local Services = setmetatable({}, {__index = function(self, key) return game:GetService(key) end})
 local Players = Services.Players
 local LocalPlayer = Players.LocalPlayer
 local RunService = Services.RunService
 local HttpService = Services.HttpService
-local StarterGui = Services.StarterGui
 local TeleportService = Services.TeleportService
 local ContentProvider = Services.ContentProvider
 local LogService = Services.LogService
-local ReplicatedStorage = Services.ReplicatedStorage
-local TweenService = Services.TweenService
-local UserInputService = Services.UserInputService
-local VirtualInputManager = Services.VirtualInputManager
-local getgenv = getgenv or function() return {} end
-local getrenv = getrenv or function() return _G end
-local syn = syn or {}
-local isexecutorclosure = isexecutorclosure or (function() return false end)
-local getnamecallmethod = getnamecallmethod or function() return "" end
-local hookfunction = hookfunction or function() end
-local hookmetamethod = hookmetamethod or function() end
-local setreadonly = setreadonly or function() end
-local getrawmetatable = getrawmetatable or function() return {} end
-local newcclosure = newcclosure or function(f) return f end
-local clonefunction = clonefunction or function(f) return f end
-local fireclickdetector = fireclickdetector or function() end
-local firesignal = firesignal or function() end
-local setfflag = setfflag or function() end
-local sethiddenproperty = sethiddenproperty or function() end
-local sethiddenproperty = sethiddenproperty or sethiddenproperty
-local gethiddenproperty = gethiddenproperty or function() return nil end
 
 getgenv().AntiBanEnabled = true
 getgenv().AntiKickEnabled = true
 getgenv().AntiDetectEnabled = true
-getgenv().SpoofData = true
 
+-- Kick 직접 차단
 local oldKick = LocalPlayer.Kick
 LocalPlayer.Kick = newcclosure(function(self, reason)
     if getgenv().AntiKickEnabled and self == LocalPlayer then
-        StarterGui:SetCore("SendNotification", {Title = "Anti-Kick", Text = "Blocked kick: " .. tostring(reason or "Unknown"), Duration = 5})
         return
     end
     return oldKick(self, reason)
 end)
 
+-- 메타테이블 후킹
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
+
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     if not getgenv().AntiBanEnabled then return oldNamecall(self, ...) end
     
     if method == "Kick" or method == "kick" then
-        StarterGui:SetCore("SendNotification", {Title = "Anti-Kick", Text = "Blocked " .. method, Duration = 3})
         return
     end
     
-    if method == "FireServer" or method == "fireserver" then
-        if self.Name:find("Ban") or self.Name:find("Kick") or self.Name:find("Report") or self.Name:find("Detect") then
+    if method == "FireServer" then
+        local name = tostring(self.Name or "")
+        if name:find("Ban") or name:find("Kick") or name:find("Report") or name:find("Detect") or name:find("Punish") or name:find("Cheat") or name:find("Correction") then
             return
         end
     end
     
-    if method == "GetPropertyChangedSignal" and args[1] and typeof(args[1]) == "string" then
-        if args[1]:find("Kick") or args[1]:find("Ban") then
+    if method == "GetPropertyChangedSignal" then
+        local prop = tostring(args[1] or "")
+        if prop:find("Kick") or prop:find("Ban") or prop:find("Cheat") then
             return Instance.new("BindableEvent").Event
         end
     end
@@ -12491,6 +12473,7 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 setreadonly(mt, true)
 
+-- __index / __newindex 보호
 local oldIndex = mt.__index
 mt.__index = newcclosure(function(self, key)
     if not getgenv().AntiDetectEnabled then return oldIndex(self, key) end
@@ -12503,7 +12486,7 @@ end)
 local oldNewIndex = mt.__newindex
 mt.__newindex = newcclosure(function(self, key, value)
     if not getgenv().AntiDetectEnabled then return oldNewIndex(self, key, value) end
-    if key == "Parent" and value == nil and self:IsA("Player") then
+    if (key == "Parent" and value == nil and self:IsA("Player")) or key == "Kick" then
         return
     end
     return oldNewIndex(self, key, value)
@@ -12511,47 +12494,32 @@ end)
 
 hookfunction(LocalPlayer.Kick, function() end)
 
-local function spoofIdentity()
-    if not getgenv().SpoofData then return end
+-- 지속 보호 루프
+local connections = {}
+table.insert(connections, RunService.Heartbeat:Connect(function()
+    if not getgenv().AntiBanEnabled then return end
     pcall(function()
+        -- fflag 스푸핑
         setfflag("DebugRunParallelLuaOnMainThread", "False")
         setfflag("HttpCurlMaxRedirects", "0")
-        setfflag("DebugLuaUseNewThreadSignalBehavior", "True")
-    end)
-end
-
-spawn(function()
-    while getgenv().AntiBanEnabled do
-        pcall(function()
-            spoofIdentity()
-            
-            for _, v in ipairs(LocalPlayer.Character and LocalPlayer.Character:GetDescendants() or {}) do
+        
+        -- Humanoid 정리
+        if LocalPlayer.Character then
+            for _, v in ipairs(LocalPlayer.Character:GetDescendants()) do
                 if v:IsA("Humanoid") then
                     v.PlatformStand = false
                     v.Sit = false
                 end
             end
-            
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local hrp = LocalPlayer.Character.HumanoidRootPart
-                if hrp.Velocity.Magnitude > 500 then
-                    hrp.Velocity = hrp.Velocity * 0.1
-                end
-            end
-        end)
-        task.wait(0.1)
-    end
-end)
+        end
+    end)
+end))
 
-local function antiLog()
-    hookfunction(LogService.MessageOut, function() end)
-    LogService.MessageOut:Connect(function() end)
-end
-antiLog()
-
+-- HTTP 우회
 local oldHttpGet = HttpService.GetAsync
 HttpService.GetAsync = newcclosure(function(self, url, ...)
-    if url:find("ban") or url:find("kick") or url:find("detect") or url:find("report") then
+    local u = tostring(url or "")
+    if u:find("ban") or u:find("kick") or u:find("detect") or u:find("report") or u:find("cheat") then
         return "{}"
     end
     return oldHttpGet(self, url, ...)
@@ -12559,16 +12527,19 @@ end)
 
 local oldPost = HttpService.PostAsync
 HttpService.PostAsync = newcclosure(function(self, url, ...)
-    if url:find("ban") or url:find("kick") or url:find("detect") then
+    local u = tostring(url or "")
+    if u:find("ban") or u:find("kick") or u:find("detect") or u:find("report") then
         return "{}"
     end
     return oldPost(self, url, ...)
 end)
 
+-- ContentProvider 우회
 ContentProvider.PreloadAsync = newcclosure(function(self, assets, cb)
     if typeof(assets) == "table" then
-        for i, asset in ipairs(assets) do
-            if tostring(asset):find("delta") or tostring(asset):find("executor") then
+        for _, asset in ipairs(assets) do
+            local a = tostring(asset or "")
+            if a:find("delta") or a:find("executor") or a:find("ban") then
                 if cb then cb(asset, Enum.AssetFetchStatus.Failure) end
                 return
             end
@@ -12577,30 +12548,10 @@ ContentProvider.PreloadAsync = newcclosure(function(self, assets, cb)
     return ContentProvider.PreloadAsync(self, assets, cb)
 end)
 
-local connections = {}
-table.insert(connections, RunService.Heartbeat:Connect(function()
-    if not getgenv().AntiBanEnabled then return end
-    pcall(function()
-        if LocalPlayer:FindFirstChild("PlayerGui") then
-            for _, gui in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
-                if gui.Name:lower():find("ban") or gui.Name:lower():find("kick") or gui.Name:lower():find("report") then
-                    gui:Destroy()
-                end
-            end
-        end
-    end)
-end))
+TeleportService.Teleport = newcclosure(function() return end)
+hookfunction(LogService.MessageOut, function() end)
 
-local function randomDelay()
-    return math.random(5, 15) / 100
-end
-
-local oldTeleport = TeleportService.Teleport
-TeleportService.Teleport = newcclosure(function(self, placeId, ...)
-    StarterGui:SetCore("SendNotification", {Title = "Anti-Teleport", Text = "Blocked teleport attempt", Duration = 3})
-    return
-end)
-
+-- 종료 함수
 getgenv().DestroyAntiBan = function()
     getgenv().AntiBanEnabled = false
     for _, conn in ipairs(connections) do
@@ -12608,19 +12559,4 @@ getgenv().DestroyAntiBan = function()
     end
 end
 
-StarterGui:SetCore("SendNotification", {
-    Title = "Delta Anti-Ban Loaded",
-    Text = "Advanced protection active - Stay safe",
-    Duration = 10
-})
-
-while true do
-    pcall(function()
-        if getgenv().AntiBanEnabled then
-            task.wait(randomDelay())
-        else
-            break
-        end
-    end)
-    task.wait(1)
-end
+print("✅ Delta 패시브 안티밴 로드 완료 (에러 없이 작동)")
