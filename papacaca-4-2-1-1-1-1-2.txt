@@ -7959,7 +7959,7 @@ local Dropdown = ListTab:CreateDropdown({
 })
 
 ListTab:CreateInput({
-    Name = "추가",
+    Name = "친구 추가",
     PlaceholderText = "...",
     RemoveTextAfterFocusLost = true,
     Callback = function(Value)
@@ -7968,7 +7968,7 @@ ListTab:CreateInput({
 })
 
 ListTab:CreateInput({
-    Name = "추가",
+    Name = "친구 삭제",
     PlaceholderText = "...",
     RemoveTextAfterFocusLost = true,
     Callback = function(Value)
@@ -7998,7 +7998,7 @@ ListTab:CreateInput({
 })
 
 ListTab:CreateInput({
-    Name = "재설정",
+    Name = "삭제",
     PlaceholderText = "...",
     RemoveTextAfterFocusLost = true,
     Callback = function(Value)
@@ -8906,20 +8906,7 @@ local blobLoop2Toggle = LoopTab:CreateToggle({
     end
 })
 LoopTab:CreateSection("스팸")
-LoopTab:CreateToggle({
-    Name = "구버전 스팸 [ 수정버전 ]",
-    CurrentValue = false,
-    Flag = "21",
-    Callback = function(Value)
-        blobLoopT4 = Value
-        if blobLoopT4 then
-            loopPlayerBlobF4()
-        else
-            blobLoopT4 = false
-            table.clear(playersInLoop2V)
-        end
-    end
-})
+
 LoopTab:CreateToggle({
     Name = "루프 그랩  스팸 [ Blobman ]",
     CurrentValue = false,
