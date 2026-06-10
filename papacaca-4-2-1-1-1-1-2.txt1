@@ -12421,109 +12421,11 @@ task.spawn(function()
 end)
 
 spamTab:CreateSection("블롭있어야하는 스팸")
-spamTab:CreateToggle({
-    Name = "루프 그랩  스팸 [ Blobman ]",
-    CurrentValue = false,
-    Flag = "21",
-    Callback = function(Value)
-        blobLoopT2 = Value
-        if blobLoopT2 then
-            table.clear(playersInLoop2V)
-            for i, e in ipairs(playersInLoop1V) do
-                local nameOnly = e:match("^(.-) %(") or e
-                table.insert(playersInLoop2V, nameOnly)
-            end
-            loopPlayerBlobF2()
-        else
-            blobLoopT2 = false
-            table.clear(playersInLoop2V)
-        end
-    end
-})
-
-function loopPlayerBlobF4() 
-    task.spawn(function()
-        table.clear(playersInLoop2V)
-        for i, e in ipairs(playersInLoop1V) do
-            local nameOnly = e:match("^(.-) %(") or e
-            table.insert(playersInLoop2V, nameOnly)
-        end
-        for i, name in ipairs(playersInLoop2V) do
-            local target = game.Players:FindFirstChild(name)
-            if target then pullSinglePlayerFast(target, i) end
-        end
-        while blobLoopT4 do
-            UpdateCurrentBlobman()
-            local myHRP = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-            if not myHRP then task.wait(); continue end
-            for i, name in ipairs(playersInLoop2V) do
-                local player = game.Players:FindFirstChild(name)
-                if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                    local hrp = player.Character.HumanoidRootPart
-                    if (myHRP.Position - hrp.Position).Magnitude > 50 then
-                        pullSinglePlayerFast(player, i)
-                    end
-                    local targetCF = myHRP.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
-                    hrp.CFrame = targetCF
-                    SetNetworkOwner:FireServer(hrp, targetCF)
-                    DestroyGrabLine:FireServer(hrp, targetCF)
-                    if currentBlobS then
-                        BlobGrab(currentBlobS, hrp, "Right")
-                        BlobRelease(currentBlobS, hrp, "Right")
-                    end
-                end
-            end
-            task.wait()
-        end
-    end)
-end
-local loopSpamActive = false
-spamTab:CreateToggle({
-    Name = "최강스팸 (락/강제TP)",
-    CurrentValue = false,
-    Flag = "LoopSpamToggle",
-    Callback = function(Value)
-        loopSpamActive = Value
-        if loopSpamActive then
-            task.spawn(function()
-                table.clear(playersInLoop2V)
-                for i, e in ipairs(playersInLoop1V) do
-                    local nameOnly = e:match("^(.-) %(") or e
-                    table.insert(playersInLoop2V, nameOnly)
-                end
-                for i, name in ipairs(playersInLoop2V) do
-                    local target = game.Players:FindFirstChild(name)
-                    if target then pullSinglePlayerFast(target, i) end
-                end
-                while loopSpamActive do
-                    UpdateCurrentBlobman()
-                    local myChar = plr.Character
-                    local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
-                    if myHrp and currentBlobS then
-                        for i, name in ipairs(playersInLoop2V) do
-                            local target = game.Players:FindFirstChild(name)
-                            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-                                local hrp = target.Character.HumanoidRootPart
-                                if (myHrp.Position - hrp.Position).Magnitude > 50 then
-                                    pullSinglePlayerFast(target, i)
-                                end
-                                local targetCF = myHrp.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
-                                hrp.CFrame = targetCF
-                                SetNetworkOwner:FireServer(hrp, targetCF)
-                                DestroyGrabLine:FireServer(hrp, targetCF)
-                                BlobGrab(currentBlobS, hrp, "Right")
-                                BlobRelease(currentBlobS, hrp, "Right")
-                            end
-                        end
-                    end
-                    task.wait()
-                end
-            end)
-        end
-    end
-})
 
 local blobLoopT2 = false
+local blobLoopT4 = false
+local loopSpamActive = false
+
 local function loopPlayerBlobF2()
     task.spawn(function()
         while blobLoopT2 do
@@ -12542,3 +12444,107 @@ local function loopPlayerBlobF2()
         end
     end)
 end
+
+function loopPlayerBlobF4() 
+    task.spawn(function()
+        table.clear(playersInLoop2V)
+        for i, e in ipairs(playersInLoop1V) do
+            local nameOnly = e:match("^(.-) %(") or e
+            table.insert(playersInLoop2V, nameOnly)
+        end
+        for i, name in ipairs(playersInLoop2V) do
+            local target = game.Players:FindFirstChild(name)
+            if target and pullSinglePlayerFast then 
+                pullSinglePlayerFast(target, i) 
+            end
+        end
+        while blobLoopT4 do
+            UpdateCurrentBlobman()
+            local myHRP = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+            if not myHRP then task.wait(); continue end
+            for i, name in ipairs(playersInLoop2V) do
+                local player = game.Players:FindFirstChild(name)
+                if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local hrp = player.Character.HumanoidRootPart
+                    if (myHRP.Position - hrp.Position).Magnitude > 50 then
+                        if pullSinglePlayerFast then pullSinglePlayerFast(player, i) end
+                    end
+                    local targetCF = myHRP.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
+                    hrp.CFrame = targetCF
+                    SetNetworkOwner:FireServer(hrp, targetCF)
+                    DestroyGrabLine:FireServer(hrp, targetCF)
+                    if currentBlobS then
+                        BlobGrab(currentBlobS, hrp, "Right")
+                        BlobRelease(currentBlobS, hrp, "Right")
+                    end
+                end
+            end
+            task.wait()
+        end
+    end)
+end
+
+
+spamTab:CreateToggle({
+    Name = "루프 그랩  스팸 [ Blobman ]",
+    CurrentValue = false,
+    Flag = "21",
+    Callback = function(Value)
+        blobLoopT2 = Value
+        if blobLoopT2 then
+            table.clear(playersInLoop2V)
+            for i, e in ipairs(playersInLoop1V) do
+                local nameOnly = e:match("^(.-) %(") or e
+                table.insert(playersInLoop2V, nameOnly)
+            end
+            loopPlayerBlobF2() -- 이제 위에서 선언되었으므로 정상 인식됩니다.
+        else
+            table.clear(playersInLoop2V)
+        end
+    end
+})
+
+spamTab:CreateToggle({
+    Name = "최강스팸 (락/강제TP)",
+    CurrentValue = false,
+    Flag = "LoopSpamToggle",
+    Callback = function(Value)
+        loopSpamActive = Value
+        if loopSpamActive then
+            task.spawn(function()
+                table.clear(playersInLoop2V)
+                for i, e in ipairs(playersInLoop1V) do
+                    local nameOnly = e:match("^(.-) %(") or e
+                    table.insert(playersInLoop2V, nameOnly)
+                end
+                for i, name in ipairs(playersInLoop2V) do
+                    local target = game.Players:FindFirstChild(name)
+                    if target and pullSinglePlayerFast then pullSinglePlayerFast(target, i) end
+                end
+                while loopSpamActive do
+                    UpdateCurrentBlobman()
+                    local myChar = plr.Character
+                    local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                    if myHrp and currentBlobS then
+                        for i, name in ipairs(playersInLoop2V) do
+                            local target = game.Players:FindFirstChild(name)
+                            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                                local hrp = target.Character.HumanoidRootPart
+                                if (myHrp.Position - hrp.Position).Magnitude > 50 then
+                                    if pullSinglePlayerFast then pullSinglePlayerFast(target, i) end
+                                end
+                                local targetCF = myHrp.CFrame * CFrame.new(math.sin(i) * 3, 20, math.cos(i) * 3)
+                                hrp.CFrame = targetCF
+                                SetNetworkOwner:FireServer(hrp, targetCF)
+                                DestroyGrabLine:FireServer(hrp, targetCF)
+                                BlobGrab(currentBlobS, hrp, "Right")
+                                BlobRelease(currentBlobS, hrp, "Right")
+                            end
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
