@@ -11627,16 +11627,16 @@ local ViewTool = keybindTab:CreateToggle({
 ViewTool:Set(true)
 
 
-CreditsTab:CreateLabel("@Defiant", 96897864871400, Color3.fromRGB(255, 255, 255), false)
-CreditsTab:CreateParagraph({Title = "dsc savior.liberty", Content = ":>"})
+CreditsTab:CreateLabel("누나", 96897864871400, Color3.fromRGB(255, 255, 255), true)
+CreditsTab:CreateParagraph({Title = "0110rim", Content = "착함의 경지"})
 
-CreditsTab:CreateLabel("0110rim( 누나 )", 113854105043977, Color3.fromRGB(255, 255, 255), false)
-CreditsTab:CreateParagraph({Title = "0110rim", Content = ":>"})
+CreditsTab:CreateLabel("식호", 113854105043977, Color3.fromRGB(255, 255, 255), false)
+CreditsTab:CreateParagraph({Title = "매우좋습니다.", Content = "가장좋은방"})
 
-CreditsTab:CreateLabel("NoPe", 0, Color3.fromRGB(255, 255, 255), false)
-CreditsTab:CreateParagraph({Title = "알파", Content = "Owner"})
+CreditsTab:CreateLabel("알파", 2932138780, Color3.fromRGB(255, 255, 255), false)
+CreditsTab:CreateParagraph({Title = "QRDOOTE1120", Content = "Owner"})
 
-CreditsTab:CreateLabel("Diro", 78390276296494, Color3.fromRGB(255, 255, 255), false)
+CreditsTab:CreateLabel("부계", 78390276296494, Color3.fromRGB(255, 255, 255), false)
 CreditsTab:CreateParagraph({Title = "AI_AIPACA", Content = "Co-Owner"})
 
 if plr.UserId ~= 2932138780 then
