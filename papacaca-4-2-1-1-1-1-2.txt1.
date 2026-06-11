@@ -11627,7 +11627,7 @@ local ViewTool = keybindTab:CreateToggle({
 ViewTool:Set(true)
 
 
-ImageLabel.Image = thumb
+
 CreditsTab:CreateLabel("누나", 96897864871400, Color3.fromRGB(255, 255, 255), true)
 CreditsTab:CreateParagraph({Title = "0110rim", Content = "착함의 경지"})
 
