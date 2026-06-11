@@ -285,6 +285,9 @@ function SpawnCFrame()
     return camPart
 
 
+G = rs.GrabEvents
+G:WaitForChild("EndGrabEarly"):Destroy()
+Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
 
  
 
