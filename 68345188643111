@@ -31,7 +31,7 @@ local function setup(character)
 		for _, track in ipairs(animator:GetPlayingAnimationTracks()) do
 			pcall(function()
 				if dir.Magnitude > 0 then
-					track:AdjustSpeed(70 / math.max(ws, 1))
+					track:AdjustSpeed(16 / math.max(ws, 1))
 				end
 			end)
 		end
