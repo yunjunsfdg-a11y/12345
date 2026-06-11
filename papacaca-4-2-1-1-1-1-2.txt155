@@ -2,8 +2,8 @@ local FN_BYPASS = true
 local TESTPP = false 
 
 print("AP FTAP Script 시작 - 설정 저장 활성화")
--- ================== Rayfield 윈도우 생성 및 키 시스템 설정 ==================
-local Rayfield =   loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 local Window = Rayfield:CreateWindow({
     Name = "누나용 V103",
     LoadingTitle = "로딩중",
@@ -25,7 +25,6 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-
 local HubTab = Window:CreateTab("파카허브란",0)
 local playerTab = Window:CreateTab("플레이어 설정", 6034281935)    
 local passTab = Window:CreateTab("패스잠금해제")
@@ -46,11 +45,6 @@ local cmdWindowTab = Window:CreateTab("명령어 콘솔",6023426923 )
 local TargetTab = Window:CreateTab("ui설정(현재 불가)")
 local CreditsTab = Window:CreateTab("제작자 한정")
 
-
-
-
-
-
 Players = game:GetService("Players")
 plr = game.Players.LocalPlayer
 cam = workspace.CurrentCamera
@@ -68,12 +62,11 @@ DestroyGrabLine = rs.GrabEvents.DestroyGrabLine
 Auto = syn and syn.queue_on_teleport or fluxus and fluxus.queue_on_teleport or queue_on_teleport
 
 Whitelist = {}
-playersInLoop1V = {} -- List
-playersInLoop2V = {} -- Loop
+playersInLoop1V = {} 
+playersInLoop2V = {} 
 
 PPs = workspace:WaitForChild("PlotItems"):WaitForChild("PlayersInPlots")
 
------------------------------------------------------------------------------------------ [ 기본 설정 ]
 function PcldOwner()
     task.spawn(function()
         while task.wait(0.1) do
@@ -221,7 +214,7 @@ function SpawnCFrame()
 
     if not workspace:FindFirstChild("CamPart") or workspace:FindFirstChild("CamPart"):FindFirstChild("CamPart") then
          char = plr.Character or plr.CharacterAdded:Wait()
-        camPart = char:FindFirstChild("CamPart"):Clone()
+         camPart = char:FindFirstChild("CamPart"):Clone()
         camPart.Name = "CamPart"
         camPart.Parent = workspace
         camPart.Transparency = 0.9
@@ -290,7 +283,7 @@ function SpawnCFrame()
     end)
 
     return camPart
-end
+
 
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
