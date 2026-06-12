@@ -9,19 +9,19 @@ task.spawn(function()
                 end
 
                 -- 이름 교체
-                v.Text = v.Text:gsub("Luna", "Paka")
-                v.Text = v.Text:gsub("Nether", "Alpha")
+                v.Text = v.Text:gsub("Luna", "파카")
+                v.Text = v.Text:gsub("Nether", "알파")
 
                 -- 괄호 안 숫자 제거
                 v.Text = v.Text:gsub("%s*%(%s*%d+%s*%)", "")
 
                 -- Owner 문구 정리
                 if string.find(v.Text, "Owner") then
-                    v.Text = "[ Paka ]"
+                    v.Text = "[ OWNER ]"
                 end
 
                 if string.find(v.Text, "Good People") then
-                    v.Text = "[ Alpha ]"
+                    v.Text = "[ 누나♧ ]"
                 end
             end
         end
