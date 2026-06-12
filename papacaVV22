@@ -11,9 +11,10 @@ task.spawn(function()
                 -- 이름 교체
                 v.Text = v.Text:gsub("Luna", "파카")
                 v.Text = v.Text:gsub("Nether", "알파")
-
-                -- 괄호 안 숫자 제거
-                v.Text = v.Text:gsub("%s*%(%s*%d+%s*%)", "")
+               v.Text = v.Text:gsub("Oats", "누나")
+                v.Text = v.Text:gsub("VHCK", "추가 예정 ")
+-- 괄호 안 숫자 제거
+v.Text = v.Text:gsub("%s*%(%s*%d+%s*%)", "")
 
                 -- Owner 문구 정리
                 if string.find(v.Text, "Owner") then
@@ -21,7 +22,7 @@ task.spawn(function()
                 end
 
                 if string.find(v.Text, "Good People") then
-                    v.Text = "[ 누나♧ ]"
+                    v.Text = "[ 스크립트 권한 ]"
                 end
             end
         end
