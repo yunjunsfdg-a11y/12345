@@ -1,4 +1,21 @@
+task.spawn(function()
+    while task.wait(1) do
+        for _,v in ipairs(game:GetDescendants()) do
+            if v:IsA("TextLabel") or v:IsA("TextButton") then
 
+                if v.Text == "Ω" then
+                    v.Text = "Paca V2"
+                end
+
+                v.Text = v.Text:gsub("Luna", "Paca")
+                v.Text = v.Text:gsub("Nether", "Alpa")
+                v.Text = v.Text:gsub("FNΩ Owner", "Paca")
+                v.Text = v.Text:gsub("Good People", "Co Owner")
+
+            end
+        end
+    end
+end)
 
 
 
