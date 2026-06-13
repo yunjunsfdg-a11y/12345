@@ -291,35 +291,7 @@ function SpawnCFrame()
 
     return camPart
 end
-local SCF = nil
 
-task.spawn(function()
-    task.wait(1.5)  
-    
-    local success = pcall(SpawnCFrame)
-    
-    if success and workspace:FindFirstChild("SpawnCF") then
-        SCF = workspace.SpawnCF
-        print("SpawnCF 생성 성공")
-    else
-        print("SpawnCFrame 호출 실패, 강제 생성 시도...")
-        
-        
-        if not workspace:FindFirstChild("SpawnCF") then
-            local camPart = Instance.new("Part")
-            camPart.Name = "SpawnCF"
-            camPart.Transparency = 1
-            camPart.CanCollide = false
-            camPart.Anchored = true
-            camPart.Size = Vector3.new(1, 1, 1)
-            camPart.Parent = workspace
-            SCF = camPart
-            print("SpawnCF 강제 생성 완료")
-        else
-            SCF = workspace.SpawnCF
-        end
-    end
-end)
 G = rs.GrabEvents
 G:WaitForChild("EndGrabEarly"):Destroy()
 Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
