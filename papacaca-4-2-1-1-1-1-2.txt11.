@@ -5229,7 +5229,7 @@ function AntiDeathF()
         local Character = plr.Character
         if not Character then return end
 
-        local donut = inv:FindFirstChild("InstrumentGuitarUkulele")
+        local donut = inv:FindFirstChild("FoodBread")
 
         if not donut then
             pcall(function()
