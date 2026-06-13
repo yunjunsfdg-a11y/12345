@@ -297,7 +297,49 @@ G:WaitForChild("EndGrabEarly"):Destroy()
 Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
 
  
+local NP = {
+    TextColor = Color3.fromRGB(255,255,255),
 
+    Background = Color3.fromRGB(20,20,20),
+    Topbar = Color3.fromRGB(30,30,30),
+    Shadow = Color3.fromRGB(15,15,15),
+
+    NotificationBackground = Color3.fromRGB(25,25,25),
+    NotificationActionsBackground = Color3.fromRGB(40,40,40),
+
+    TabBackground = Color3.fromRGB(40,40,40),
+    TabStroke = Color3.fromRGB(70,70,70),
+    TabBackgroundSelected = Color3.fromRGB(60,60,60),
+    TabTextColor = Color3.fromRGB(255,255,255),
+    SelectedTabTextColor = Color3.fromRGB(255,0,0),
+
+    ElementBackground = Color3.fromRGB(35,35,35),
+    ElementBackgroundHover = Color3.fromRGB(50,50,50),
+    SecondaryElementBackground = Color3.fromRGB(25,25,25),
+    ElementStroke = Color3.fromRGB(60,60,60),
+    SecondaryElementStroke = Color3.fromRGB(45,45,45),
+
+    SliderBackground = Color3.fromRGB(60,60,60),
+    SliderProgress = Color3.fromRGB(0,170,255),
+    SliderStroke = Color3.fromRGB(0,120,200),
+
+    ToggleBackground = Color3.fromRGB(30,30,30),
+
+    ToggleEnabled = Color3.fromRGB(185,0,0),
+    ToggleEnabledStroke = Color3.fromRGB(255,255,255),
+    ToggleEnabledOuterStroke = Color3.fromRGB(255,255,255),
+
+    ToggleDisabled = Color3.fromRGB(100, 100, 100),
+    ToggleDisabledStroke = Color3.fromRGB(125, 125, 125),
+    ToggleDisabledOuterStroke = Color3.fromRGB(65, 65, 65),
+
+    DropdownSelected = Color3.fromRGB(50,50,50),
+    DropdownUnselected = Color3.fromRGB(30,30,30),
+
+    InputBackground = Color3.fromRGB(25,25,25),
+    InputStroke = Color3.fromRGB(45,45,45),
+    PlaceholderColor = Color3.fromRGB(150,150,150),
+}
 ----------------------------------------------------------------------------------------- [ 기능들 ]
 function ForWhiteList(enable)
     WhiteListMode = enable
